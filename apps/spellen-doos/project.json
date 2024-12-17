@@ -52,17 +52,18 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
-      "configurations": {
-        "production": {
-          "buildTarget": "spellen-doos:build:production"
-        },
-        "development": {
-          "buildTarget": "spellen-doos:build:development"
-        }
+    "executor": "@angular-devkit/build-angular:dev-server",
+    "configurations": {
+      "production": {
+        "buildTarget": "spellen-doos:build:production"
       },
-      "defaultConfiguration": "development"
+      "development": {
+        "buildTarget": "spellen-doos:build:development",
+        "host": "0.0.0.0"
+      }
     },
+    "defaultConfiguration": "development"
+    }, 
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
