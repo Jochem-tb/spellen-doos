@@ -1,0 +1,17 @@
+.btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 50px; /* Spacing between buttons */
+  padding: 30px;
+}
+.btn-custom {
+  font-size: 2rem;
+  width: 350px;
+  padding: 10px 20px 0px 20px;
+  margin: 0 10px
+}
+
+.arrow {
+  font-size: 4rem;
+  margin-left: 10px;
+}
