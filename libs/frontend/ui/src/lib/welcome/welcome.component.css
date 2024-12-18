@@ -1,3 +1,8 @@
+html, body {
+  overflow: hidden;
+  height: 100%;
+}
+
 .btn-container {
   display: flex;
   justify-content: center;
@@ -7,11 +12,17 @@
 .btn-custom {
   font-size: 2rem;
   width: 350px;
-  padding: 10px 20px 0px 20px;
-  margin: 0 10px
+  height: 100px;
 }
 
-.arrow {
-  font-size: 4rem;
-  margin-left: 10px;
+.frosted-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: inherit;
+  filter: blur(15px);
+  z-index: -1;
 }
