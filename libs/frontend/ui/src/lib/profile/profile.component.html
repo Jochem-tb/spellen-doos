@@ -4,8 +4,17 @@
     <!-- Left Section -->
     <div class="col-md-4 text-center">
       <div class="border p-4">
-        <i class="bi bi-person-circle fs-1"></i>
-        <button class="btn btn-secondary w-100 mt-3">Verander foto</button>
+        <img
+          [src]="profile?.profilePicture"
+          alt="profile picture"
+          class="img-thumbnail"
+        />
+        <button
+          class="btn btn-secondary w-100 mt-3"
+          (click)="togglePictureOptions()"
+        >
+          Verander foto
+        </button>
       </div>
     </div>
     <!-- Right Section -->
@@ -38,6 +47,23 @@
             ></i>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal or Dropdown for Selecting Profile Picture -->
+<div *ngIf="showPictureOptions" class="profile-pic-options">
+  <div class="container">
+    <h5>Selecteer een profielfoto</h5>
+    <div class="row">
+      <div class="col-3" *ngFor="let option of profilePictureOptions">
+        <img
+          [src]="option"
+          alt="profile option"
+          class="img-thumbnail"
+          (click)="selectProfilePicture(option)"
+        />
       </div>
     </div>
   </div>
