@@ -1,0 +1,84 @@
+<div class="register-container">
+    <h2>Registreren - Stap {{ currentStepIndex + 1 }} van {{ steps.length }}</h2>
+  
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+@if (currentStep.key) {
+    <div>
+    <form>
+        @if (currentStep.key === 'name') {
+          <label for="name">Naam</label>
+            <input 
+                id="name" 
+                formControlName="name" 
+                type="text"
+                [ngClass]="{ 
+                'is-invalid': registerForm.get('name')?.touched && registerForm.get('name')?.invalid
+                }"
+            />
+            <div *ngIf="registerForm?.get('name')?.invalid && registerForm?.get('name')?.touched" class="invalid-feedback">
+                <h4 id="name-invalid">Voer alstublieft een valide naam in</h4>
+            </div>
+        }
+
+        @else if (currentStep.key === 'dateOfBirth') {
+            <label for="dateOfBirth">Geboortedatum</label>
+            <input 
+                id="dateOfBirth" 
+                formControlName="dateOfBirth" 
+                type="date"
+                [ngClass]="{ 
+                'is-invalid': registerForm.get('dateOfBirth')?.touched && registerForm.get('dateOfBirth')?.invalid
+                }"
+            />
+            <div *ngIf="registerForm?.get('dateOfBirth')?.invalid && registerForm?.get('dateOfBirth')?.touched" class="invalid-feedback">
+                <h4 id="dateOfBirth-invalid">Voer alstublieft een valide geboortedatum in</h4>
+            </div>
+        }
+
+        @else if (currentStep.key === 'email') {
+          <label for="email">E-mail</label>
+            <input 
+                id="email" 
+                formControlName="email" 
+                type="email"
+                [ngClass]="{ 
+                'is-invalid': registerForm.get('email')?.touched && registerForm.get('email')?.invalid
+                }"
+            />
+            <div *ngIf="registerForm?.get('email')?.invalid && registerForm?.get('email')?.touched" class="invalid-feedback">
+                <h4 id="email-invalid">Voer alstublieft een valide e-mailadres in</h4>
+            </div>
+        }
+
+        @else if (currentStep.key === 'password') {
+            <label for="password">Wachtwoord</label>
+                <input 
+                    id="password" 
+                    formControlName="password" 
+                    type="password"
+                    [ngClass]="{ 
+                        'is-invalid': registerForm.get('password')?.touched && registerForm.get('password')?.invalid
+                        }"
+                />
+
+                <div *ngIf="registerForm?.get('password')?.invalid && registerForm?.get('password')?.touched" class="invalid-feedback">
+                    <h4 id="password-invalid">Voer alstublieft een valide wachtwoord in van minimaal 8 karakters</h4>
+                </div>
+        }
+      <div class="buttons row justify-content-between">
+        <button type="button" (click)="previousStep()" class="btn col-4" [ngClass]="{ 'btn-primary': currentStepIndex !== 0, 'btn-outline-secondary': currentStepIndex === 0 }" [disabled]="currentStepIndex === 0">
+          Vorige
+        </button>
+        
+        <button type="button" (click)="nextStep()" class="btn btn-primary col-4" *ngIf="currentStepIndex < steps.length - 1" >
+          Volgende
+        </button>
+        
+        <button type="submit" class="btn btn-success col-4" *ngIf="currentStepIndex === steps.length - 1" routerLink="/login">
+          Registreer
+        </button>
+
+      </div>
+    </form>
+</div>
+}  
