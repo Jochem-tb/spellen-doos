@@ -13,25 +13,30 @@
       <div class="border p-4">
         <!-- Editable Fields -->
         <div
-          class="mb-3 d-flex align-items-center justify-content-between"
+          class="mb-3 row align-items-center"
           *ngFor="let field of editableFields"
         >
-          <span>{{ field.label }}</span>
-          <ng-container *ngIf="!field.isEditing">
-            <span>{{ field.value }}</span>
+          <label class="col-sm-4 fw-bold text-left fs-5">{{ field.label }}</label>
+          <div class="col-sm-7 fs-5">
+            <ng-container *ngIf="!field.isEditing">
+              <span>{{ field.value }}</span>
+            </ng-container>
+            <ng-container *ngIf="field.isEditing">
+              <input
+                [type]="field.type"
+                [(ngModel)]="field.value"
+                (blur)="stopEditing(field)"
+                class="form-control"
+              />
+            </ng-container>
+          </div>
+          <div class="col-sm-1 text-end">
             <i
               class="bi bi-pencil editable-icon"
               (click)="startEditing(field)"
+              style="cursor: pointer"
             ></i>
-          </ng-container>
-          <ng-container *ngIf="field.isEditing">
-            <input
-              [type]="field.type"
-              [(ngModel)]="field.value"
-              (blur)="stopEditing(field)"
-              class="form-control"
-            />
-          </ng-container>
+          </div>
         </div>
       </div>
     </div>
