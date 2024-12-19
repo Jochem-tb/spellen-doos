@@ -36,7 +36,7 @@ export class ProfileService {
         this.loggedUser = profile;
         return profile;
       }),
-      delay(1000)
+      delay(300)
     );
   }
 }

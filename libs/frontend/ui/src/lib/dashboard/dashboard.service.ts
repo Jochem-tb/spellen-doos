@@ -46,7 +46,7 @@ export class DashBoardService {
         this.games = games;
         return games;
       }),
-      delay(1000)
+      delay(300)
     );
   }
 }
