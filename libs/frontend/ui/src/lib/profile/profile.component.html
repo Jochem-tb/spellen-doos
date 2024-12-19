@@ -1,5 +1,11 @@
 <app-header></app-header>
 <div class="container mt-4">
+  <button
+    class="btn btn-secondary p-3 ps-4 pe-4 mt-1 mb-3"
+    routerLink="/dashboard"
+  >
+    Terug
+  </button>
   <div class="row">
     <!-- Left Section -->
     <div class="col-md-4 text-center">
@@ -25,7 +31,9 @@
           class="mb-3 row align-items-center border-bottom pb-2"
           *ngFor="let field of editableFields"
         >
-          <label class="col-sm-4 fw-bold text-left fs-5">{{ field.label }}</label>
+          <label class="col-sm-4 fw-bold text-left fs-5">{{
+            field.label
+          }}</label>
           <div class="col-sm-7 fs-5" (click)="startEditing(field)">
             <ng-container *ngIf="!field.isEditing">
               <span>{{ field.value }}</span>
