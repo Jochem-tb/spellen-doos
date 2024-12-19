@@ -21,13 +21,8 @@
             "input": "apps/spellen-doos/public"
           }
         ],
-        "styles": [
-          "apps/spellen-doos/src/styles.css",
-          "node_modules/bootstrap/dist/css/bootstrap.min.css"
-        ],
-        "scripts": [
-          "node_modules/bootstrap/dist/js/bootstrap.min.js"
-        ]
+        "styles": ["apps/spellen-doos/src/styles.css"],
+        "scripts": []
       },
       "configurations": {
         "production": {
