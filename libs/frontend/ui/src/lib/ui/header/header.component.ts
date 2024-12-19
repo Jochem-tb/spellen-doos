@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'lib-header',
-  imports: [CommonModule],
+  selector: 'app-header',
+  standalone: false,
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
