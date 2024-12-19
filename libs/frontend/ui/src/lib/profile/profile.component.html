@@ -35,6 +35,7 @@
                 [type]="field.type"
                 [(ngModel)]="field.value"
                 (blur)="stopEditing(field)"
+                (keyup.enter)="stopEditing(field)"
                 class="form-control"
               />
             </ng-container>
