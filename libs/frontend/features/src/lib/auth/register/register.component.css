@@ -44,3 +44,22 @@
   filter: blur(15px);
   z-index: -1;
 }
+
+.invalid-feedback-container {
+  height: 20px; 
+  visibility: hidden;
+}
+
+.invalid-feedback-container.visible {
+  visibility: visible;
+}
+
+.invalid-feedback-container p {
+  margin: 0;
+  color: red;
+  font-size: large;
+}
+
+.invalid-feedback {
+  margin-bottom: 20px;
+}

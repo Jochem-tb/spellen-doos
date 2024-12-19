@@ -24,13 +24,14 @@
                             'is-invalid': loginForm.get('email')?.touched && loginForm.get('email')?.invalid
                             }"
                         >
-                    <div *ngIf="loginForm?.get('email')?.invalid && loginForm?.get('email')?.touched" class="invalid-feedback">
-                        <h4 id="email-invalid">Voer een geldig e-mailadres in.</h4>
+                    <div 
+                        class="invalid-feedback-container"
+                        [class.visible]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                        <p id="email-invalid">Voer een geldig e-mailadres in.</p>
                     </div>
                 </div>
 
-                <div class="form-group
-                    mb-3">
+                <div class="form-group mb-3">
                     <label for="password" class="fs-3">Wachtwoord</label>
                     <input 
                         type="password" 
@@ -42,12 +43,14 @@
                             'is-invalid': loginForm.get('password')?.touched && loginForm.get('password')?.invalid
                             }"
                         >
-                    <div *ngIf="loginForm?.get('password')?.invalid && loginForm?.get('password')?.touched" class="invalid-feedback">
-                        <h4 id="password-invalid">Voer een geldig wachtwoord in van minimaal 8 karakters.</h4>
+                        <div 
+                            class="invalid-feedback-container"
+                            [class.visible]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                            <p id="password-invalid">Voer een geldig wachtwoord in van minimaal 8 karakters.</p>
+                        </div>
                     </div>
-                </div> 
 
-                <button type="submit" class="btn btn-primary btn-lg fs-4">Login</button>
+                <button type="submit" class="btn btn-primary btn-lg fs-4 mt-3">Login</button>
             </form>
         </div>
           
