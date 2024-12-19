@@ -13,7 +13,7 @@ body {
 
 /* Image styling */
 .game-card img {
-  height: 480px;
+  height: 520px;
   object-fit: cover;
 }
 
@@ -33,7 +33,18 @@ body {
 
 /* Button styling */
 .game-button {
-  width: 90%;
-  border-radius: 10px;
-  display: block;
+  padding: 10px;
+  width: 80%;
+  border-radius: 12px;
+  border: 1px solid black;
+  background-color: rgb(57, 241, 57);
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  font-size: 1.3rem;
+  text-align: center;
+
+  display: inline-block;
 }
