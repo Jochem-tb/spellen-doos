@@ -19,8 +19,7 @@ export class RegisterComponent implements OnInit {
     this.registerForm = this.fb.group(
       {
         name: ['', Validators.required],
-        // user needs to be 65 years old to register so we set the min age to 65 but check from date of birth
-        dateOfBirth: ['', [Validators.required, this.minAgeValidator(65)]],
+        dateOfBirth: ['', [Validators.required, this.minAgeValidator(13)]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', Validators.required],
@@ -30,9 +29,8 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Get current date in YYYY-MM-DD format
     const currentDate = new Date();
-    this.dateToday = currentDate.toISOString().split('T')[0]; // Format the date to YYYY-MM-DD
+    this.dateToday = currentDate.toISOString().split('T')[0];
     this.registerForm.patchValue({ dateOfBirth: this.dateToday });
   }
 
