@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { IUser, ProfilePictureEnum } from '@spellen-doos/shared/api';
 import { ProfileService } from './profile.service';
 import { DatePipe } from '@angular/common';
