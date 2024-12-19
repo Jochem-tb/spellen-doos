@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'lib-login',
@@ -11,7 +12,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) { 
+  constructor(private fb: FormBuilder, private router: Router) { 
     this.loginForm = this.fb.group({
           name: ['', Validators.required],
           dateOfBirth: ['', Validators.required],
@@ -23,6 +24,7 @@ export class LoginComponent {
   login() {
     console.log('login');
     // login logic
+    this.router.navigate(['/dashboard']);
   }
 
 }

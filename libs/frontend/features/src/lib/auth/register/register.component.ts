@@ -1,6 +1,7 @@
 // register.component.ts
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { REGISTER_STEPS } from '@spellen-doos/shared/api';
 
 @Component({
@@ -14,7 +15,7 @@ export class RegisterComponent {
   currentStepIndex = 0;
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
@@ -43,6 +44,7 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       console.log(this.registerForm.value);
       // Verwerk de registratie
+      this.router.navigate(['/dashboard']);
     }
   }
 }
