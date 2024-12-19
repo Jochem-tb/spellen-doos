@@ -1,0 +1,33 @@
+html,
+body {
+  overflow: hidden;
+  height: 100%;
+}
+
+i.bi-person-circle {
+  font-size: 5rem;
+  color: #6c757d;
+}
+
+.btn-outline-secondary {
+  border: 1px solid #6c757d;
+  color: #6c757d;
+}
+
+.border {
+  border-radius: 10px;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+}
+
+.bi-pencil {
+  cursor: pointer;
+  color: #6c757d;
+}
+
+.bi-question-circle {
+  color: #6c757d;
+}

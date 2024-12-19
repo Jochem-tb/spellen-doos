@@ -1,0 +1,45 @@
+<app-header></app-header>
+<div class="container mt-4">
+  <div class="row">
+    <!-- Left Section -->
+    <div class="col-md-4 text-center">
+      <div class="border p-4">
+        <i class="bi bi-person-circle fs-1"></i>
+        <button class="btn btn-secondary w-100 mt-3">Verander foto</button>
+      </div>
+    </div>
+    <!-- Right Section -->
+    <div class="col-md-8">
+      <div class="border p-4">
+        <!-- Editable Fields -->
+        <div
+          class="mb-3 d-flex align-items-center justify-content-between"
+          *ngFor="let field of editableFields"
+        >
+          <span>{{ field.label }}</span>
+          <ng-container *ngIf="!field.isEditing">
+            <span>{{ field.value }}</span>
+            <i
+              class="bi bi-pencil editable-icon"
+              (click)="startEditing(field)"
+            ></i>
+          </ng-container>
+          <ng-container *ngIf="field.isEditing">
+            <input
+              [type]="field.type"
+              [(ngModel)]="field.value"
+              (blur)="stopEditing(field)"
+              class="form-control"
+            />
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap Icons -->
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+  rel="stylesheet"
+/>
