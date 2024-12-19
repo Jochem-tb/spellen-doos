@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { IUser, UserRole } from '@spellen-doos/shared/api';
+import { IUser, ProfilePictureEnum, UserRole } from '@spellen-doos/shared/api';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +27,7 @@ export class ProfileService {
       dateOfBirth: new Date(),
       password: 'abc',
       role: UserRole.User,
+      profilePicture: ProfilePictureEnum.Pic1,
     };
 
     console.log('Returning mock user');

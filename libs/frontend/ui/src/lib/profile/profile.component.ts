@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IUser } from '@spellen-doos/shared/api';
+import { IUser, ProfilePictureEnum } from '@spellen-doos/shared/api';
 import { ProfileService } from './profile.service';
 import { DatePipe } from '@angular/common';
 
@@ -43,6 +43,24 @@ export class ProfileComponent implements OnInit {
       this.profile = profile;
       this.initializeFields();
     });
+  }
+
+  profilePictureOptions = Object.values(ProfilePictureEnum);
+
+  // Flag to toggle showing the picture options
+  showPictureOptions: boolean = false;
+
+  // Method to toggle showing the profile picture options
+  togglePictureOptions(): void {
+    this.showPictureOptions = !this.showPictureOptions;
+  }
+
+  // Method to select a profile picture
+  selectProfilePicture(picture: ProfilePictureEnum): void {
+    if (this.profile) {
+      this.profile.profilePicture = picture; // Set the new profile picture
+    }
+    this.showPictureOptions = false; // Close the options
   }
 
   initializeFields() {
