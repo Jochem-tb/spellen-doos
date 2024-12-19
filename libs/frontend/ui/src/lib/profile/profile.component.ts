@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IUser } from '@spellen-doos/shared/api';
 import { ProfileService } from './profile.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'lib-profile',
   standalone: false,
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
+  providers: [DatePipe]
 })
 export class ProfileComponent implements OnInit {
   profile: IUser | null = null;
@@ -26,22 +28,14 @@ export class ProfileComponent implements OnInit {
     },
     {
       label: 'Geboortedatum',
-      value: this.profile?.dateOfBirth,
+      value: this.formatDate(this.profile?.dateOfBirth),
       type: 'date',
       isEditing: false,
     },
     { label: 'Wachtwoord', value: '', type: 'password', isEditing: false },
   ];
 
-  startEditing(field: any) {
-    field.isEditing = true;
-  }
-
-  stopEditing(field: any) {
-    field.isEditing = false;
-  }
-
-  constructor(private profileService: ProfileService) {}
+  constructor(private profileService: ProfileService, private datePipe: DatePipe) {}
 
   ngOnInit(): void {
     console.log('ProfileComponent ngOnInit');
@@ -68,7 +62,7 @@ export class ProfileComponent implements OnInit {
       },
       {
         label: 'Geboortedatum',
-        value: this.profile?.dateOfBirth,
+        value: this.formatDate(this.profile?.dateOfBirth),
         type: 'date',
         isEditing: false,
       },
@@ -79,5 +73,20 @@ export class ProfileComponent implements OnInit {
         isEditing: false,
       },
     ];
+  }
+
+  formatDate(date: Date | undefined): string {
+    return date ? this.datePipe.transform(date, 'dd-MM-yyyy') || '' : '';
+  }
+
+  startEditing(field: any) {
+    field.isEditing = true;
+  }
+
+  stopEditing(field: any) {
+    if (field.type === 'date') {
+      field.value = this.formatDate(new Date(field.value));
+    }
+    field.isEditing = false;
   }
 }
