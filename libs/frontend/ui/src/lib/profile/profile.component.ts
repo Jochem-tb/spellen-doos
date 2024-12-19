@@ -16,19 +16,19 @@ export class ProfileComponent implements OnInit {
   editableFields = [
     {
       label: 'Naam',
-      value: this.profile?.firstName,
+      // value: this.profile?.firstName, // Values weggehaald, zodat bij het inladen er een leeg veld staat.
       type: 'text',
       isEditing: false,
     },
     {
       label: 'Email-adres',
-      value: this.profile?.email,
+      // value: this.profile?.email,
       type: 'text',
       isEditing: false,
     },
     {
       label: 'Geboortedatum',
-      value: this.formatDate(this.profile?.dateOfBirth),
+      // value: this.formatDate(this.profile?.dateOfBirth),
       type: 'date',
       isEditing: false,
     },
@@ -69,13 +69,13 @@ export class ProfileComponent implements OnInit {
       {
         label: 'Naam',
         value: this.profile?.firstName,
-        type: 'text',
+        type: 'email', // type = email, zodat je op enter kunt klikken om de edit aftesluiten (op ipad)
         isEditing: false,
       },
       {
         label: 'Email-adres',
         value: this.profile?.email,
-        type: 'text',
+        type: 'email',
         isEditing: false,
       },
       {
