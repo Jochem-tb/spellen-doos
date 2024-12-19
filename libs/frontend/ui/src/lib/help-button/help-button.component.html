@@ -1,0 +1,19 @@
+<!-- Floating Help Button -->
+<div class="help-button-container">
+    <button class="help-button" (click)="togglePopup()">
+      ?
+    </button>
+  </div>
+  
+  <!-- Popup -->
+  <div class="popup-overlay" *ngIf="isPopupOpen" (click)="togglePopup()"></div>
+  <div class="popup-content" *ngIf="isPopupOpen">
+    <div class="popup-header">
+      <h3>Help</h3>
+      <button class="close-button" (click)="togglePopup()">×</button>
+    </div>
+    <div class="popup-body">
+      <p>{{ helpContent }}</p>
+    </div>
+  </div>
+  
