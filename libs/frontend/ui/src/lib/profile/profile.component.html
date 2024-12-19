@@ -26,7 +26,7 @@
           *ngFor="let field of editableFields"
         >
           <label class="col-sm-4 fw-bold text-left fs-5">{{ field.label }}</label>
-          <div class="col-sm-7 fs-5">
+          <div class="col-sm-7 fs-5" (click)="startEditing(field)">
             <ng-container *ngIf="!field.isEditing">
               <span>{{ field.value }}</span>
             </ng-container>
