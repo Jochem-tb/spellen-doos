@@ -103,8 +103,20 @@ export class ProfileComponent implements OnInit {
 
   stopEditing(field: any) {
     if (field.type === 'date') {
-      field.value = this.formatDate(new Date(field.value));
+      const date = new Date(field.value);
+      if (this.isValidDate(date)) {
+        field.value = this.formatDate(date);
+      } else {
+        alert('De geboortedatum mag niet vandaag of later zijn.');
+        field.value = this.formatDate(this.profile?.dateOfBirth);
+      }
     }
     field.isEditing = false;
+  }
+
+  isValidDate(date: Date): boolean {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date < today;
   }
 }
