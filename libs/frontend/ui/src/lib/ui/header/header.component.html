@@ -10,9 +10,9 @@
       class="d-flex align-items-center justify-content-end position-relative"
       [routerLink]="['/profile']"
     >
-      <span class="me-3 fs-3">Anja</span>
+      <span class="me-3 fs-3">{{ profile?.firstName }}</span>
       <img
-        src="https://th.bing.com/th/id/OIP.Hq7kmHzkI0WjxYEWpX5uAwAAAA?pid=ImgDet&w=185&h=185&c=7&dpr=1,3"
+        src="{{ profile?.profilePicture }}"
         alt="mdo"
         width="57"
         height="57"
