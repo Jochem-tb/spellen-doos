@@ -117,11 +117,11 @@
         </div>
 
         <div class="buttons row justify-content-between">
-          <button type="button" (click)="previousStep()" class="btn col-4" [ngClass]="{ 'btn-primary': currentStepIndex !== 0, 'btn-outline-secondary': currentStepIndex === 0 }" [disabled]="currentStepIndex === 0">
+          <button type="button" (click)="previousStep()" class="btn col-4" [ngClass]="{ 'btn-info': currentStepIndex !== 0, 'btn-outline-secondary': currentStepIndex === 0 }">
             Vorige
           </button>
           
-          <button type="button" (click)="nextStep()" class="btn btn-primary col-4" *ngIf="currentStepIndex > 0 && currentStepIndex < 4" [disabled]="registerForm.get(steps[currentStepIndex].key)?.invalid">
+          <button type="button" (click)="nextStep()" class="btn btn-success col-4" *ngIf="currentStepIndex > 0 && currentStepIndex < 4" [disabled]="registerForm.get(steps[currentStepIndex].key)?.invalid">
             Volgende
           </button>
 
