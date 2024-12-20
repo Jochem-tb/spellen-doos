@@ -22,9 +22,9 @@
     z-index: 1100;
   }
   
-  .alert-box h2 {
+  .alert-box h1 {
     margin: 0 0 10px;
-    font-size: 1.5em;
+    font-size: 2em;
   }
   
   .alert-box p {
