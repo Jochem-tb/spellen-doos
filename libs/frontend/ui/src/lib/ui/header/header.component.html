@@ -1,0 +1,27 @@
+<header class="p-4 border-bottom">
+  <div class="container position-relative">
+    <div
+      class="text-center display-5 position-absolute top-50 start-50 translate-middle"
+      style="padding-bottom: 10px"
+    >
+      De Spellendoos
+    </div>
+    <div
+      class="d-flex align-items-center justify-content-end position-relative"
+    >
+      <div
+        class="d-flex align-items-center justify-content-end"
+        [routerLink]="['/profile']"
+      >
+        <span class="me-3 fs-3">{{ profile?.firstName }}</span>
+        <img
+          src="{{ profile?.profilePicture }}"
+          alt="mdo"
+          width="57"
+          height="57"
+          class="rounded-circle"
+        />
+      </div>
+    </div>
+  </div>
+</header>
