@@ -1,12 +1,15 @@
 <!-- Floating Help Button -->
 <div class="help-button-container">
-    <button class="help-button" (click)="togglePopup()">
-      ?
-    </button>
-  </div>
-  
-  <!-- Popup -->
-  <div class="popup-overlay" *ngIf="isPopupOpen" (click)="togglePopup()"></div>
+  <button
+    class="help-button p-5 fs-1 d-flex justify-content-center align-items-center full-height"
+    (click)="togglePopup()"
+  >
+    ?
+  </button>
+</div>
+
+<!-- Popup -->
+<div class="popup-overlay" *ngIf="isPopupOpen" (click)="togglePopup()">
   <div class="popup-content" *ngIf="isPopupOpen">
     <div class="popup-header">
       <h3>Help</h3>
@@ -14,6 +17,10 @@
     </div>
     <div class="popup-body">
       <p>{{ helpContent }}</p>
+      <hr />
+      <p>Tikkie tokoie</p>
+      <hr />
+      <p>Spellen Doos</p>
     </div>
   </div>
-  
+</div>
