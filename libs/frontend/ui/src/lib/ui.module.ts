@@ -6,9 +6,10 @@ import { RouterModule } from '@angular/router';
 import { DashBoardComponent } from './dashboard/dashboard.component';
 import { HeaderComponent } from './ui/header/header.component';
 import { ProfileComponent } from './profile/profile.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, HttpClientModule],
   declarations: [
     WelcomeComponent,
     DashBoardComponent,
