@@ -12,22 +12,19 @@ import { DatePipe } from '@angular/common';
 })
 export class ProfileComponent implements OnInit {
   profile: IUser | null = null;
-  editableFields = [
+  editableFields = [ // Loading screen
     {
       label: 'Naam',
-      // value: this.profile?.firstName, // Values weggehaald, zodat bij het inladen er een leeg veld staat.
       type: 'text',
       isEditing: false,
     },
     // {
     //   label: 'Email-adres',
-    //   // value: this.profile?.email,
     //   type: 'text',
     //   isEditing: false,
     // },
     {
       label: 'Geboortedatum',
-      // value: this.formatDate(this.profile?.dateOfBirth),
       type: 'date',
       isEditing: false,
     },
@@ -46,7 +43,6 @@ export class ProfileComponent implements OnInit {
 
   profilePictureOptions = Object.values(ProfilePictureEnum);
 
-  // Flag to toggle showing the picture options
   showPictureOptions: boolean = false;
 
   // Method to toggle showing the profile picture options
@@ -68,7 +64,7 @@ export class ProfileComponent implements OnInit {
       {
         label: 'Naam',
         value: this.profile?.firstName,
-        type: 'email', // type = email, zodat je op enter kunt klikken om de edit aftesluiten (op ipad)
+        type: 'email', // type = email, so you can press enter to save the value
         isEditing: false,
       },
       // {
@@ -93,18 +89,15 @@ export class ProfileComponent implements OnInit {
   }
 
   startEditing(field: any) {
-    if (!field.originalValue) {
-      field.originalValue = field.value; // Bewaar de originele waarde
-    }
-    // Geen wijzigingen maken aan field.value hier!
+    field.originalValue = field.value; // Saves the orginal value
     console.log('Start editing, current value:', field.value);
     field.isEditing = true;
   }
 
   stopEditing(field: any) {
-    const handlers: { [key: string]: (field: any) => void } = {
-      
-      date: (field) => {
+    const handlers: { [key: string]: (field: any) => void } = { // Object with handlers for each field type
+
+      date: (field) => { // Handler for the date field
         const date = new Date(field.value);
         if (this.isValidDate(date)) {
           field.value = this.formatDate(date);
@@ -114,7 +107,7 @@ export class ProfileComponent implements OnInit {
         }
       },
 
-      password: (field) => {
+      password: (field) => { // Handler for the password field
         const password = field.value;
         if (this.isValidPassword(password)) {
           field.value = this.formatPassword(password);
@@ -124,7 +117,7 @@ export class ProfileComponent implements OnInit {
         }
       },
 
-      email: (field) => {
+      email: (field) => { // Handler for the username field (email bcs type = email)
         const username = field.value;
         if (this.isValidUsername(username)) {
           field.value = username;
@@ -142,25 +135,25 @@ export class ProfileComponent implements OnInit {
     field.isEditing = false;
   }
 
-  isValidDate(date: Date): boolean {
+  isValidDate(date: Date): boolean { // validates the date (not today or later)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return date < today;
   } 
 
-  isValidPassword(password: string): boolean {
+  isValidPassword(password: string): boolean { // validates the password (at least 6 characters)
     return password.length >= 6;
   }
 
-  isValidUsername(username: string): boolean {
+  isValidUsername(username: string): boolean { // validates the username (at least 1 character)
     return username.length >= 1;
   }
 
-  formatDate(date: Date | undefined): string {
+  formatDate(date: Date | undefined): string { // formats the date (dd-MM-yyyy)
     return date ? this.datePipe.transform(date, 'dd-MM-yyyy') || '' : '';
   }
 
-  formatPassword(password: string): string {
+  formatPassword(password: string): string { // formats the password(* for every character)
     return '*'.repeat(password.length);
   }
 }
