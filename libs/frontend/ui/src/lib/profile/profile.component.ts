@@ -102,31 +102,43 @@ export class ProfileComponent implements OnInit {
   }
 
   stopEditing(field: any) {
-    if (field.type === 'date') {
-      const date = new Date(field.value);
-      if (this.isValidDate(date)) {
-        field.value = this.formatDate(date);
-      } else {
-        alert('De geboortedatum mag niet vandaag of later zijn.');
-        field.value = field.originalValue; // Reset the value
-      }
-    } else if (field.type === 'password') {
-      const password = field.value;
-      if (this.isValidPassword(password)) {
-        field.value = this.formatPassword(password);
-      } else {
-        alert('Het wachtwoord moet minimaal 6 tekens lang zijn.');
-        field.value = field.originalValue; // Reset the value
-      }
-    } else if (field.type === 'email') {
-      const username = field.value;
-      if (this.isValidUsername(username)) {
-        field.value = username;
-      } else {
-        alert('Een gebruikersnaam moet minimaal 1 teken hebben.');
-        field.value = field.originalValue; // Reset the value
-      }
+    const handlers: { [key: string]: (field: any) => void } = {
+      
+      date: (field) => {
+        const date = new Date(field.value);
+        if (this.isValidDate(date)) {
+          field.value = this.formatDate(date);
+        } else {
+          alert('De geboortedatum mag niet vandaag of later zijn.');
+          field.value = field.originalValue; // Reset the value
+        }
+      },
+
+      password: (field) => {
+        const password = field.value;
+        if (this.isValidPassword(password)) {
+          field.value = this.formatPassword(password);
+        } else {
+          alert('Het wachtwoord moet minimaal 6 tekens lang zijn.');
+          field.value = field.originalValue; // Reset the value
+        }
+      },
+
+      email: (field) => {
+        const username = field.value;
+        if (this.isValidUsername(username)) {
+          field.value = username;
+        } else {
+          alert('Een gebruikersnaam moet minimaal 1 teken hebben.');
+          field.value = field.originalValue; // Reset the value
+        }
+      },
+    };
+  
+    if (handlers[field.type]) {
+      handlers[field.type](field);
     }
+  
     field.isEditing = false;
   }
 
