@@ -114,6 +114,14 @@ export class ProfileComponent implements OnInit {
         alert('De geboortedatum mag niet vandaag of later zijn.');
         field.value = field.originalValue; // Reset the value
       }
+    } else if (field.type === 'password') {
+      const password = field.value;
+      if (this.isValidPassword(password)) {
+        field.value = this.formatPassword(password);
+      } else {
+        alert('Het wachtwoord moet minimaal 6 tekens lang zijn.');
+        field.value = field.originalValue; // Reset the value
+      }
     }
     field.isEditing = false;
   }
@@ -123,4 +131,11 @@ export class ProfileComponent implements OnInit {
     today.setHours(0, 0, 0, 0);
     return date < today;
   } 
+
+  isValidPassword(password: string): boolean {
+    return password.length >= 6;
+  }
+  formatPassword(password: string): string {
+    return '*'.repeat(password.length);
+  }
 }
