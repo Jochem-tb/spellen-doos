@@ -12,4 +12,4 @@
 </div>
 
 <router-outlet class="content"></router-outlet>
-<app-help-button></app-help-button>
+<app-help-button *ngIf="isLandscape"></app-help-button>
