@@ -4,7 +4,7 @@ export enum UserRole {
 }
 
 export interface IUser {
-  email: string;
+  // email: string;
   password: string;
   firstName: string;
   dateOfBirth: Date;
@@ -25,5 +25,6 @@ export enum ProfilePictureEnum {
 
 export type ICreateUser = Pick<
   IUser,
-  'email' | 'password' | 'firstName' | 'dateOfBirth' | 'role'
+  // 'email' | 
+  'password' | 'firstName' | 'dateOfBirth' | 'role'
 >;

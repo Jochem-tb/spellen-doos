@@ -23,7 +23,7 @@ export class ProfileService {
     // Mocking the real call
     const mockProfile: IUser = {
       firstName: 'John',
-      email: 'myOwnEmail',
+      // email: 'myOwnEmail',
       dateOfBirth: new Date(),
       password: 'abc',
       role: UserRole.User,

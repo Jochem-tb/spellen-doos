@@ -19,12 +19,12 @@ export class ProfileComponent implements OnInit {
       type: 'text',
       isEditing: false,
     },
-    {
-      label: 'Email-adres',
-      // value: this.profile?.email,
-      type: 'text',
-      isEditing: false,
-    },
+    // {
+    //   label: 'Email-adres',
+    //   // value: this.profile?.email,
+    //   type: 'text',
+    //   isEditing: false,
+    // },
     {
       label: 'Geboortedatum',
       // value: this.formatDate(this.profile?.dateOfBirth),
@@ -71,12 +71,12 @@ export class ProfileComponent implements OnInit {
         type: 'email', // type = email, zodat je op enter kunt klikken om de edit aftesluiten (op ipad)
         isEditing: false,
       },
-      {
-        label: 'Email-adres',
-        value: this.profile?.email,
-        type: 'email',
-        isEditing: false,
-      },
+      // {
+      //   label: 'Email-adres',
+      //   value: this.profile?.email,
+      //   type: 'email',
+      //   isEditing: false,
+      // },
       {
         label: 'Geboortedatum',
         value: this.formatDate(this.profile?.dateOfBirth),
