@@ -97,6 +97,11 @@ export class ProfileComponent implements OnInit {
   }
 
   startEditing(field: any) {
+    if (!field.originalValue) {
+      field.originalValue = field.value; // Bewaar de originele waarde
+    }
+    // Geen wijzigingen maken aan field.value hier!
+    console.log('Start editing, current value:', field.value);
     field.isEditing = true;
   }
 
@@ -107,7 +112,7 @@ export class ProfileComponent implements OnInit {
         field.value = this.formatDate(date);
       } else {
         alert('De geboortedatum mag niet vandaag of later zijn.');
-        field.value = this.formatDate(this.profile?.dateOfBirth);
+        field.value = field.originalValue; // Reset the value
       }
     }
     field.isEditing = false;
