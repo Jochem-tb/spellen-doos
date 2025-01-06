@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { AuthModule } from '@spellen-doos/auth';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
+import { UserModule } from '@spellen-doos/backend-user';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
       },
     }),
     AuthModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService],

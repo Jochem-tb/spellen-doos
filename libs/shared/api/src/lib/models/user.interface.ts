@@ -11,4 +11,10 @@ export interface IUser {
   role: UserRole;
 }
 
+export interface IUserIdentity {
+  email: string;
+  firstName: string;
+  dateOfBirth: Date;
+}
+
 export type ICreateUser = Pick<IUser, 'email' | 'password' | 'firstName' | 'dateOfBirth' | 'role'>;
