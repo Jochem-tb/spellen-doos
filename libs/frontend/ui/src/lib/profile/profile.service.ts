@@ -24,7 +24,7 @@ export class ProfileService {
     const mockProfile: IUser = {
       firstName: 'John',
       // email: 'myOwnEmail',
-      dateOfBirth: new Date(),
+      dateOfBirth: new Date("1973-03-20"),
       password: 'abc',
       role: UserRole.User,
       profilePicture: ProfilePictureEnum.Pic1,
