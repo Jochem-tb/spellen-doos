@@ -85,15 +85,11 @@ export class ProfileComponent implements OnInit {
       },
       {
         label: 'Wachtwoord',
-        value: '*********',
+        value: '******',
         type: 'password',
         isEditing: false,
       },
     ];
-  }
-
-  formatDate(date: Date | undefined): string {
-    return date ? this.datePipe.transform(date, 'dd-MM-yyyy') || '' : '';
   }
 
   startEditing(field: any) {
@@ -122,6 +118,14 @@ export class ProfileComponent implements OnInit {
         alert('Het wachtwoord moet minimaal 6 tekens lang zijn.');
         field.value = field.originalValue; // Reset the value
       }
+    } else if (field.type === 'email') {
+      const username = field.value;
+      if (this.isValidUsername(username)) {
+        field.value = username;
+      } else {
+        alert('Een gebruikersnaam moet minimaal 1 teken hebben.');
+        field.value = field.originalValue; // Reset the value
+      }
     }
     field.isEditing = false;
   }
@@ -135,6 +139,15 @@ export class ProfileComponent implements OnInit {
   isValidPassword(password: string): boolean {
     return password.length >= 6;
   }
+
+  isValidUsername(username: string): boolean {
+    return username.length >= 1;
+  }
+
+  formatDate(date: Date | undefined): string {
+    return date ? this.datePipe.transform(date, 'dd-MM-yyyy') || '' : '';
+  }
+
   formatPassword(password: string): string {
     return '*'.repeat(password.length);
   }
