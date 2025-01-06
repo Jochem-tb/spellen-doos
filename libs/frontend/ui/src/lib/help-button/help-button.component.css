@@ -14,7 +14,7 @@
   width: 50px;
   height: 50px;
   font-size: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
 
@@ -35,9 +35,12 @@
 
 .popup-content {
   position: fixed;
-  bottom: 80px;
+  bottom: 120px;
   right: 20px;
-  width: 300px;
+  width: 48vw;
+  max-width: 700px;
+  max-height: 70vh;
+  height: 70vh;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -63,6 +66,18 @@
 }
 
 .popup-body {
-  padding: 10px;
-  font-size: 14px;
+  padding: 16px;
+  font-size: 20px;
+  overflow: auto;
+  max-height: calc(80vh - 50px); /* 50px is the height of the header */
+}
+
+/* Ensure text content is properly spaced and scrollable */
+.popup-body p {
+  margin-bottom: 16px; /* Space between paragraphs */
+}
+
+/* HR styling */
+.popup-body hr {
+  margin: 16px 0; /* Space around HR */
 }

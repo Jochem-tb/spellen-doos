@@ -16,11 +16,8 @@
       <button class="close-button" (click)="togglePopup()">×</button>
     </div>
     <div class="popup-body">
-      <p>{{ helpContent }}</p>
-      <hr />
-      <p>Tikkie tokoie</p>
-      <hr />
-      <p>Spellen Doos</p>
+      <!-- Render raw HTML content -->
+      <div [innerHTML]="helpContent"></div>
     </div>
   </div>
 </div>
