@@ -43,10 +43,10 @@ export class ProfileService {
 
   getProfileById(id: string): Observable<IUser> {
     console.log('getUserById aanroepen');
-    return this.http.get<IUser>('http://localhost:3000' + `/api/user/${id}`).pipe(
+    return this.http.get<{ results: IUser }>('http://localhost:3000' + `/api/user/${id}`).pipe(
       map((response) => {
         console.log('Response received:', response);
-        return response;
+        return response.results;
       })
     );
   }
