@@ -63,7 +63,7 @@ export class ProfileComponent implements OnInit {
     this.editableFields = [
       {
         label: 'Naam',
-        value: this.profile?.firstName,
+        value: this.profile?.userName,
         type: 'email', // type = email, so you can press enter to save the value
         isEditing: false,
       },

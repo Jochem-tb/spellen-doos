@@ -1,5 +1,4 @@
 import { Route } from '@angular/router';
-import { WelcomeComponent } from '@spellen-doos/ui';
 import { LoginComponent, RegisterComponent } from '@spellen-doos/features';
 import {
   WelcomeComponent,

@@ -30,6 +30,7 @@ import { HttpClientModule } from '@angular/common/http';
     RouterModule.forRoot(appRoutes),
     UiModule,
     HttpClientModule,
+    FeatureModule,
     HelpButtonComponent,
   ],
   providers: [],
