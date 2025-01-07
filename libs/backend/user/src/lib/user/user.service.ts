@@ -20,6 +20,10 @@ export class UserService {
         });
     }
 
+    async findById(id: string): Promise<User | undefined | null> {
+        return this.userModel.findById(id);
+    }
+
     async updateUser(id: string, user: User): Promise<User | null> {
         return this.userModel.findByIdAndUpdate(id, user, { new: true });
     }
