@@ -14,7 +14,6 @@ export interface IUser {
 
 export interface IUserIdentity {
   userName: string;
-  token: string;
 }
 
 export type ICreateUser = Pick<IUser, 'password' | 'userName' | 'dateOfBirth' | 'role' | 'profilePicture'>;

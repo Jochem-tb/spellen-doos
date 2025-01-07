@@ -58,8 +58,7 @@ export class AuthService {
           }
   
           const user: IUserIdentity = {
-            userName: userName,
-            token: token,
+            userName: userName
           };
   
           this.saveUserToLocalStorage(user, token);
