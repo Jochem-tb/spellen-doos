@@ -19,7 +19,7 @@ export interface IUserIdentity {
   dateOfBirth: Date;
 }
 
-export type ICreateUser = Pick<IUser, 'email' | 'password' | 'userName' | 'dateOfBirth' | 'role' | 'profilePicture'>;
+export type ICreateUser = Pick<IUser, 'email' | 'password' | 'userName' | 'dateOfBirth' | 'role'>;
 
 export enum ProfilePictureEnum {
   Pic1 = '/profileImg/giraffe.jpg',

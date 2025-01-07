@@ -1,5 +1,6 @@
 <div class="bg-dark text-dark frosted-background" 
-     style="background-image: url('https://cdn.discordapp.com/attachments/1318178971803717632/1318912803112747048/zdenek-machacek-l1vfj2y13tk-unsplash_1.jpg?ex=67640cc4&is=6762bb44&hm=94636f1db2647d82e892ce6c0836ce0cddbfcd506fe39200a18e3cbc84658cdc&'); 
+     style="
+          background-image: url('https://cdn.discordapp.com/attachments/1318178971803717632/1318912803112747048/zdenek-machacek-l1vfj2y13tk-unsplash_1.jpg?ex=67640cc4&is=6762bb44&hm=94636f1db2647d82e892ce6c0836ce0cddbfcd506fe39200a18e3cbc84658cdc&'); 
           background-size: cover; 
           background-position: center; 
           opacity: 0.99;">
@@ -9,10 +10,10 @@
             <h1 class="text-center">Login</h1>
         </div>
         <div class="login-body">
-            <form [formGroup]="loginForm" (ngSubmit)="login()">   
+            <form [formGroup]="loginForm" (ngSubmit)="login()">
 
                 <div class="form-group mb-3">
-                    <label for="email" class="fs-3">Gebruikersnaam</label>
+                    <label for="email" class="fs-3">Email</label>
                     <input 
                         type="email"
                         class="form-control" 
@@ -51,7 +52,6 @@
 
                 <button type="submit" class="btn btn-primary btn-lg fs-4 mt-3" [disabled]="loginForm.invalid">Login</button>
             </form>
-            <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
         </div>
-    </div>
+          
 </div>
