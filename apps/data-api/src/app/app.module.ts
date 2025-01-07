@@ -5,6 +5,7 @@ import { AuthModule } from '@spellen-doos/auth';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from '@spellen-doos/backend-user';
+import { HelpButtonModule } from '@spellen-doos/backend/helpButton';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { UserModule } from '@spellen-doos/backend-user';
       },
     }),
     AuthModule,
-    UserModule
+    UserModule,
+    HelpButtonModule,
   ],
   controllers: [AppController],
   providers: [AppService],
