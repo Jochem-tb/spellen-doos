@@ -37,7 +37,7 @@ export class User implements IUser {
     default: ProfilePictureEnum.Pic1,
     type: String
   })
-  profilePicture!: ProfilePictureEnum.Pic1;
+  profilePicture!: ProfilePictureEnum;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
