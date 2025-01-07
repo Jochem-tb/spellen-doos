@@ -8,8 +8,8 @@ import { IHelpButton } from '@spellen-doos/shared/api';
 })
 export class HelpContentService {
   //TODO: Replace with actual API URL
-  // private apiUrl = 'http://localhost:3000/api/helpButton';
-  private apiUrl = 'http://192.168.178.204:3000/api/helpButton';
+  private apiUrl = 'http://localhost:3000/api/helpButton';
+  // private apiUrl = 'http://192.168.178.204:3000/api/helpButton';  //IP voor computer/laptop met localhost API
 
   constructor(private http: HttpClient) {}
   getHelpContent(route: string): Observable<IHelpButton> {
