@@ -1,4 +1,6 @@
 import { Route } from '@angular/router';
+import { WelcomeComponent } from '@spellen-doos/ui';
+import { LoginComponent, RegisterComponent } from '@spellen-doos/features';
 import {
   WelcomeComponent,
   DashBoardComponent,
@@ -10,6 +12,7 @@ export const appRoutes: Route[] = [
   { path: 'welcome', component: WelcomeComponent },
   { path: 'dashboard', component: DashBoardComponent },
   { path: 'profile', component: ProfileComponent },
-
-  { path: '**', redirectTo: 'welcome' },
+    { path: 'register', component: RegisterComponent },
+    { path: 'login', component: LoginComponent },
+    { path: '**', redirectTo: 'welcome' }
 ];

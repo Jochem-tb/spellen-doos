@@ -15,12 +15,16 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@spellen-doos/auth": ["libs/backend/auth/src/index.ts"],
+      "@spellen-doos/backend-user": ["libs/backend/user/src/index.ts"],
       "@spellen-doos/backend/dto": ["libs/backend/dto/src/index.ts"],
       "@spellen-doos/backend/featurs": ["libs/backend/features/src/index.ts"],
       "@spellen-doos/common": ["libs/frontend/common/src/index.ts"],
       "@spellen-doos/features": ["libs/frontend/features/src/index.ts"],
       "@spellen-doos/shared/api": ["libs/shared/api/src/index.ts"],
-      "@spellen-doos/ui": ["libs/frontend/ui/src/index.ts"]
+      "@spellen-doos/uesr": ["libs/backend/uesr/src/index.ts"],
+      "@spellen-doos/ui": ["libs/frontend/ui/src/index.ts"],
+      "@spellen-doos/user": ["libs/backend/user/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

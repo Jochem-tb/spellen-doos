@@ -1,0 +1,65 @@
+.register-container {
+  width: 500px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .buttons {
+    margin: 0 20px;
+  }
+  
+  html, body {
+    overflow: hidden;
+    height: 100%;
+  }
+  
+  
+.frosted-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: inherit;
+  filter: blur(15px);
+  z-index: -1;
+}
+
+.invalid-feedback-container {
+  height: 20px; 
+  visibility: hidden;
+}
+
+.invalid-feedback-container.visible {
+  visibility: visible;
+}
+
+.invalid-feedback-container p {
+  margin: 0;
+  color: red;
+  font-size: large;
+}
+
+.invalid-feedback {
+  margin-bottom: 20px;
+}
