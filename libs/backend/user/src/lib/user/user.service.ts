@@ -19,4 +19,8 @@ export class UserService {
             userName
         });
     }
+
+    async updateUser(user: User): Promise<User | null> {
+        return this.userModel.findByIdAndUpdate(user);
+    }
 }
