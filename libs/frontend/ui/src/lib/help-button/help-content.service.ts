@@ -1,20 +1,30 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { IHelpButton } from '@spellen-doos/shared/api';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HelpContentService {
   //TODO: Replace with actual API URL
-  private apiUrl = 'PLACEHOLDER_API_URL';
+  // private apiUrl = 'http://localhost:3000/api/helpButton';
+  private apiUrl = 'http://192.168.178.204:3000/api/helpButton';
 
   constructor(private http: HttpClient) {}
-
-  getHelpContent(route: string): Observable<string> {
-    return this.http.get<string>(
-      `${this.apiUrl}?route=${encodeURIComponent(route)}`
-    );
+  getHelpContent(route: string): Observable<IHelpButton> {
+    return this.http
+      .get<{ results: IHelpButton }>(
+        `${this.apiUrl}?route=${encodeURIComponent(route)}`
+      )
+      .pipe(
+        map((response) => {
+          if (!response.results) {
+            throw new Error('No content found for the specified route');
+          }
+          return response.results;
+        })
+      );
   }
 
   getHelpContentMock(route: string): Observable<string> {

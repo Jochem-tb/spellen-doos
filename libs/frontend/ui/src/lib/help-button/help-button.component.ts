@@ -13,6 +13,7 @@ import { HelpContentService } from './help-content.service';
 export class HelpButtonComponent implements OnInit {
   isPopupOpen = false;
   helpContent = 'Aan het laden...'; // Default content while loading
+  title = 'Help'; // Default content while loading
 
   constructor(
     private router: Router,
@@ -35,12 +36,15 @@ export class HelpButtonComponent implements OnInit {
 
   loadHelpContent(url: string) {
     this.helpContent = '<h5>Aan het laden...</h5>'; // Set loading state
-    this.helpContentService.getHelpContentMock(url).subscribe({
-      next: (content) => (this.helpContent = content),
+    this.helpContentService.getHelpContent(url).subscribe({
+      next: (results) => (
+        (this.helpContent = results.content), (this.title = results.title)
+      ),
       error: (err) => {
         console.error('Failed to load help content', err);
         this.helpContent =
           '<h3>Oeps.</h3><h5>Er is iets fout gegaan. Probeer het later nog een keer.</h5>';
+        this.title = 'Help';
       },
     });
   }
