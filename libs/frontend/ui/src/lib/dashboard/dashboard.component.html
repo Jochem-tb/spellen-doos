@@ -1,0 +1,35 @@
+<app-header></app-header>
+<div
+  style="
+    background-image: url('/backgrounds/dash-background.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    opacity: 0.99;
+  "
+>
+  <div class="container p-5">
+    <div class="card-body p-3">
+      <div
+        *ngIf="availableGames && availableGames.length > 0"
+        class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
+      >
+        <div class="col gx-5" *ngFor="let game of availableGames">
+          <div class="card shadow-sm game-card">
+            <img
+              [src]="game.cardImage"
+              class="card-img-top"
+              alt="{{ game.name }}'s profile picture"
+            />
+            <div class="card-overlay">
+              <h5 class="card-title text-center p-2 fs-3">{{ game.name }}</h5>
+            </div>
+            <div class="card-body p-0">
+              <a class="btn btn-succes game-button">Speel</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

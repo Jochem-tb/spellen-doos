@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +8,19 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'spellen-doos';
+
+  isLandscape: boolean = true;
+
+  constructor() {
+    this.checkOrientation(); // Initial check
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkOrientation();
+  }
+
+  private checkOrientation() {
+    this.isLandscape = window.innerWidth > window.innerHeight;
+  }
 }
