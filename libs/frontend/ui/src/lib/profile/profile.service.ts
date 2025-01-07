@@ -50,4 +50,14 @@ export class ProfileService {
       })
     );
   }
+
+  updateProfile(id: string, user: IUser): Observable<IUser> {
+    console.log('updateProfile aanroepen :', user);
+    return this.http.put<{ results: IUser }>('http://localhost:3000' + `/api/user/${id}`, user).pipe(
+      map((response) => {
+        console.log('Response received:', response);
+        return response.results;
+      })
+    );
+  }
 }
