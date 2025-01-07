@@ -35,10 +35,18 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('ProfileComponent ngOnInit');
-    this.profileService.getProfile().subscribe((profile) => {
+
+    const userId = '677d0b6ccc31fe87a70d8190'; // Dummy ID
+    this.profileService.getProfileById(userId).subscribe((profile) => {
       this.profile = profile;
       this.initializeFields();
     });
+
+    // this.profileService.getProfile().subscribe((profile) => {
+    //   this.profile = profile;
+    //   this.initializeFields();
+    // });
+
   }
 
   profilePictureOptions = Object.values(ProfilePictureEnum);
