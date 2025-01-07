@@ -12,7 +12,7 @@ export class CreateUserDto implements ICreateUser {
 
     @IsString()
     @IsNotEmpty()
-    firstName!: string;
+    userName!: string;
 
     @IsNotEmpty()
     dateOfBirth!: Date;

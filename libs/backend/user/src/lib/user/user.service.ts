@@ -14,9 +14,9 @@ export class UserService {
         return this.userModel.find().exec();
     }
 
-    async findByFirstname(firstName: string): Promise<User | undefined | null> {
+    async findByFirstname(userName: string): Promise<User | undefined | null> {
         return this.userModel.findOne({
-            firstName
+            userName
         });
     }
 }

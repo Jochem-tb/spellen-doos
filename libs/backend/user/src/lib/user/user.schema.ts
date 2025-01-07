@@ -20,7 +20,7 @@ export class User implements IUser {
     required: true,
     unique: true,
   })
-  firstName!: string;
+  userName!: string;
 
   @Prop({ required: true })
   dateOfBirth!: Date;

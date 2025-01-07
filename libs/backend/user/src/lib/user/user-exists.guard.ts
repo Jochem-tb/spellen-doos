@@ -12,9 +12,9 @@ export class UserExistsGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const { firstName } = request.body;
+    const { userName } = request.body;
 
-    const foundUser = await this.userService.findByFirstname(firstName);
+    const foundUser = await this.userService.findByFirstname(userName);
     Logger.debug(foundUser);
 
     if (foundUser) {

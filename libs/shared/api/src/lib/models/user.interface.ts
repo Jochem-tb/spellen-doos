@@ -6,15 +6,15 @@ export enum UserRole {
 export interface IUser {
   email: string;
   password: string;
-  firstName: string;
+  userName: string;
   dateOfBirth: Date;
   role: UserRole;
 }
 
 export interface IUserIdentity {
   email: string;
-  firstName: string;
+  userName: string;
   dateOfBirth: Date;
 }
 
-export type ICreateUser = Pick<IUser, 'email' | 'password' | 'firstName' | 'dateOfBirth' | 'role'>;
+export type ICreateUser = Pick<IUser, 'email' | 'password' | 'userName' | 'dateOfBirth' | 'role'>;

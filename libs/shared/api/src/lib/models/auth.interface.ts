@@ -4,7 +4,7 @@ export interface IUserCredentials {
 }
 
 export interface IUserRegestration extends IUserCredentials {
-    firstName: string;
+    userName: string;
     dateOfBirth: Date;
 }
 
