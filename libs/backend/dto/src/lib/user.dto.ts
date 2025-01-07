@@ -1,4 +1,4 @@
-import { ICreateUser, UserRole } from "@spellen-doos/shared/api";
+import { ICreateUser, ProfilePictureEnum, UserRole } from "@spellen-doos/shared/api";
 import { IsEmail, IsNotEmpty, IsString, IsOptional } from "class-validator";
 
 export class CreateUserDto implements ICreateUser {
@@ -19,5 +19,9 @@ export class CreateUserDto implements ICreateUser {
 
     @IsString()
     @IsNotEmpty()
-    role!: UserRole;
+    role: UserRole = UserRole.User;
+
+    @IsString()
+    @IsNotEmpty()
+    profilePicture: ProfilePictureEnum = ProfilePictureEnum.Pic1;
 }
