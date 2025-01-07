@@ -18,5 +18,9 @@ export class DashBoardComponent implements OnInit {
     this.dashBoardService.getGames().subscribe((games) => {
       this.availableGames = games;
     });
+
+    this.dashBoardService.getGamesApi().subscribe((games) => {
+      console.log('games from api:' + games);
+    });
   }
 }
