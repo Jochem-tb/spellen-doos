@@ -17,5 +17,4 @@ export class UserController {
     async updateUser(user: IUser): Promise<IUser | null> {
         return this.userService.updateUser(user);
     }
-
 }
