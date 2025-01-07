@@ -25,7 +25,11 @@ export class User implements IUser {
   @Prop({ required: true })
   dateOfBirth!: Date;
 
-  @Prop({ required: true, default: UserRole.User, type: String })
+  @Prop({ 
+    required: false, 
+    default: UserRole.User, 
+    type: String 
+  })
   role: UserRole = UserRole.User;
 
   @Prop({

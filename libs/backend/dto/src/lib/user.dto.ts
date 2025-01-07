@@ -19,9 +19,9 @@ export class CreateUserDto implements ICreateUser {
 
     @IsString()
     @IsNotEmpty()
-    role!: UserRole;
+    role: UserRole = UserRole.User;
 
     @IsString()
     @IsNotEmpty()
-    profilePicture!: ProfilePictureEnum;
+    profilePicture: ProfilePictureEnum = ProfilePictureEnum.Pic1;
 }
