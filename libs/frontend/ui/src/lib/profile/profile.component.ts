@@ -12,17 +12,15 @@ import { DatePipe } from '@angular/common';
 })
 export class ProfileComponent implements OnInit {
   profile: IUser | null = null;
+
+  private userId: string = '677d0b6ccc31fe87a70d8190'; // Dummy ID
+
   editableFields = [ // Loading screen
     {
       label: 'Naam',
       type: 'text',
       isEditing: false,
     },
-    // {
-    //   label: 'Email-adres',
-    //   type: 'text',
-    //   isEditing: false,
-    // },
     {
       label: 'Geboortedatum',
       type: 'date',
@@ -35,18 +33,10 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('ProfileComponent ngOnInit');
-
-    const userId = '677d0b6ccc31fe87a70d8190'; // Dummy ID
-    this.profileService.getProfileById(userId).subscribe((profile) => {
+    this.profileService.getProfileById(this.userId).subscribe((profile) => {
       this.profile = profile;
       this.initializeFields();
     });
-
-    // this.profileService.getProfile().subscribe((profile) => {
-    //   this.profile = profile;
-    //   this.initializeFields();
-    // });
-
   }
 
   profilePictureOptions = Object.values(ProfilePictureEnum);
@@ -75,21 +65,15 @@ export class ProfileComponent implements OnInit {
         type: 'email', // type = email, so you can press enter to save the value
         isEditing: false,
       },
-      // {
-      //   label: 'Email-adres',
-      //   value: this.profile?.email,
-      //   type: 'email',
-      //   isEditing: false,
-      // },
       {
         label: 'Geboortedatum',
-        value: this.formatDate(this.profile?.dateOfBirth),
+        value: this.formatDate(this.profile!.dateOfBirth),
         type: 'date',
         isEditing: false,
       },
       {
         label: 'Wachtwoord',
-        value: '******',
+        value: this.formatPassword(this.profile!.password),
         type: 'password',
         isEditing: false,
       },
@@ -97,11 +81,11 @@ export class ProfileComponent implements OnInit {
   }
 
   startEditing(field: any) {
-    field.originalValue = field.value; // Saves the orginal value
+    field.originalValue = field.value; // Saves the original value
     console.log('Start editing, current value:', field.value);
     field.isEditing = true;
   }
-
+  
   stopEditing(field: any) {
     const handlers: { [key: string]: (field: any) => void } = { // Object with handlers for each field type
 
