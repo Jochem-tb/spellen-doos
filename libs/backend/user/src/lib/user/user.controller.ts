@@ -1,6 +1,6 @@
 import { Controller } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { Get, Put } from "@nestjs/common";
+import { Get, Put, Param, Body } from "@nestjs/common";
 import { IUser } from "@spellen-doos/shared/api";
 
 
@@ -13,8 +13,8 @@ export class UserController {
         return this.userService.findAll();
     }
 
-    @Put()
-    async updateUser(user: IUser): Promise<IUser | null> {
-        return this.userService.updateUser(user);
+    @Put(':id')
+    async updateUser(@Param('id') id: string, @Body() user: IUser): Promise<IUser | null> {
+        return this.userService.updateUser(id, user);
     }
 }
