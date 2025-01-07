@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { REGISTER_STEPS } from '@spellen-doos/shared/api';
+import { UserExistsGuard } from '@spellen-doos/backend-user';
+import { CreateUserDto } from '@spellen-doos/backend/dto';
+import { ProfilePictureEnum, REGISTER_STEPS, UserRole } from '@spellen-doos/shared/api';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-register',
@@ -12,15 +16,19 @@ import { REGISTER_STEPS } from '@spellen-doos/shared/api';
 export class RegisterComponent implements OnInit {
   steps = REGISTER_STEPS;
   currentStepIndex = 0;
+  subs: Subscription[] = [];
   registerForm: FormGroup;
   dateToday: string | undefined;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router,
+    private authService: AuthService
+  ) {
     this.registerForm = this.fb.group(
       {
-        name: ['', Validators.required],
+        userName: ['', Validators.required],
         dateOfBirth: ['', [Validators.required, this.minAgeValidator(13)]],
-        email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', Validators.required],
       },
@@ -80,8 +88,27 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     if (this.registerForm.valid) {
       console.log(this.registerForm.value);
-      // Process registration
-      this.router.navigate(['/dashboard']);
+      const { userName, dateOfBirth, password } = this.registerForm.value;
+
+      const userDto: CreateUserDto = {
+        userName,
+        dateOfBirth,
+        password,
+        profilePicture: ProfilePictureEnum.Pic1,
+        role: UserRole.User,
+      };
+
+      this.subs.push(
+        this.authService.register(userDto).subscribe({
+          next: () => {
+            this.router.navigate(['/login']);
+          },
+          error: (err) => {
+            console.error(err);
+          },
+        })
+      )
+
     }
   }
 }

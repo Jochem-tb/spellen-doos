@@ -9,11 +9,6 @@ export class User implements IUser {
   @Prop({
     required: true,
   })
-  email!: string;
-
-  @Prop({
-    required: true,
-  })
   password!: string;
 
   @Prop({
@@ -38,6 +33,13 @@ export class User implements IUser {
     type: String
   })
   profilePicture!: ProfilePictureEnum.Pic1;
+
+  @Prop({
+    required: false,
+    default: false,
+    type: String
+  })
+  token!: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

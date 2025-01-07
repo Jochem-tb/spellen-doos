@@ -14,7 +14,7 @@ export class UserExistsGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const { userName } = request.body;
 
-    const foundUser = await this.userService.findByFirstname(userName);
+    const foundUser = await this.userService.findByUsername(userName);
     Logger.debug(foundUser);
 
     if (foundUser) {

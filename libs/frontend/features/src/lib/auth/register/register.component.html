@@ -23,21 +23,21 @@
             </div>
           }
 
-          @else if (currentStep.key === 'name') {
-            <label for="name" class="fs-4">Naam</label>
+          @else if (currentStep.key === 'userName') {
+            <label for="userName" class="fs-4">Gebruikersnaam</label>
               <input 
-                  id="name" 
-                  formControlName="name" 
+                  id="userName" 
+                  formControlName="userName" 
                   type="text"
                   [ngClass]="{ 
-                  'is-invalid': registerForm.get('name')?.touched && registerForm.get('name')?.invalid
+                  'is-invalid': registerForm.get('userName')?.touched && registerForm.get('userName')?.invalid
                   }"
               />
               <div 
                   class="invalid-feedback-container  mb-5"
-                  [class.visible]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+                  [class.visible]="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched"
                 >
-                  <p id="name-invalid">Voer alstublieft een valide naam in</p>
+                  <p id="userName-invalid">Voer alstublieft een valide gebruikersnaam in</p>
               </div>
           }
 
@@ -56,24 +56,6 @@
                   [class.visible]="registerForm.get('dateOfBirth')?.invalid && registerForm.get('dateOfBirth')?.touched"
                 >
                   <p id="dateOfBirth-invalid">Voer alstublieft een valide geboortedatum in (Min. 65 jaar)</p>
-              </div>
-          }
-
-          @else if (currentStep.key === 'email') {
-            <label for="email" class="fs-4">E-mail</label>
-              <input 
-                  id="email" 
-                  formControlName="email" 
-                  type="email"
-                  [ngClass]="{ 
-                  'is-invalid': registerForm.get('email')?.touched && registerForm.get('email')?.invalid
-                  }"
-              />
-              <div 
-                  class="invalid-feedback-container mb-5"
-                  [class.visible]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
-                >
-                  <p id="email-invalid">Voer alstublieft een valide e-mailadres in</p>
               </div>
           }
 
@@ -121,7 +103,7 @@
             Vorige
           </button>
           
-          <button type="button" (click)="nextStep()" class="btn btn-success col-4" *ngIf="currentStepIndex > 0 && currentStepIndex < 4" [disabled]="registerForm.get(steps[currentStepIndex].key)?.invalid">
+          <button type="button" (click)="nextStep()" class="btn btn-success col-4" *ngIf="currentStepIndex > 0 && currentStepIndex < 3" [disabled]="registerForm.get(steps[currentStepIndex].key)?.invalid">
             Volgende
           </button>
 

@@ -12,21 +12,21 @@
             <form [formGroup]="loginForm" (ngSubmit)="login()">   
 
                 <div class="form-group mb-3">
-                    <label for="email" class="fs-3">Gebruikersnaam</label>
+                    <label for="userName" class="fs-3">Gebruikersnaam</label>
                     <input 
-                        type="email"
+                        type="text"
                         class="form-control" 
-                        id="email" 
-                        formControlName="email" 
-                        placeholder="Enter email"
+                        id="userName" 
+                        formControlName="userName" 
+                        placeholder="Enter username"
                         [ngClass]="{ 
-                            'is-invalid': loginForm.get('email')?.touched && loginForm.get('email')?.invalid
+                            'is-invalid': loginForm.get('userName')?.touched && loginForm.get('userName')?.invalid
                             }"
                         >
                     <div 
                         class="invalid-feedback-container"
-                        [class.visible]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-                        <p id="email-invalid">Voer een geldig e-mailadres in.</p>
+                        [class.visible]="loginForm.get('userName')?.invalid && loginForm.get('userName')?.touched">
+                        <p id="userName-invalid">Voer een geldig gebruikersnaam in.</p>
                     </div>
                 </div>
 

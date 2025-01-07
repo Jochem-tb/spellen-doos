@@ -2,10 +2,6 @@ import { ICreateUser, ProfilePictureEnum, UserRole } from "@spellen-doos/shared/
 import { IsEmail, IsNotEmpty, IsString, IsOptional } from "class-validator";
 
 export class CreateUserDto implements ICreateUser {
-    @IsEmail()
-    @IsNotEmpty()
-    email!: string;
-
     @IsString()
     @IsNotEmpty()
     password!: string;
