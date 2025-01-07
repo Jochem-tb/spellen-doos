@@ -48,8 +48,11 @@
                             <p id="password-invalid">Voer een geldig wachtwoord in van minimaal 8 karakters.</p>
                         </div>
                     </div>
-
-                <button type="submit" class="btn btn-primary btn-lg fs-4 mt-3" [disabled]="loginForm.invalid">Login</button>
+                
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-danger btn-lg fs-4 mt-3" routerLink="/">terug</button>
+                    <button type="submit" class="btn btn-primary btn-lg fs-4 mt-3" [disabled]="loginForm.invalid">Login</button>
+                </div>
             </form>
             <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
         </div>

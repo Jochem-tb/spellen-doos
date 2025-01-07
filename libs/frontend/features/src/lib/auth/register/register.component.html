@@ -99,18 +99,27 @@
         </div>
 
         <div class="buttons row justify-content-between">
-          <button type="button" (click)="previousStep()" class="btn col-4" [ngClass]="{ 'btn-info': currentStepIndex !== 0, 'btn-outline-secondary': currentStepIndex === 0 }">
+          <!-- back button to home -->
+          <button type="button" (click)="previousStep()" class="btn btn-danger col-4" *ngIf="currentStepIndex === 0" routerLink="/">
+            Terug
+          </button>
+
+          <!-- back button to previous step -->
+          <button type="button" (click)="previousStep()" class="btn btn-info col-4" *ngIf="currentStepIndex > 0">
             Vorige
           </button>
           
-          <button type="button" (click)="nextStep()" class="btn btn-success col-4" *ngIf="currentStepIndex > 0 && currentStepIndex < 3" [disabled]="registerForm.get(steps[currentStepIndex].key)?.invalid">
+          <!-- next button to next step -->
+          <button type="button" (click)="nextStep()" class="btn btn-success col-4" *ngIf="currentStepIndex > 0 && currentStepIndex < steps.length - 1" [disabled]="registerForm.get(steps[currentStepIndex].key)?.invalid">
             Volgende
           </button>
 
+          <!-- start button -->
           <button type="button" (click)="nextStep()" class="btn btn-primary col-4" *ngIf="currentStepIndex === 0">
             Starten
           </button>
         
+          <!-- register button -->
           <button type="submit" class="btn btn-success col-4" *ngIf="currentStepIndex === steps.length - 1" [disabled]="registerForm.invalid">
             Registreer
           </button>
