@@ -6,7 +6,11 @@ import {
   HelpButtonDocument,
   HelpButton,
 } from './helpButton.schema';
-import { IHelpButton, IHelpButtonCreate } from '@spellen-doos/shared/api';
+import {
+  IHelpButton,
+  IHelpButtonCreate,
+  IHelpButtonUpdate,
+} from '@spellen-doos/shared/api';
 import { Observable, from, map } from 'rxjs';
 
 @Injectable({})
@@ -33,5 +37,20 @@ export class HelpButtonService {
     helpButton.updatedAt = new Date();
     const createdItem = this.helpButtonModel.create(helpButton);
     return createdItem;
+  }
+
+  async update(helpButton: IHelpButtonUpdate): Promise<IHelpButton> {
+    this.logger.log(`Update helpButton with route:  ${helpButton.route}`);
+    helpButton.updatedAt = new Date();
+    const updatedItem = await this.helpButtonModel
+      .findOneAndUpdate({ route: helpButton.route }, helpButton, { new: true })
+      .exec();
+    if (!updatedItem) {
+      throw new HttpException(
+        `HelpButton with route: ${helpButton.route} not found`,
+        404
+      );
+    }
+    return updatedItem;
   }
 }

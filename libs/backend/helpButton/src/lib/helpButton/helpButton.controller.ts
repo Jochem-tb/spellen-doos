@@ -19,6 +19,7 @@ import {
 } from '@spellen-doos/shared/api';
 
 import { HelpButton } from './helpButton.schema';
+import { RouteExistsGuard } from './route-exists.guard';
 
 @Controller('helpButton')
 export class HelpButtonController {
@@ -31,8 +32,14 @@ export class HelpButtonController {
     return this.helpButtonService.getContentByRoute(route);
   }
 
+  @UseGuards(RouteExistsGuard)
   @Post()
   create(@Body() helpButton: IHelpButtonCreate): Promise<IHelpButton> {
     return this.helpButtonService.create(helpButton);
+  }
+
+  @Put()
+  update(@Body() helpButton: IHelpButtonCreate): Promise<IHelpButton> {
+    return this.helpButtonService.update(helpButton);
   }
 }

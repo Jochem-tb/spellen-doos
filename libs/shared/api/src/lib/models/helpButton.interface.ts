@@ -8,3 +8,4 @@ export interface IHelpButton {
 }
 
 export type IHelpButtonCreate = Omit<IHelpButton, '_id'>;
+export type IHelpButtonUpdate = Omit<IHelpButton, '_id'>;
