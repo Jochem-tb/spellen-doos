@@ -12,7 +12,7 @@ export class AuthController {
     @Public()
     @Post("login")
     async login(@Body() credentials: IUserCredentials): Promise<IUserIdentity> {
-        Logger.log(`Login attempt for user ${credentials.email}`);
+        Logger.log(`Login attempt for user ${credentials.userName}`);
         return this.authService.login(credentials);
     }
 

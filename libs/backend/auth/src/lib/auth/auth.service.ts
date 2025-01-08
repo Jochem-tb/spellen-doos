@@ -15,7 +15,7 @@ export class AuthService {
     async login(credentials: IUserCredentials): Promise<IUserIdentity> {
         return await this.userModel
             .findOne({ 
-                email: credentials.email 
+                userName: credentials.userName 
             })
             .select("+password")
             .exec()
@@ -26,13 +26,12 @@ export class AuthService {
                     };
                     return {
                         _id: user._id,
-                        email: user.email,
                         userName: user.userName,
                         dateOfBirth: user.dateOfBirth,
                         token: this.jwtService.sign(payload),
                     };
                 } else {
-                    const errMsg = "Email not found or password invalid";
+                    const errMsg = "Username not found or password invalid";
                     throw new UnauthorizedException(errMsg);
                 }
             })
