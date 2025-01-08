@@ -1,6 +1,5 @@
-import { Controller } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { Get, Put, Param, Body } from "@nestjs/common";
+import { Get, Put, Param, Body, Controller } from "@nestjs/common";
 import { IUser } from "@spellen-doos/shared/api";
 
 

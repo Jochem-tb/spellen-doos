@@ -68,6 +68,11 @@ export class ProfileComponent implements OnInit {
   }
 
   startEditing(field: any) {
+    if (field.type === 'password') {
+      console.log('test');
+      field.value = this.profile!.password; // Set the value to the actual password
+      console.log('password value:', field.value);
+    }
     field.originalValue = field.value; // Saves the original value
     console.log('Start editing, current value:', field.value);
     field.isEditing = true;
@@ -94,10 +99,12 @@ export class ProfileComponent implements OnInit {
 
       password: (field) => { // Handler for the password field
         const password = field.value;
+        console.log('password read:' + password);
         if (this.isValidPassword(password)) {
           field.value = this.formatPassword(password);
 
           if (this.profile) { // Update the profile
+            console.log('Updating password' + password);
             this.profile.password = password;
             this.updateProfileApi();
           }
