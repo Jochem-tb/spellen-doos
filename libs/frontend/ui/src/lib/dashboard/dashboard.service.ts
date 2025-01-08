@@ -28,6 +28,7 @@ export class DashBoardService {
     // Mocking the real call
     const mockGames: IGame[] = [
       {
+        _id: '1',
         name: 'Steen papier schaar  ',
         shortDescription: 'Dit spelletje kent iedereen natuulrijk',
         longDescription: 'Dit is een langere beschrijving van het spel',
@@ -38,6 +39,7 @@ export class DashBoardService {
         minPlayers: 2,
       },
       {
+        _id: '2',
         name: 'Bingo!!',
         shortDescription: 'Wie kent het niet, bingo!',
         cardImage:
@@ -46,6 +48,7 @@ export class DashBoardService {
         minPlayers: 1,
       },
       {
+        _id: '3',
         name: 'Memory',
         shortDescription: 'Een spelletje voor jong en oud',
         cardImage:

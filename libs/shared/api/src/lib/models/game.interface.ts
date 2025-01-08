@@ -1,4 +1,5 @@
 export interface IGame {
+  _id: string;
   name: string;
   shortDescription?: string;
   longDescription?: string;
@@ -23,4 +24,4 @@ export type ICreateGame = Pick<
   | 'maxPlayers'
   | 'minPlayers'
 >;
-export type IUpdateGame = Partial<Omit<IGame, 'id'>>;
+export type IUpdateGame = Partial<Omit<IGame, '_id'>>;
