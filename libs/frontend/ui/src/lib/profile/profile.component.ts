@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IUser, ProfilePictureEnum } from '@spellen-doos/shared/api';
+import { IUser, ProfilePictureEnum, UserRole } from '@spellen-doos/shared/api';
 import { ProfileService } from './profile.service';
 import { DatePipe } from '@angular/common';
 
@@ -43,19 +43,6 @@ export class ProfileComponent implements OnInit {
 
   showPictureOptions: boolean = false;
 
-  // Method to toggle showing the profile picture options
-  togglePictureOptions(): void {
-    this.showPictureOptions = !this.showPictureOptions;
-  }
-
-  // Method to select a profile picture
-  selectProfilePicture(picture: ProfilePictureEnum): void {
-    if (this.profile) {
-      this.profile.profilePicture = picture; // Set the new profile picture
-    }
-    this.showPictureOptions = false; // Close the options
-  }
-
   initializeFields() {
     console.log('ProfileComponent initializeFields');
     this.editableFields = [
@@ -85,14 +72,20 @@ export class ProfileComponent implements OnInit {
     console.log('Start editing, current value:', field.value);
     field.isEditing = true;
   }
-  
+
   stopEditing(field: any) {
     const handlers: { [key: string]: (field: any) => void } = { // Object with handlers for each field type
 
       date: (field) => { // Handler for the date field
         const date = new Date(field.value);
         if (this.isValidDate(date)) {
-          field.value = this.formatDate(date);
+            field.value = this.formatDate(date);
+
+            if (this.profile) { // Update the profile
+            this.profile.dateOfBirth = date;
+            this.updateProfileApi();
+            }
+            
         } else {
           alert('De geboortedatum mag niet vandaag of later zijn.');
           field.value = field.originalValue; // Reset the value
@@ -103,6 +96,11 @@ export class ProfileComponent implements OnInit {
         const password = field.value;
         if (this.isValidPassword(password)) {
           field.value = this.formatPassword(password);
+
+          if (this.profile) { // Update the profile
+            this.profile.password = password;
+            this.updateProfileApi();
+          }
         } else {
           alert('Het wachtwoord moet minimaal 6 tekens lang zijn.');
           field.value = field.originalValue; // Reset the value
@@ -113,6 +111,12 @@ export class ProfileComponent implements OnInit {
         const username = field.value;
         if (this.isValidUsername(username)) {
           field.value = username;
+
+          if (this.profile) { // Update the profile
+            this.profile.userName = username;
+            this.updateProfileApi();
+          }
+          
         } else {
           alert('Een gebruikersnaam moet minimaal 1 teken hebben.');
           field.value = field.originalValue; // Reset the value
@@ -127,6 +131,25 @@ export class ProfileComponent implements OnInit {
     field.isEditing = false;
   }
 
+  // Method to toggle showing the profile picture options
+  togglePictureOptions(): void {
+    this.showPictureOptions = !this.showPictureOptions;
+  }
+  // Method to select a profile picture
+  selectProfilePicture(picture: ProfilePictureEnum): void {
+    if (this.profile) {
+      this.profile.profilePicture = picture; // Set the new profile picture
+        this.updateProfileApi();
+    }
+    this.showPictureOptions = false; // Close the options
+  }
+
+
+  updateProfileApi(){ // Method to update the profile
+    this.profileService.updateProfile(this.userId, this.profile!);
+  }
+
+
   isValidDate(date: Date): boolean { // validates the date (not today or later)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -140,6 +163,7 @@ export class ProfileComponent implements OnInit {
   isValidUsername(username: string): boolean { // validates the username (at least 1 character)
     return username.length >= 1;
   }
+  
 
   formatDate(date: Date | undefined): string { // formats the date (dd-MM-yyyy)
     return date ? this.datePipe.transform(date, 'dd-MM-yyyy') || '' : '';
