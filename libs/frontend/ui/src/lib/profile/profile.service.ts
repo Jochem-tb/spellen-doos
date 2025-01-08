@@ -14,33 +14,6 @@ export class ProfileService {
     console.log('Service constructor called');
   }
 
-  getProfile(): Observable<IUser> { // Old method, used in header
-    console.log('Service getProfile called');
-    if (this.loggedUser != null) {
-      console.log('Returning cached user');
-      return of(this.loggedUser);
-    }
-
-    // Mocking the real call
-    const mockProfile: IUser = {
-      userName: 'John',
-      email: 'myOwnEmail',
-      dateOfBirth: new Date("1973-03-20"),
-      password: 'abc',
-      role: UserRole.User,
-      profilePicture: ProfilePictureEnum.Pic1,
-    };
-
-    console.log('Returning mock user');
-    return of(mockProfile).pipe(
-      map((profile) => {
-        this.loggedUser = profile;
-        return profile;
-      }),
-      delay(300)
-    );
-  }
-
   getProfileById(id: string): Observable<IUser> {
     console.log('getUserById called');
     return this.http.get<{ results: IUser }>('http://localhost:3000' + `/api/user/${id}`).pipe(
