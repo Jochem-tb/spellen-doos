@@ -25,7 +25,11 @@
               <h5 class="card-title text-center p-2 fs-3">{{ game.name }}</h5>
             </div>
             <div class="card-body p-0">
-              <a class="btn btn-succes game-button">Speel</a>
+              <a
+                [routerLink]="['/waitScreen']"
+                class="btn btn-succes game-button"
+                >Speel</a
+              >
             </div>
           </div>
         </div>
