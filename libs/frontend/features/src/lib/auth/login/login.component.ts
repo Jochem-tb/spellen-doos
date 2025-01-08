@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'lib-login',
@@ -13,25 +14,41 @@ import { AuthService } from '../auth.service';
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string | null = null;
+  private subs: Subscription[] = [];
+  submitted: boolean | undefined;
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) { 
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService
+  ) {
     this.loginForm = this.fb.group({
-          email: ['', [Validators.required, Validators.email]],
-          password: ['', [Validators.required, Validators.minLength(8)]],
-        });
+      userName: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+    });
   }
-  
+
   login() {
-    const { email, password } = this.loginForm.value;
-    this.authService.login(email, password).subscribe(
-      response => {
-        console.log('Login successful', response);
-        this.router.navigate(['/dashboard']);
-      },
-      error => {
-        console.error('Login failed', error);
-        this.errorMessage = error.error.message || 'Login failed. Please try again.';
-      }
-    );
+    if (this.loginForm.valid) {
+      this.submitted = true;
+      const { userName, password } = this.loginForm.value;
+
+      this.subs.push(
+        this.authService.login(userName, password).subscribe(
+          (user) => {
+            if (user) {
+              this.router.navigate(['/dashboard']);
+            } else {
+              this.errorMessage = 'Invalid username or password';
+            }
+          },
+          (error) => {
+            this.errorMessage = error.message;
+          }
+        )
+      );
+    } else {
+      this.errorMessage = 'Please enter a valid username and password';
+    }
   }
 }

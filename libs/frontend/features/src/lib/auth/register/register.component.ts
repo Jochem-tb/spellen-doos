@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { CreateUserDto } from '@spellen-doos/backend/dto';
 import { REGISTER_STEPS } from '@spellen-doos/shared/api';
+import { catchError, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -15,12 +18,15 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   dateToday: string | undefined;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router,
+    private authService: AuthService
+  ) {
     this.registerForm = this.fb.group(
       {
-        name: ['', Validators.required],
+        userName: ['', [Validators.required], [this.asyncUsernameValidator()]],
         dateOfBirth: ['', [Validators.required, this.minAgeValidator(13)]],
-        email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', Validators.required],
       },
@@ -78,10 +84,36 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.registerForm.valid) {
-      console.log(this.registerForm.value);
-      // Process registration
-      this.router.navigate(['/dashboard']);
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
     }
+
+    const registerDto: CreateUserDto = this.registerForm.value;
+    this.authService.register(registerDto).subscribe(
+      (response) => {
+        console.log('Registration successful', response);
+        this.router.navigate(['/login']);
+      },
+      (error) => {
+        console.error('Registration failed', error);
+      }
+    );
+  }
+
+  asyncUsernameValidator(): (control: AbstractControl) => Observable<{ [key: string]: any } | null> {
+    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+      console.log('Checking username existence for:', control.value);
+      return this.authService.checkUserNameExistence(control.value).pipe(
+        map((exists: boolean) => {
+          console.log('Username existence check response:', exists);
+          return exists ? { usernameTaken: true } : null;
+        }),
+        catchError((error) => {
+          console.error('Error checking username existence:', error);
+          return of(null);
+        })
+      );
+    };
   }
 }
