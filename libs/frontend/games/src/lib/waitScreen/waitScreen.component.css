@@ -23,9 +23,9 @@
 .background-wrapper {
   position: relative;
   width: 90%; /* Adjust width as needed */
-  height: 70vh;
-  max-width: 100vh; /* Limit the width for portrait shape */
-  aspect-ratio: 3/1; /* Portrait rectangle shape */
+  height: 80vh;
+  max-width: 110vh; /* Limit the width for portrait shape */
+  aspect-ratio: 4/1; /* Portrait rectangle shape */
   background: url('/backgrounds/waitScreenBackgroundGif.gif') no-repeat center
     center;
   background-size: cover;
@@ -43,41 +43,103 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   color: #fff; /* White text for contrast */
   font-weight: bold;
   text-align: center;
   padding: 1rem;
-  background: rgba(0, 0, 0, 0.5); /* Transparent black background */
+  background: rgba(0, 0, 0, 0.4); /* Transparent black background */
   border-radius: 10px; /* Match the border radius of the rectangle */
 }
 
 /* Styles for inner elements */
 .title {
   font-family: 'Arial', sans-serif;
+  margin-top: 40px;
   font-size: 2.5rem;
   font-weight: bold;
 }
 
-.background-image {
-  max-width: 100%;
-  max-height: 60vh;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.timer {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 15vh;
 }
-
 .timer span {
-  color: #343a40; /* Dark gray text */
-  font-size: 2.5rem;
+  position: relative;
+  bottom: 110px;
+  text-align: center;
+  color: #fff; /* Dark gray text */
+  font-size: 3rem;
   font-weight: 600;
 }
 
+.leave-box {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 15vh;
+}
+
 .leave-button {
+  position: relative;
+  padding: 1.2rem 1.5rem;
   transition: transform 0.2s ease-in-out, background-color 0.3s;
 }
 
 .leave-button:hover {
   transform: scale(1.05);
   background-color: #c82333 !important; /* Slightly darker red on hover */
+}
+
+/* Styles for the tips */
+.overlay-tips {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  width: 50%;
+}
+
+.tip {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: #fff; /* White text */
+  text-align: center;
+  padding: 1rem;
+  border-radius: 10px;
+  margin: 0 1rem;
+}
+
+.overlay-numPlayerQueue {
+  position: absolute;
+  right: 0;
+  padding: 0px;
+  margin: 0px;
+  /* display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto; */
+  /* width: 50%; */
+}
+
+.numPlayer {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: #fff; /* White text */
+  text-align: center;
+  padding: 1rem;
+  /* border-radius: 10px; */
+  margin: 0 1rem;
 }

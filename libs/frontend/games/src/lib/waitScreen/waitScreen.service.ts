@@ -8,7 +8,7 @@ import { IUser, ProfilePictureEnum, UserRole } from '@spellen-doos/shared/api';
 })
 export class WaitScreenService {
   private loggedUser: IUser | null = null;
-  private NUM_PLAYER_QUEUE: number = 46;
+  private NUM_PLAYER_QUEUE: number = 2;
 
   constructor() {
     console.log('Service constructor aanroepen');
@@ -17,7 +17,7 @@ export class WaitScreenService {
   signIntoQueue(): Observable<boolean> {
     //TODO: Implement real call
     console.log('Service signIntoQueue aanroepen');
-    return of(true).pipe(delay(300));
+    return of(true).pipe(delay(3000));
   }
 
   signOutOfQueue(): Observable<boolean> {
