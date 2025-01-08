@@ -27,7 +27,8 @@
       "@spellen-doos/user": ["libs/backend/user/src/index.ts"],
       "@spellen-doos/backend/helpButton": [
         "libs/backend/helpButton/src/index.ts"
-      ]
+      ],
+      "@spellen-doos/frontend/games": ["libs/frontend/games/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
