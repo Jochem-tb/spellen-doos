@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { map, tap, catchError, switchMap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CreateUserDto } from '../../../../../backend/dto/src';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +15,7 @@ export class AuthService {
   public currentUser$ = new BehaviorSubject<IUserIdentity | null>(null);
   private readonly CURRENT_USER = 'currentuser';
   private readonly TOKEN_KEY = 'token';
-    httpService: any;
-
+  httpService: any;
 
   constructor(
     private http: HttpClient,
@@ -46,31 +46,30 @@ export class AuthService {
       .get<{ results: { exists: boolean } }>(`http://localhost:3000/api/user/check-username/${userName}`)
       .pipe(map((response) => response.results.exists));
   }
-  
 
-
-  login(userName: string, password: string): Observable<IUserIdentity | null> {
+  async login(userName: string, password: string): Promise<Observable<IUserIdentity | null>> {
     console.log(`login at http://localhost:3000/api/auth/login`);
-  
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     return this.http
       .post<{ results: { _id: string; token: string; userName: string; profileImgUrl: string } }>(
         `http://localhost:3000/api/auth/login`,
-        { userName, password },
+        { userName, password: hashedPassword },
         { headers: this.headers }
       )
       .pipe(
         map((response) => {
           console.log('API Response:', response);
           const { token, userName } = response.results;
-  
+
           if (!token || !userName) {
             throw new Error('Token or user details missing from response');
           }
-  
+
           const user: IUserIdentity = {
             userName: userName
           };
-  
+
           this.saveUserToLocalStorage(user, token);
           this.currentUser$.next(user);
           return user;
@@ -81,76 +80,51 @@ export class AuthService {
         })
       );
   }
-  
 
-  register(dto: CreateUserDto): Observable<User | null> {
+  async register(dto: CreateUserDto): Promise<Observable<User | null>> {
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    const registerDto = { ...dto, password: hashedPassword };
+
     return this.http
       .post<{ results: User & { token: string } }>(
         `http://localhost:3000/api/auth/register`,
-        dto
+        registerDto
       )
       .pipe(
         map((response) => {
           const { results } = response;
           const { ...user } = results;
-  
+
           console.log('User:', user);
-  
+
           // Update the current user
           this.currentUser$.next(user as User);
-  
+
           console.log('Registration successful:', user);
           return user as User;
         }),
         catchError((error: any) => {
           console.error('Registration error:', error);
-  
+
           // Pass null back to the caller to indicate failure
           return of(null);
         })
       );
   }
-  
-// validateToken() tijdelijk
-validateToken() {
+
+  // validateToken() tijdelijk
+  validateToken() {
     console.log('Validate token aangeroepen');
     return of(null);
-}
-
-//   validateToken(): Observable<User | null> {
-//     const token = localStorage.getItem(this.TOKEN_KEY);
-//     if (!token) {
-//       this.logout();
-//       return of(null);
-//     }
-
-//     const httpOptions = {
-//       headers: new HttpHeaders({
-//         'Content-Type': 'application/json',
-//         Authorization: `Bearer ${token}`,
-//       }),
-//     };
-
-//     return this.http.get<User>(`http://localhost:3000/api/auth/profile`, httpOptions).pipe(
-//       tap((validatedUser) => {
-//         console.log('Token is valid.');
-//         this.currentUser$.next(validatedUser);
-//       }),
-//       catchError((error) => {
-//         console.error('Token validation failed:', error);
-//         this.logout();
-//         return of(null);
-//       })
-//     );
-//   }
+  }
 
   logout(): void {
     console.log('Logging out...');
     localStorage.removeItem(this.CURRENT_USER);
     localStorage.removeItem(this.TOKEN_KEY);
-    
+
     this.currentUser$.next(null);
-    
+
     this.router.navigate(['/login']).then((success) => {
       if (success) {
         console.log('Logged out successfully.');
@@ -163,19 +137,19 @@ validateToken() {
   getUserFromLocalStorage(): Observable<User | null> {
     const userJson = localStorage.getItem(this.CURRENT_USER);
     if (!userJson) {
-        return of(null);
+      return of(null);
     }
     try {
-        const user: IUser = JSON.parse(userJson);
-        const mappedUser: User = {
-            ...user,
-            profilePicture: ProfilePictureEnum.Pic1,
-            token: localStorage.getItem(this.TOKEN_KEY) || '',
-        };
-        return of(mappedUser);
+      const user: IUser = JSON.parse(userJson);
+      const mappedUser: User = {
+        ...user,
+        profilePicture: ProfilePictureEnum.Pic1,
+        token: localStorage.getItem(this.TOKEN_KEY) || '',
+      };
+      return of(mappedUser);
     } catch (error) {
-        console.error('Error parsing user from localStorage:', error);
-        return of(null);
+      console.error('Error parsing user from localStorage:', error);
+      return of(null);
     }
   }
 
@@ -184,10 +158,9 @@ validateToken() {
       console.error('User or token is undefined');
       return;
     }
-  
+
     console.log('Saving user to localStorage:', user);
     localStorage.setItem('currentuser', JSON.stringify(user));
     localStorage.setItem('token', token);
   }
-
 }

@@ -21,6 +21,7 @@ export class AuthController {
     @Post("register")
     async register(@Body() registerDto: CreateUserDto) {
         Logger.log(`Register attempt for new user`);
+        Logger.log(registerDto);
         return this.authService.register(registerDto);
     }
 }
