@@ -7,7 +7,7 @@ import { UiModule } from '@spellen-doos/ui';
 import { FeatureModule } from '@spellen-doos/features';
 import { HelpButtonComponent } from '@spellen-doos/ui';
 import { HttpClientModule } from '@angular/common/http';
-import { WaitScreenComponent } from '@spellen-doos/frontend/games';
+import { WaitScreenComponent, GamesModule } from '@spellen-doos/frontend/games';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,7 +19,7 @@ import { WaitScreenComponent } from '@spellen-doos/frontend/games';
     FeatureModule,
     HelpButtonComponent,
 
-    WaitScreenComponent,
+    GamesModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

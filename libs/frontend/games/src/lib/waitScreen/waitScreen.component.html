@@ -1,1 +1,25 @@
-<p>WaitScreen works !!!</p>
+<div class="fullscreen-layout">
+  <!-- Header Section -->
+  <app-header></app-header>
+
+  <!-- Wait Screen Content -->
+  <div class="waitscreen-container">
+    <!-- Background with Overlayed Text -->
+    <div class="background-wrapper">
+      <div class="text-overlay">
+        <h1 class="title">{{ gameTitle }} Wachtrij</h1>
+        <div class="timer">
+          <span class="display-4">{{ displayTime }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leave Button -->
+    <button
+      class="btn btn-danger btn-lg px-5 leave-button"
+      [routerLink]="['/dashboard']"
+    >
+      Wachtrij verlaten
+    </button>
+  </div>
+</div>

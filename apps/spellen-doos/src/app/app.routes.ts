@@ -22,7 +22,7 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'waitScreen',
+    path: 'waitScreen/:id',
     component: WaitScreenComponent,
     canActivate: [AuthGuard],
   },
