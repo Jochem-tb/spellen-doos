@@ -189,4 +189,5 @@ validateToken() {
     localStorage.setItem('currentuser', JSON.stringify(user));
     localStorage.setItem('token', token);
   }
+
 }

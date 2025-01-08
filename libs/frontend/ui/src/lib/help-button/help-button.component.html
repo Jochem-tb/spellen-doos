@@ -12,7 +12,7 @@
 <div class="popup-overlay" *ngIf="isPopupOpen" (click)="togglePopup()">
   <div class="popup-content" *ngIf="isPopupOpen">
     <div class="popup-header">
-      <h3>Help</h3>
+      <h3>{{ title }}</h3>
       <button class="close-button" (click)="togglePopup()">×</button>
     </div>
     <div class="popup-body">
