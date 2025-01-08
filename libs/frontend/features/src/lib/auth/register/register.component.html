@@ -33,6 +33,7 @@
           id="userName"
           formControlName="userName"
           type="text"
+          placeholder="e.g. janjansen"
           [ngClass]="{
             'is-invalid':
               registerForm.get('userName')?.touched &&
@@ -88,6 +89,7 @@
           id="password"
           formControlName="password"
           type="password"
+          placeholder="Wachtwoord"
           [ngClass]="{
             'is-invalid':
               registerForm.get('password')?.touched &&
@@ -116,6 +118,7 @@
           id="confirmPassword"
           formControlName="confirmPassword"
           type="password"
+          placeholder="Bevestig Wachtwoord"
           [ngClass]="{
             'is-invalid':
               registerForm.get('confirmPassword')?.touched &&

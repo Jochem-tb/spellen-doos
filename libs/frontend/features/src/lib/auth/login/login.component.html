@@ -18,7 +18,7 @@
                         class="form-control" 
                         id="userName" 
                         formControlName="userName" 
-                        placeholder="Enter username"
+                        placeholder="e.g. janjansen"
                         [ngClass]="{ 
                             'is-invalid': loginForm.get('userName')?.touched && loginForm.get('userName')?.invalid
                             }"
@@ -31,13 +31,13 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="password" class="fs-3">Wachtwoord</label>
+                    <label for="Wachtwoord" class="fs-3">Wachtwoord</label>
                     <input 
                         type="password" 
                         class="form-control" 
                         id="password" 
                         formControlName="password" 
-                        placeholder="Password"
+                        placeholder="Wachtwoord"
                         [ngClass]="{ 
                             'is-invalid': loginForm.get('password')?.touched && loginForm.get('password')?.invalid
                             }"
