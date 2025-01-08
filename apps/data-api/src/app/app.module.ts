@@ -5,6 +5,7 @@ import { AuthModule } from '@spellen-doos/auth';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from '@spellen-doos/backend-user';
+import { GameModule } from '@spellen-doos/backend-game';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { UserModule } from '@spellen-doos/backend-user';
       },
     }),
     AuthModule,
-    UserModule
+    UserModule,
+    GameModule
   ],
   controllers: [AppController],
   providers: [AppService],

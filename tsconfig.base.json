@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@spellen-doos/auth": ["libs/backend/auth/src/index.ts"],
+      "@spellen-doos/backend-game": ["libs/backend/game/src/index.ts"],
       "@spellen-doos/backend-user": ["libs/backend/user/src/index.ts"],
       "@spellen-doos/backend/dto": ["libs/backend/dto/src/index.ts"],
       "@spellen-doos/backend/featurs": ["libs/backend/features/src/index.ts"],
