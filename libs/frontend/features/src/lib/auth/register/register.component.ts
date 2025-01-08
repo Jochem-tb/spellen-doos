@@ -5,6 +5,7 @@ import { AuthService } from '../auth.service';
 import { CreateUserDto } from '@spellen-doos/backend/dto';
 import { REGISTER_STEPS } from '@spellen-doos/shared/api';
 import { catchError, map, Observable, of } from 'rxjs';
+import * as bcrypt from 'bcryptjs';
 
 @Component({
   selector: 'app-register',
@@ -83,14 +84,17 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
     }
 
     const registerDto: CreateUserDto = this.registerForm.value;
-    this.authService.register(registerDto).subscribe(
+    const hashedPassword = await bcrypt.hash(registerDto.password, 10);
+    registerDto.password = hashedPassword;
+
+    (await this.authService.register(registerDto)).subscribe(
       (response) => {
         console.log('Registration successful', response);
         this.router.navigate(['/login']);

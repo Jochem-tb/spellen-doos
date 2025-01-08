@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { Subscription } from 'rxjs';
+import * as bcrypt from 'bcryptjs';
 
 @Component({
   selector: 'lib-login',
@@ -28,13 +29,14 @@ export class LoginComponent {
     });
   }
 
-  login() {
+  async login() {
     if (this.loginForm.valid) {
       this.submitted = true;
       const { userName, password } = this.loginForm.value;
+      const hashedPassword = await bcrypt.hash(password, 10);
 
       this.subs.push(
-        this.authService.login(userName, password).subscribe(
+        (await this.authService.login(userName, hashedPassword)).subscribe(
           (user) => {
             if (user) {
               this.router.navigate(['/dashboard']);

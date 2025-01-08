@@ -4,7 +4,6 @@ import { Model } from "mongoose";
 import { IUser, IUserCredentials, IUserIdentity, UserRole } from "@spellen-doos/shared/api";
 import { UserDocument } from "@spellen-doos/backend-user";
 import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -20,8 +19,8 @@ export class AuthService {
             })
             .select("+password")
             .exec()
-            .then(async (user) => {
-                if (user && await bcrypt.compare(credentials.password, user.password)) {
+            .then((user) => {
+                if (user) {
                     const payload = { 
                         user_id: user._id 
                     };
@@ -42,8 +41,6 @@ export class AuthService {
     }
 
     async register(user: IUser): Promise<IUser> {
-        const salt = await bcrypt.genSalt();
-        user.password = await bcrypt.hash(user.password, salt);
         return this.userModel.create(user);
     }
 }
