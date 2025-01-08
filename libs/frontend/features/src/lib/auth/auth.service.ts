@@ -14,6 +14,7 @@ export class AuthService {
   public currentUser$ = new BehaviorSubject<IUserIdentity | null>(null);
   private readonly CURRENT_USER = 'currentuser';
   private readonly TOKEN_KEY = 'token';
+    httpService: any;
 
 
   constructor(
@@ -38,6 +39,15 @@ export class AuthService {
   }
 
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+  checkUserNameExistence(userName: string): Observable<any> {
+    console.log(`Checking username existence at /api/user/check-username/${userName}`);
+    return this.http
+      .get<{ results: { exists: boolean } }>(`http://localhost:3000/api/user/check-username/${userName}`)
+      .pipe(map((response) => response.results.exists));
+  }
+  
+
 
   login(userName: string, password: string): Observable<IUserIdentity | null> {
     console.log(`login at http://localhost:3000/api/auth/login`);

@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserExistsGuard } from '@spellen-doos/backend-user';
-import { CreateUserDto } from '@spellen-doos/backend/dto';
-import { ProfilePictureEnum, REGISTER_STEPS, UserRole } from '@spellen-doos/shared/api';
-import { Subscription } from 'rxjs';
 import { AuthService } from '../auth.service';
+import { CreateUserDto } from '@spellen-doos/backend/dto';
+import { REGISTER_STEPS } from '@spellen-doos/shared/api';
+import { catchError, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +15,6 @@ import { AuthService } from '../auth.service';
 export class RegisterComponent implements OnInit {
   steps = REGISTER_STEPS;
   currentStepIndex = 0;
-  subs: Subscription[] = [];
   registerForm: FormGroup;
   dateToday: string | undefined;
 
@@ -27,7 +25,7 @@ export class RegisterComponent implements OnInit {
   ) {
     this.registerForm = this.fb.group(
       {
-        userName: ['', Validators.required],
+        userName: ['', [Validators.required], [this.asyncUsernameValidator()]],
         dateOfBirth: ['', [Validators.required, this.minAgeValidator(13)]],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', Validators.required],
@@ -86,29 +84,36 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.registerForm.valid) {
-      console.log(this.registerForm.value);
-      const { userName, dateOfBirth, password } = this.registerForm.value;
-
-      const userDto: CreateUserDto = {
-        userName,
-        dateOfBirth,
-        password,
-        profilePicture: ProfilePictureEnum.Pic1,
-        role: UserRole.User,
-      };
-
-      this.subs.push(
-        this.authService.register(userDto).subscribe({
-          next: () => {
-            this.router.navigate(['/login']);
-          },
-          error: (err) => {
-            console.error(err);
-          },
-        })
-      )
-
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
     }
+
+    const registerDto: CreateUserDto = this.registerForm.value;
+    this.authService.register(registerDto).subscribe(
+      (response) => {
+        console.log('Registration successful', response);
+        this.router.navigate(['/login']);
+      },
+      (error) => {
+        console.error('Registration failed', error);
+      }
+    );
+  }
+
+  asyncUsernameValidator(): (control: AbstractControl) => Observable<{ [key: string]: any } | null> {
+    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+      console.log('Checking username existence for:', control.value);
+      return this.authService.checkUserNameExistence(control.value).pipe(
+        map((exists: boolean) => {
+          console.log('Username existence check response:', exists);
+          return exists ? { usernameTaken: true } : null;
+        }),
+        catchError((error) => {
+          console.error('Error checking username existence:', error);
+          return of(null);
+        })
+      );
+    };
   }
 }
