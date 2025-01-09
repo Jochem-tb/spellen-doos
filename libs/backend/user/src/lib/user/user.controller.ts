@@ -1,6 +1,5 @@
-import { Controller, Logger, Param } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { Get, Put } from "@nestjs/common";
+import { Get, Put, Param, Body, Controller, Logger } from "@nestjs/common";
 import { IUser } from "@spellen-doos/shared/api";
 
 
@@ -8,7 +7,7 @@ import { IUser } from "@spellen-doos/shared/api";
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-    @Get()
+    @Get() // Gets all users
     async findAll(): Promise<IUser[]> {
         return this.userService.findAll();
     }
@@ -21,9 +20,17 @@ export class UserController {
         return { exists: !!userExists };
     }
   
-    @Put()
-    async updateUser(user: IUser): Promise<IUser | null> {
-        return this.userService.updateUser(user);
+    // @Put()
+    // async updateUser(user: IUser): Promise<IUser | null> {
+    //     return this.userService.updateUser(user);
+    
+    @Get(':id') // Get user by ID
+    async findById(@Param('id') id: string): Promise<IUser | undefined | null> {
+        return this.userService.findById(id);
     }
 
+    @Put(':id') // Update user by ID
+    async updateUser(@Param('id') id: string, @Body() user: IUser): Promise<IUser | null> {
+        return this.userService.updateUser(id, user);
+    }
 }
