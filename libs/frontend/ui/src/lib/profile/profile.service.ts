@@ -54,4 +54,11 @@ export class ProfileService {
 
     return request;
   }
+
+  checkUserNameExistence(userName: string): Observable<any> {
+    console.log(`Checking username existence at /api/user/check-username/${userName}`);
+    return this.http
+      .get<{ results: { exists: boolean } }>(`${environment.dataApiUrl}/user/check-username/${userName}`)
+      .pipe(map((response) => response.results.exists));
+  }
 }

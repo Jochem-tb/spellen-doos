@@ -14,6 +14,7 @@ import * as bcrypt from 'bcryptjs';
 export class ProfileComponent implements OnInit {
   profile: IUser | null = null;
   private userId: string | null = null;
+  isCheckingUsername: boolean = false;
 
   editableFields = [ // Loading screen
     {
@@ -122,14 +123,29 @@ export class ProfileComponent implements OnInit {
       },
           
       email: (field) => { // Handler for the username field (email bcs type = email)
+        if (this.isCheckingUsername) {
+          return;
+        }
+      
         const username = field.value;
         if (this.isValidUsername(username)) {
           field.value = username;
-  
-          if (this.profile) { // Update the profile
-            this.profile.userName = username;
-            this.updateProfileApi();
-          }
+          this.isCheckingUsername = true;
+          this.profileService.checkUserNameExistence(username).subscribe((exists) => {
+            console.log('Username exists:', exists);
+            this.isCheckingUsername = false;
+            if (!exists) {
+              if (this.profile) { // Update the profile
+                this.profile.userName = username;
+                this.updateProfileApi();
+              }
+            } else {
+              field.value = field.originalValue; // Reset the value
+              alert("Deze gebruikersnaam bestaat al.");
+            }
+          }, () => {
+            this.isCheckingUsername = false; // Reset flag on error
+          });
         } else {
           alert('Een gebruikersnaam moet minimaal 1 teken hebben.');
           field.value = field.originalValue; // Reset the value
