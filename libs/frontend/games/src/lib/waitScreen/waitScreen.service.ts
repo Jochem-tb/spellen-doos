@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { IUser, ProfilePictureEnum, UserRole } from '@spellen-doos/shared/api';
-import { io } from 'socket.io-client';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +17,6 @@ export class WaitScreenService {
   signIntoQueue(): Observable<boolean> {
     //TODO: Implement real call
     console.log('Service signIntoQueue aanroepen');
-
     return of(true).pipe(delay(3000));
   }
 
@@ -30,14 +28,5 @@ export class WaitScreenService {
   getNumberOfPlayersInQueue(): Observable<number> {
     console.log('Service getNumberOfPlayersInQueue aanroepen');
     return of(this.NUM_PLAYER_QUEUE).pipe(delay(300));
-  }
-
-  //TESTING SOCKETS
-  private socket = io('http://localhost:3000/rpsGameServerGateway');
-
-  private initializeSocket(): void {
-    this.socket.on('connect', () => {
-      console.log('Connected to server');
-    });
   }
 }

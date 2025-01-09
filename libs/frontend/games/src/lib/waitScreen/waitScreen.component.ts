@@ -4,7 +4,6 @@ import { WaitScreenService } from './waitScreen.service';
 import { interval, Subscription } from 'rxjs';
 import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 import { Router } from '@angular/router';
-import { GameServerService } from './gameServer.service';
 
 @Component({
   selector: 'lib-waitScreen',
@@ -48,17 +47,8 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
 
   constructor(
     private waitScreenService: WaitScreenService,
-    private gameServerService: GameServerService,
     private router: Router
   ) {}
-
-  //TESTING
-
-  doSomethingWithSocket(): void {
-    this.gameServerService.sendMessage('Hello, server!');
-  }
-
-  //TESTING
 
   ngOnInit(): void {
     //Set the title of the wait screen
