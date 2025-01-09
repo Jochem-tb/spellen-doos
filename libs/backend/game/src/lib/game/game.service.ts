@@ -17,29 +17,17 @@ export class GameService {
   async findAll(): Promise<IGame[]> {
     this.logger.log(`Finding all items`);
     const items = await this.gameModel.find();
+    this.logger.log(`Found ${items.length} items`);
     return items;
   }
 
-  async findOne(_id: string): Promise<IGame | null> {
-    this.logger.log(`finding game with id ${_id}`);
-    const item = await this.gameModel.findOne({ _id }).exec();
-    if (!item) {
-      this.logger.debug('Item not found');
-    }
-    return item;
-  }
-
-  // async create(game: CreateGameDto): Promise<IGame> {
-  //   this.logger.log(`Create game with title:  ${game.title}`);
-  //   game.createdAt = new Date();
-  //   game.updatedAt = new Date();
-  //   const createdItem = this.gameModel.create(game);
-  //   return createdItem;
+  // async findOne(_id: string): Promise<IGame | null> {
+  //   this.logger.log(`finding game with id ${_id}`);
+  //   const item = await this.gameModel.findOne({ _id }).exec();
+  //   if (!item) {
+  //     this.logger.debug('Item not found');
+  //   }
+  //   return item;
   // }
 
-  // async update(_id: string, game: UpdateGameDto): Promise<IGame | null> {
-  //   this.logger.log(`Update game ${game.title}`);
-  //   game.updatedAt = new Date();
-  //   return this.gameModel.findByIdAndUpdate({ _id }, game);
-  // }
 }
