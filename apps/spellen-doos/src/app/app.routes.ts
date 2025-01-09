@@ -14,17 +14,17 @@ export const appRoutes: Route[] = [
   {
     path: 'dashboard',
     component: DashBoardComponent,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
   {
     path: 'profile',
     component: ProfileComponent,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
   {
     path: 'waitScreen/:id',
     component: WaitScreenComponent,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
