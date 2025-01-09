@@ -90,25 +90,27 @@ export class ProfileComponent implements OnInit {
         } else {
           alert('U moet minimaal 13 jaar zijn.');
           field.value = field.originalValue; // Reset the value
-        }
-      },
-  
+
+          }
+        },
+
       password: (field) => { // Handler for the password field
         const password = field.value;
-        if(!this.HasAsterisk(password)){
-          if (this.isValidPassword(password)) {
-            if (this.profile) { // Update the profile
-              this.profile.password = password;
-              this.updateProfileApi();
-            }
-            field.value = '********'; // Hides the password
-          } else {
-            alert('Het wachtwoord moet minimaal 8 tekens lang zijn.');
-            field.value = field.originalValue; // Reset the value
-          }
+        if (this.HasAsterisk(password)) return;
+        
+        if (!this.isValidPassword(password)) {
+          alert('Het wachtwoord moet minimaal 8 tekens lang zijn.');
+          field.value = field.originalValue; // Reset the value
+          return;
         }
+        
+        if (this.profile) { // Update the profile
+          this.profile.password = password;
+          this.updateProfileApi();
+        }
+        field.value = '********'; // Hides the password
       },
-  
+          
       email: (field) => { // Handler for the username field (email bcs type = email)
         const username = field.value;
         if (this.isValidUsername(username)) {
