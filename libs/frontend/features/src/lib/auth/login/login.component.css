@@ -1,9 +1,8 @@
 html, body {
     overflow: hidden;
     height: 100%;
-  }
-  
-  
+}
+   
 .frosted-background::before {
   content: '';
   position: absolute;
