@@ -1,1 +1,34 @@
-<p>rps works!</p>
+<div class="rps-container">
+  <h1>Steen Papier Schaar</h1>
+
+  <div class="buttons-container">
+    <button class="rps-button left rock" (click)="play('steen')">
+      <img src="rps/rock.png" alt="Rock">
+    </button>
+    <button class="rps-button center paper" (click)="play('papier')">
+      <img src="rps/paper.png" alt="Paper">
+    </button>
+    <button class="rps-button right scissor" (click)="play('schaar')">
+      <img src="rps/scissor.png" alt="Scissor">
+    </button>
+  </div>
+
+  <div class="score-container">
+    <h2>Scoren: {{ score }}</h2>
+  </div>
+
+  <div class="opponent-choice-container">
+    <h2>{{ opponentChoice }}</h2>
+  </div>
+
+  <div class="result-container">
+    <h2>{{ result }}</h2>
+  </div>
+
+  <div class="popup" *ngIf="showPopup">
+    <div class="popup-content">
+      <h2>{{ winnerMessage }}</h2>
+      <button (click)="closePopup()">Sluiten</button>
+    </div>
+  </div>
+</div>

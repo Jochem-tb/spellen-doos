@@ -1,0 +1,129 @@
+.rps-container {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    color: aliceblue;
+    background-color: #1a1a1a;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+}
+
+.rps-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: transform 0.5s, left 0.5s, top 0.5s;
+    position: relative;
+}
+
+.rps-button img {
+    height: 200px;
+    width: 200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.rps-button.left img {
+    transform: rotate(-10deg);
+}
+
+.rps-button.center img {
+    transform: rotate(0deg);
+    margin-bottom: 25px;
+}
+
+.rps-button.right img {
+    transform: rotate(10deg);
+}
+
+.rps-button img:hover {
+    transform: scale(1.1) translateY(-20px);
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.3);
+}
+
+.rps-button.selected {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1.1);
+    transition: all 0.5s ease;
+    z-index: 10;
+}
+
+.rps-button.selected img {
+    transform: rotate(0deg);
+}
+
+.result-container, .score-container {
+    margin: 20px 0;
+    font-size: 24px;
+}
+
+.opponent-choice {
+    margin: 20px 0;
+    font-size: 24px;
+    color: lightcoral;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 50px;
+    border-radius: 10px;
+    z-index: 20;
+    display: block;
+}
+
+.popup-content h2 {
+  margin: 0 0 20px;
+}
+
+.popup-content button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 24px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.popup-content button:hover {
+    background-color: #218838;
+}
+
+@media (max-width: 1400px) {
+    .rps-container {
+        height: 90vh;
+        padding: 20px;
+    }
+
+    .rps-button img {
+        height: 175px;
+        width: 175px;
+    }
+
+    .result-container, .score-container {
+        font-size: 18px;
+    }
+
+    .opponent-choice {
+        font-size: 18px;
+    }
+}
+  
