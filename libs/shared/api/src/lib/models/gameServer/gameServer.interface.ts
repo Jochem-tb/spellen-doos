@@ -9,6 +9,11 @@ export interface IGameServer {
   connectedPlayers: string[];
 }
 
+export enum BaseGameEvents {
+  CONNECT = 'connect',
+  DISCONNECT = 'disconnect',
+}
+
 // export type ICreateGame = Pick<
 //   IGame,
 //   | 'name'

@@ -6,6 +6,7 @@ import {
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
@@ -23,7 +24,7 @@ export class RPSGameServerGateway
   server!: Server;
 
   // Handle new client connections
-  handleConnection(client: Socket) {
+  handleConnection(@ConnectedSocket() client: Socket) {
     console.log(`Client connected to ${this.server} clientId: ${client.id}`);
   }
 

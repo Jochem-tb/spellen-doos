@@ -8,25 +8,57 @@ import { io } from 'socket.io-client';
   providedIn: 'root',
 })
 export class GameServerService {
-  constructor() {
-    console.log('Service constructor aanroepen');
-    this.initializeSocket();
-  }
+  constructor() {}
 
   //TESTING SOCKETS
-  private socket = io('http://localhost:3000/rpsGameServerGateway');
 
-  public sendMessage(message: string): void {
-    this.socket.emit('message', {
-      userId: '12345',
-      message: message,
-    });
+  private socket: any;
+
+  public signIntoQueue(title: string): boolean {
+    try {
+      this.initializeSocket(title);
+      this.verifyConnection();
+    } catch (error) {
+      console.log('Error:', error);
+      return false;
+    }
+    return true;
   }
 
-  private initializeSocket(): void {
+  public signOutOfQueue(): boolean {
+    try {
+      this.notifyServerOfLeave();
+    } catch (error) {
+      return false;
+    }
+    this.socket.disconnect();
+    return true;
+  }
+
+  notifyServerOfLeave() {
+    // throw new Error('Method not implemented.');
+  }
+
+  private verifyConnection() {
+    // throw new Error('Method not implemented.');
+  }
+
+  private initializeSocket(gameTitle: string): void {
+    //Choose right GameServer
+    console.debug('GameTitle:', gameTitle);
+    switch (gameTitle) {
+      case 'Steen Papier Schaar':
+        this.socket = io('http://localhost:3000/rpsGameServerGateway');
+        break;
+      //Add other gae cases here
+      default:
+        '';
+    }
+
     this.socket.on('connect', () => {
       console.log('Connected to server');
     });
+
     this.socket.on('connect', () => {
       console.log('Connected to the control hub:', this.socket.id);
 
@@ -39,7 +71,7 @@ export class GameServerService {
       this.socket.emit('changeChoice', { data: 'Hello, server!' });
 
       // Listen for responses
-      this.socket.on('response', (data) => {
+      this.socket.on('response', (data: any) => {
         console.log('Server response:', data);
       });
     });

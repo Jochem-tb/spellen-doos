@@ -4,7 +4,7 @@ import { WaitScreenService } from './waitScreen.service';
 import { interval, Subscription } from 'rxjs';
 import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 import { Router } from '@angular/router';
-import { GameServerService } from './gameServer.service';
+// import { GameServerService } from './gameServer.service';
 
 @Component({
   selector: 'lib-waitScreen',
@@ -48,14 +48,13 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
 
   constructor(
     private waitScreenService: WaitScreenService,
-    private gameServerService: GameServerService,
     private router: Router
   ) {}
 
   //TESTING
 
   doSomethingWithSocket(): void {
-    this.gameServerService.sendMessage('Hello, server!');
+    // this.gameServerService.sendMessage('Hello, server!');
   }
 
   //TESTING
@@ -68,8 +67,9 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
     //Start the timer
     this.startTimer();
 
+    // Wait for 5 seconds before proceeding
     const subscriptionIntoQueue = this.waitScreenService
-      .signIntoQueue()
+      .signIntoQueue(this.gameTitle)
       .subscribe({
         next: (success: boolean) => {
           if (success) {

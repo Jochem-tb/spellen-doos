@@ -3,6 +3,7 @@ import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { IUser, ProfilePictureEnum, UserRole } from '@spellen-doos/shared/api';
 import { io } from 'socket.io-client';
+import { GameServerService } from './gameServer.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,33 +12,22 @@ export class WaitScreenService {
   private loggedUser: IUser | null = null;
   private NUM_PLAYER_QUEUE: number = 2;
 
-  constructor() {
+  constructor(private gameServerService: GameServerService) {
     console.log('Service constructor aanroepen');
   }
 
-  signIntoQueue(): Observable<boolean> {
-    //TODO: Implement real call
+  signIntoQueue(title: string): Observable<boolean> {
     console.log('Service signIntoQueue aanroepen');
-
-    return of(true).pipe(delay(3000));
+    return of(this.gameServerService.signIntoQueue(title));
   }
 
   signOutOfQueue(): Observable<boolean> {
     console.log('Service signOutOfQueue aanroepen');
-    return of(true).pipe(delay(300));
+    return of(this.gameServerService.signOutOfQueue());
   }
 
   getNumberOfPlayersInQueue(): Observable<number> {
     console.log('Service getNumberOfPlayersInQueue aanroepen');
     return of(this.NUM_PLAYER_QUEUE).pipe(delay(300));
-  }
-
-  //TESTING SOCKETS
-  private socket = io('http://localhost:3000/rpsGameServerGateway');
-
-  private initializeSocket(): void {
-    this.socket.on('connect', () => {
-      console.log('Connected to server');
-    });
   }
 }
