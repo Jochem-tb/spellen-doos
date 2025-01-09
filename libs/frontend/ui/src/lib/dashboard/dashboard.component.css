@@ -9,12 +9,14 @@ body {
   position: relative;
   height: 100%;
   border: 0;
+  border-radius: 10px;
 }
 
 /* Image styling */
 .game-card img {
   height: 520px;
   object-fit: cover;
+  border-radius: 10px;
 }
 
 /* Overlay styling for name and description */
@@ -29,6 +31,7 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   padding: 18px;
+  border-radius: 10px 10px 0 0;
 }
 
 /* Button styling */
