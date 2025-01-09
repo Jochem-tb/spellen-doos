@@ -25,7 +25,7 @@ export class ProfileService {
   }
 
   updateProfile(id: string, user: IUser): Observable<IUser> {
-    console.log('updateProfile called :', user);
+    console.log('updateProfile called');
 
     const request = this.http
       .put<{ results: any }>('http://localhost:3000' + `/api/user/${id}`, user)

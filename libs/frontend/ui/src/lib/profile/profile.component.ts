@@ -69,59 +69,55 @@ export class ProfileComponent implements OnInit {
 
   startEditing(field: any) {
     if (field.type === 'password') {
-      console.log('test');
       field.value = this.profile!.password; // Set the value to the actual password
-      console.log('password value:', field.value);
     }
     field.originalValue = field.value; // Saves the original value
-    console.log('Start editing, current value:', field.value);
     field.isEditing = true;
   }
-
+  
   stopEditing(field: any) {
     const handlers: { [key: string]: (field: any) => void } = { // Object with handlers for each field type
-
+  
       date: (field) => { // Handler for the date field
         const date = new Date(field.value);
         if (this.isValidDate(date)) {
-            field.value = this.formatDate(date);
-
-            if (this.profile) { // Update the profile
+          field.value = this.formatDate(date);
+  
+          if (this.profile) { // Update the profile
             this.profile.dateOfBirth = date;
             this.updateProfileApi();
-            }
-            
+          }
         } else {
           alert('U moet minimaal 13 jaar zijn.');
           field.value = field.originalValue; // Reset the value
         }
       },
-
+  
       password: (field) => { // Handler for the password field
         const password = field.value;
-        console.log('password read:' + password);
-        if (this.isValidPassword(password)) {
-          if (this.profile) { // Update the profile
-            console.log('Updating password' + password);
-            this.profile.password = password;
-            this.updateProfileApi();
+        if(!this.HasAsterisk(password)){
+          if (this.isValidPassword(password)) {
+            if (this.profile) { // Update the profile
+              this.profile.password = password;
+              this.updateProfileApi();
+            }
+            field.value = '********'; // Hides the password
+          } else {
+            alert('Het wachtwoord moet minimaal 8 tekens lang zijn.');
+            field.value = field.originalValue; // Reset the value
           }
-        } else {
-          alert('Het wachtwoord moet minimaal 8 tekens lang zijn.');
-          field.value = field.originalValue; // Reset the value
         }
       },
-
+  
       email: (field) => { // Handler for the username field (email bcs type = email)
         const username = field.value;
         if (this.isValidUsername(username)) {
           field.value = username;
-
+  
           if (this.profile) { // Update the profile
             this.profile.userName = username;
             this.updateProfileApi();
           }
-          
         } else {
           alert('Een gebruikersnaam moet minimaal 1 teken hebben.');
           field.value = field.originalValue; // Reset the value
@@ -165,6 +161,13 @@ export class ProfileComponent implements OnInit {
     return password.length >= 8;
   }
 
+  HasAsterisk(password: string): boolean { // checks if the password contains a *
+    if (password.includes('*')){
+      return true;
+    }
+    return false;
+  }
+
   isValidUsername(username: string): boolean { // validates the username (at least 1 character)
     return username.length >= 1;
   }
@@ -173,8 +176,4 @@ export class ProfileComponent implements OnInit {
   formatDate(date: Date | undefined): string { // formats the date (dd-MM-yyyy)
     return date ? this.datePipe.transform(date, 'dd-MM-yyyy') || '' : '';
   }
-
-  // formatPassword(password: string): string { // formats the password(* for every character)
-  //   return '*'.repeat(password.length);
-  // }
 }
