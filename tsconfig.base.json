@@ -25,9 +25,8 @@
       "@spellen-doos/uesr": ["libs/backend/uesr/src/index.ts"],
       "@spellen-doos/ui": ["libs/frontend/ui/src/index.ts"],
       "@spellen-doos/user": ["libs/backend/user/src/index.ts"],
-      "@spellen-doos/backend/helpButton": [
-        "libs/backend/helpButton/src/index.ts"
-      ]
+      "@spellen-doos/backend/helpButton": ["libs/backend/helpButton/src/index.ts"],
+      "@spellen-doos/environment": ["libs/shared/util-env/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

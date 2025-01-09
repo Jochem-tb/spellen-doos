@@ -7,6 +7,7 @@ import { map, tap, catchError, switchMap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CreateUserDto } from '../../../../../backend/dto/src';
 import * as bcrypt from 'bcryptjs';
+import { environment } from '@spellen-doos/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -43,17 +44,17 @@ export class AuthService {
   checkUserNameExistence(userName: string): Observable<any> {
     console.log(`Checking username existence at /api/user/check-username/${userName}`);
     return this.http
-      .get<{ results: { exists: boolean } }>(`http://localhost:3000/api/user/check-username/${userName}`)
+      .get<{ results: { exists: boolean } }>(`${environment.dataApiUrl}/user/check-username/${userName}`)
       .pipe(map((response) => response.results.exists));
   }
 
   async login(userName: string, password: string): Promise<Observable<IUserIdentity | null>> {
-    console.log(`login at http://localhost:3000/api/auth/login`);
+    console.log(`login at ${environment.dataApiUrl}/auth/login`);
     const hashedPassword = await bcrypt.hash(password, 10);
 
     return this.http
       .post<{ results: { _id: string; token: string; userName: string; profileImgUrl: string } }>(
-        `http://localhost:3000/api/auth/login`,
+        `${environment.dataApiUrl}/auth/login`,
         { userName, password: hashedPassword },
         { headers: this.headers }
       )
@@ -87,7 +88,7 @@ export class AuthService {
 
     return this.http
       .post<{ results: User & { token: string } }>(
-        `http://localhost:3000/api/auth/register`,
+        `${environment.dataApiUrl}/auth/register`,
         registerDto
       )
       .pipe(

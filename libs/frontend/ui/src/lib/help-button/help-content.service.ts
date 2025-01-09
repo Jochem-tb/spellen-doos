@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { IHelpButton } from '@spellen-doos/shared/api';
+import { environment } from '@spellen-doos/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HelpContentService {
   //TODO: Replace with actual API URL
-  private apiUrl = 'http://localhost:3000/api/helpButton';
-  // private apiUrl = 'http://192.168.178.204:3000/api/helpButton';  //IP voor computer/laptop met localhost API
+  private apiUrl = environment.dataApiUrl + '/helpButton';
 
   constructor(private http: HttpClient) {}
   getHelpContent(route: string): Observable<IHelpButton> {
