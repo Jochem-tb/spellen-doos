@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { delay, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { IUser, ProfilePictureEnum, UserRole } from '@spellen-doos/shared/api';
+import { IUser } from '@spellen-doos/shared/api';
 
 @Injectable({
   providedIn: 'root',
@@ -16,9 +16,15 @@ export class ProfileService {
 
   getProfileById(id: string): Observable<IUser> {
     console.log('getUserById called');
+    if (this.loggedUser != null) { // Checks if person is already loggedIn
+      console.log('Returning cached user');
+      return of(this.loggedUser);
+    }
+  
     return this.http.get<{ results: IUser }>('http://localhost:3000' + `/api/user/${id}`).pipe(
       map((response) => {
         console.log('Response received:', response);
+        this.loggedUser = response.results; // Save the response as loggedUser
         return response.results;
       })
     );
