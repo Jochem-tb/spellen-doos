@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IUser, ProfilePictureEnum, UserRole } from '@spellen-doos/shared/api';
 import { ProfileService } from './profile.service';
 import { DatePipe } from '@angular/common';
+import * as bcrypt from 'bcryptjs';
 
 @Component({
   selector: 'lib-profile',
@@ -94,7 +95,7 @@ export class ProfileComponent implements OnInit {
           }
         },
 
-      password: (field) => { // Handler for the password field
+      password: async (field) => { // Handler for the password field
         const password = field.value;
         if (this.HasAsterisk(password)) return;
         
@@ -105,7 +106,8 @@ export class ProfileComponent implements OnInit {
         }
         
         if (this.profile) { // Update the profile
-          this.profile.password = password;
+          const hashedPassword = await bcrypt.hash(this.profile.password, 10);
+          this.profile.password = hashedPassword;
           this.updateProfileApi();
         }
         field.value = '********'; // Hides the password
