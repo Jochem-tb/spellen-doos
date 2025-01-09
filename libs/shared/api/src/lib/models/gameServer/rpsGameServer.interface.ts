@@ -1,37 +1,32 @@
-import {
-  IGameServer,
-  BaseGameEvents,
-} from '../gameServer/gameServer.interface';
-
-export interface IRockPaperScissorGameServer extends IGameServer {
+export interface IRPSGameServer {
   maxRounds: number;
   currentRound: number;
   playerAWins: number;
   playerBWins: number;
   draws: number;
-  playerAChoice: RockPaperScissorChoicesEnum;
-  playerBChoice: RockPaperScissorChoicesEnum;
+  playerAChoice?: RPSChoicesEnum;
+  playerBChoice?: RPSChoicesEnum;
 
   playerAConnected: boolean;
   playerBConnected: boolean;
 
-  roundsInfo: IRockPaperScissorRoundInfo[];
+  roundsInfo: IRPSRoundInfo[];
 }
 
-export enum RockPaperScissorChoicesEnum {
+export enum RPSChoicesEnum {
   Steen = 'Steen',
   Papier = 'Papier',
   Schaar = 'Schaar',
 }
 
-export interface IRockPaperScissorRoundInfo {
+export interface IRPSRoundInfo {
   round: number;
   playerAChoice: string;
   playerBChoice: string;
-  winner: RockPaperScissorWinnerEnum;
+  winner: RPSWinnerEnum;
 }
 
-export enum RockPaperScissorWinnerEnum {
+export enum RPSWinnerEnum {
   PlayerA = 'PlayerA',
   PlayerB = 'PlayerB',
   Draw = 'Draw',
