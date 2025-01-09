@@ -6,7 +6,7 @@ import {
   ProfileComponent,
 } from '@spellen-doos/ui';
 import { AuthGuard } from '@spellen-doos/features';
-import { WaitScreenComponent } from '@spellen-doos/frontend/games';
+import { RpsComponent, WaitScreenComponent } from '@spellen-doos/frontend/games';
 
 export const appRoutes: Route[] = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -24,6 +24,11 @@ export const appRoutes: Route[] = [
   {
     path: 'waitScreen/:id',
     component: WaitScreenComponent,
+    // canActivate: [AuthGuard],
+  },
+  {
+    path: 'rpsGame',
+    component: RpsComponent,
     // canActivate: [AuthGuard],
   },
   { path: 'register', component: RegisterComponent },
