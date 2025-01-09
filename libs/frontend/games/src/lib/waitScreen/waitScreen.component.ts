@@ -105,7 +105,7 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
 
       //Check for number of players in queue
       this.numPlayerQueueCounter++;
-      this.checkIntervalForNumPlayerQueue();
+      this.checkIntervalForNumPlayerQueueChange();
     });
   }
 
@@ -144,18 +144,18 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
     }
   }
 
-  private checkIntervalForNumPlayerQueue(): void {
+  private checkIntervalForNumPlayerQueueChange(): void {
     if (this.numPlayerQueueCounter >= this.numPlayerQueueCheckInterval) {
-      this.waitScreenService
-        .getNumberOfPlayersInQueue()
-        .subscribe((numPlayers) => {
-          this.numPlayersInQueue = numPlayers;
-        });
+      // this.waitScreenService
+      //   .getNumberOfPlayersInQueue()
+      //   .subscribe((numPlayers) => {
+      //     this.numPlayersInQueue = numPlayers;
+      //   });
       this.numPlayerQueueCounter = 0;
 
       //TODO: Remove this line
       //Mock for testing
-      // this.numPlayersInQueue += Math.random() > 0.5 ? 5 : 2;
+      this.numPlayersInQueue += Math.random() > 0.5 ? 5 : 2;
     }
   }
 }

@@ -31,8 +31,8 @@
   background-size: cover;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
-  margin-top: 1rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .text-overlay {
@@ -56,8 +56,15 @@
 .title {
   font-family: 'Arial', sans-serif;
   margin-top: 40px;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: bold;
+  font-style: italic;
+}
+
+.gameTitle {
+  font-family: 'Arial', sans-serif;
+  font-size: 2.8rem;
+  font-style: normal;
 }
 
 .timer {
