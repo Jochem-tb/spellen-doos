@@ -3,7 +3,7 @@ import { GameController } from './game/game.controller';
 import { GameService } from './game/game.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Game, GameSchema } from './game/game.schema';
-import { RPSGameServerGateway } from './gameServer/gameServer.gateway';
+import { RPSGameServerControllerGateway } from './gameServer/gameServer.gateway';
 // import { Meal, MealSchema } from '@avans-nx-game/backend/features';
 
 @Module({
@@ -11,7 +11,7 @@ import { RPSGameServerGateway } from './gameServer/gameServer.gateway';
     MongooseModule.forFeature([{ name: Game.name, schema: GameSchema }]),
   ],
   controllers: [GameController],
-  providers: [GameService, RPSGameServerGateway],
+  providers: [GameService, RPSGameServerControllerGateway],
   exports: [GameService],
 })
 export class GameModule {}

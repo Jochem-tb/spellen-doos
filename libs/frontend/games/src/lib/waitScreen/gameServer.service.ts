@@ -1,18 +1,24 @@
 import { Injectable } from '@angular/core';
 import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { IUser, ProfilePictureEnum, UserRole } from '@spellen-doos/shared/api';
+import {
+  BaseGatewayEvents,
+  IUser,
+  ProfilePictureEnum,
+  UserRole,
+} from '@spellen-doos/shared/api';
 import { io } from 'socket.io-client';
 
 @Injectable({
   providedIn: 'root',
 })
-export class GameServerService {
+export class RPSGameServerController {
   constructor() {}
 
   //TESTING SOCKETS
 
   private socket: any;
+  private NUM_PLAYER_QUEUE: number = -1;
 
   public signIntoQueue(title: string): boolean {
     try {
@@ -35,6 +41,20 @@ export class GameServerService {
     return true;
   }
 
+  public getNumberOfPlayersInQueue(): Observable<number> {
+    return new Observable<number>((observer) => {
+      this.socket.emit(
+        BaseGatewayEvents.CHECK_NUM_PLAYER_QUEUE,
+        this.socket.id
+      );
+      this.socket.on(BaseGatewayEvents.CHECK_NUM_PLAYER_QUEUE, (data: any) => {
+        this.NUM_PLAYER_QUEUE = data;
+        observer.next(this.NUM_PLAYER_QUEUE);
+        observer.complete();
+      });
+    });
+  }
+
   notifyServerOfLeave() {
     // throw new Error('Method not implemented.');
   }
@@ -48,12 +68,19 @@ export class GameServerService {
     console.debug('GameTitle:', gameTitle);
     switch (gameTitle) {
       case 'Steen Papier Schaar':
-        this.socket = io('http://localhost:3000/rpsGameServerGateway');
+        this.socket = io(
+          'http://localhost:3000/RPSGameServerControllerGateway'
+        );
         break;
       //Add other gae cases here
       default:
         '';
     }
+
+    // this.socket.on(BaseGatewayEvents.CHECK_NUM_PLAYER_QUEUE, (data: any) => {
+    //   console.log('Received number of players in queue');
+    //   this.NUM_PLAYER_QUEUE = data;
+    // });
 
     this.socket.on('connect', () => {
       console.log('Connected to server');

@@ -4,7 +4,7 @@ import { WaitScreenService } from './waitScreen.service';
 import { interval, Subscription } from 'rxjs';
 import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 import { Router } from '@angular/router';
-// import { GameServerService } from './gameServer.service';
+// import { RPSGameServerController } from './gameServer.service';
 
 @Component({
   selector: 'lib-waitScreen',
@@ -54,7 +54,7 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
   //TESTING
 
   doSomethingWithSocket(): void {
-    // this.gameServerService.sendMessage('Hello, server!');
+    // this.RPSGameServerController.sendMessage('Hello, server!');
   }
 
   //TESTING
@@ -156,16 +156,16 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
 
   private checkIntervalForNumPlayerQueueChange(): void {
     if (this.numPlayerQueueCounter >= this.numPlayerQueueCheckInterval) {
-      // this.waitScreenService
-      //   .getNumberOfPlayersInQueue()
-      //   .subscribe((numPlayers) => {
-      //     this.numPlayersInQueue = numPlayers;
-      //   });
+      this.waitScreenService
+        .getNumberOfPlayersInQueue()
+        .subscribe((numPlayers) => {
+          this.numPlayersInQueue = numPlayers;
+        });
       this.numPlayerQueueCounter = 0;
 
       //TODO: Remove this line
       //Mock for testing
-      this.numPlayersInQueue += Math.random() > 0.5 ? 5 : 2;
+      // this.numPlayersInQueue += Math.random() > 0.5 ? 5 : 2;
     }
   }
 }
