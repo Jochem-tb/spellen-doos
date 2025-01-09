@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { delay, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { IGame } from '@spellen-doos/shared/api';
+import { environment } from '@spellen-doos/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class DashBoardService {
 
   getGamesApi(): Observable<IGame[]> {
     return this.http
-      .get<{ results: IGame[] }>('http://localhost:3000/api/game')
+      .get<{ results: IGame[] }>(`${environment.dataApiUrl}/game`)
       .pipe(map((response) => response.results));
   }
 
