@@ -75,7 +75,7 @@ export class ProfileComponent implements OnInit {
 
   startEditing(field: any) {
     if (field.type === 'password') {
-      field.value = this.profile!.password; // Set the value to the actual password
+      field.value = ''; // Clear the value for password field
     }
     field.originalValue = field.value; // Saves the original value
     field.isEditing = true;
@@ -102,11 +102,14 @@ export class ProfileComponent implements OnInit {
 
       password: async (field) => { // Handler for the password field
         const password = field.value;
-        if (this.HasAsterisk(password)) return;
+        if (this.HasAsterisk(password)) {
+          return;
+        }
         
         if (!this.isValidPassword(password)) {
           alert('Het wachtwoord moet minimaal 8 tekens lang zijn.');
           field.value = field.originalValue; // Reset the value
+          field.value = '********'; // Hides the password
           return;
         }
         
