@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IUser, ProfilePictureEnum, UserRole } from '@spellen-doos/shared/api';
+import { IUser, ProfilePictureEnum } from '@spellen-doos/shared/api';
 import { ProfileService } from './profile.service';
 import { DatePipe } from '@angular/common';
 import * as bcrypt from 'bcryptjs';
@@ -13,8 +13,7 @@ import * as bcrypt from 'bcryptjs';
 })
 export class ProfileComponent implements OnInit {
   profile: IUser | null = null;
-
-  private userId: string = '677d0b6ccc31fe87a70d8190'; // Dummy ID
+  private userId: string | null = null;
 
   editableFields = [ // Loading screen
     {
@@ -34,10 +33,16 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('ProfileComponent ngOnInit');
-    this.profileService.getProfileById(this.userId).subscribe((profile) => {
-      this.profile = profile;
-      this.initializeFields();
-    });
+
+    this.userId = localStorage.getItem('userId');
+    if (this.userId) {
+      this.profileService.getProfileById(this.userId).subscribe((profile) => {
+        this.profile = profile;
+        this.initializeFields();
+      });
+    } else {
+      console.error('User ID is null');
+    }
   }
 
   profilePictureOptions = Object.values(ProfilePictureEnum);
@@ -151,7 +156,11 @@ export class ProfileComponent implements OnInit {
 
 
   updateProfileApi(){ // Method to update the profile
-    this.profileService.updateProfile(this.userId, this.profile!);
+    if (this.userId) {
+      this.profileService.updateProfile(this.userId, this.profile!);
+    } else {
+      console.error('User ID is null');
+    }
   }
 
 

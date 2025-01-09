@@ -10,12 +10,18 @@ import { IUser } from '@spellen-doos/shared/api';
 })
 export class HeaderComponent implements OnInit {
   public profile: IUser | null = null;
-  private userId: string = '677d0b6ccc31fe87a70d8190'; // Dummy ID
+  private userId: string | null = null;
   constructor(private profileService: ProfileService) {}
 
   ngOnInit(): void {
-    this.profileService.getProfileById(this.userId).subscribe((profile) => {
-      this.profile = profile;
-    });
+    this.userId = localStorage.getItem('userId');
+    console.log('Retrieved userId from localStorage:', this.userId);
+    if (this.userId) {
+      this.profileService.getProfileById(this.userId).subscribe((profile) => {
+        this.profile = profile;
+      });
+    } else {
+      console.error('User ID is null');
+    }
   }
 }

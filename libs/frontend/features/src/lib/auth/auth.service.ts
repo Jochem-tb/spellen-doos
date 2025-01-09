@@ -61,10 +61,10 @@ export class AuthService {
       .pipe(
         map((response) => {
           console.log('API Response:', response);
-          const { token, userName } = response.results;
+          const { _id, token, userName } = response.results;
 
-          if (!token || !userName) {
-            throw new Error('Token or user details missing from response');
+          if (!token || !userName || !_id) {
+            throw new Error('Token, user details, or user ID missing from response');
           }
 
           const user: IUserIdentity = {
@@ -72,6 +72,7 @@ export class AuthService {
           };
 
           this.saveUserToLocalStorage(user, token);
+          this.saveUserIdToLocalStorage(_id, token);
           this.currentUser$.next(user);
           return user;
         }),
@@ -163,5 +164,15 @@ export class AuthService {
     console.log('Saving user to localStorage:', user);
     localStorage.setItem('currentuser', JSON.stringify(user));
     localStorage.setItem('token', token);
+  }
+
+  saveUserIdToLocalStorage(userId: string, token: string): void {
+    if (!userId || !token) {
+      console.error('User ID or token is undefined');
+      return;
+    }
+
+    console.log('Saving user ID to localStorage:', userId);
+    localStorage.setItem('userId', userId); // Save userId to localStorage
   }
 }
