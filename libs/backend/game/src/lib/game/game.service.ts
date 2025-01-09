@@ -17,6 +17,7 @@ export class GameService {
   async findAll(): Promise<IGame[]> {
     this.logger.log(`Finding all items`);
     const items = await this.gameModel.find();
+    this.logger.log(`Found ${items.length} items`);
     return items;
   }
 
