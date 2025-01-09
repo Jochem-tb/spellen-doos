@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { IUser } from '@spellen-doos/shared/api';
+import { environment } from '@spellen-doos/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,7 @@ export class ProfileService {
       return of(this.loggedUser);
     }
   
-    return this.http.get<{ results: IUser }>('http://localhost:3000' + `/api/user/${id}`).pipe(
+    return this.http.get<{ results: IUser }>(`${environment.dataApiUrl}/user/${id}`).pipe(
       map((response) => {
         console.log('Response received:', response);
         this.loggedUser = response.results; // Save the response as loggedUser
@@ -34,7 +35,7 @@ export class ProfileService {
     console.log('updateProfile called');
 
     const request = this.http
-      .put<{ results: any }>('http://localhost:3000' + `/api/user/${id}`, user)
+      .put<{ results: any }>(`${environment.dataApiUrl}/user/${id}`, user)
       .pipe(
         map((response) => { // Succesfull response
           console.log('API response:', response);
