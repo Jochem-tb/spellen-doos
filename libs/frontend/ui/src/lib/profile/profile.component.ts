@@ -128,28 +128,33 @@ export class ProfileComponent implements OnInit {
         }
       
         const username = field.value;
-        if (this.isValidUsername(username)) {
-          field.value = username;
-          this.isCheckingUsername = true;
-          this.profileService.checkUserNameExistence(username).subscribe((exists) => {
-            console.log('Username exists:', exists);
-            this.isCheckingUsername = false;
-            if (!exists) {
-              if (this.profile) { // Update the profile
-                this.profile.userName = username;
-                this.updateProfileApi();
-              }
-            } else {
-              field.value = field.originalValue; // Reset the value
-              alert("Deze gebruikersnaam bestaat al.");
-            }
-          }, () => {
-            this.isCheckingUsername = false; // Reset flag on error
-          });
-        } else {
+        if (!this.isValidUsername(username)) {
           alert('Een gebruikersnaam moet minimaal 1 teken hebben.');
           field.value = field.originalValue; // Reset the value
+          return;
         }
+      
+        field.value = username;
+        this.isCheckingUsername = true;
+        this.profileService.checkUserNameExistence(username).subscribe(
+          (exists) => {
+            console.log('Username exists:', exists);
+            this.isCheckingUsername = false;
+            if (exists) {
+              field.value = field.originalValue; // Reset the value
+              alert("Deze gebruikersnaam bestaat al.");
+              return;
+            }
+      
+            if (this.profile) { // Update the profile
+              this.profile.userName = username;
+              this.updateProfileApi();
+            }
+          },
+          () => {
+            this.isCheckingUsername = false; // Reset flag on error
+          }
+        );
       },
     };
   
