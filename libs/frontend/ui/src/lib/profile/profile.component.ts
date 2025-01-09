@@ -60,7 +60,7 @@ export class ProfileComponent implements OnInit {
       },
       {
         label: 'Wachtwoord',
-        value: this.formatPassword(this.profile!.password),
+        value: '********',
         type: 'password',
         isEditing: false,
       },
@@ -101,8 +101,6 @@ export class ProfileComponent implements OnInit {
         const password = field.value;
         console.log('password read:' + password);
         if (this.isValidPassword(password)) {
-          field.value = this.formatPassword(password);
-
           if (this.profile) { // Update the profile
             console.log('Updating password' + password);
             this.profile.password = password;
@@ -176,7 +174,7 @@ export class ProfileComponent implements OnInit {
     return date ? this.datePipe.transform(date, 'dd-MM-yyyy') || '' : '';
   }
 
-  formatPassword(password: string): string { // formats the password(* for every character)
-    return '*'.repeat(password.length);
-  }
+  // formatPassword(password: string): string { // formats the password(* for every character)
+  //   return '*'.repeat(password.length);
+  // }
 }
