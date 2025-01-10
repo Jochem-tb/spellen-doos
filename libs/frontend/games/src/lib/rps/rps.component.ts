@@ -17,33 +17,36 @@ export class RpsComponent {
   constructor(private renderer: Renderer2, private rpsService: RPSService) {}
 
   play(choice: string): void {
-    // Reset previous button state
+    console.log(`[DEBUG] Player choice: ${choice}`);
+
     const buttons = document.querySelectorAll('.rps-button');
     buttons.forEach((button) => this.renderer.removeClass(button, 'selected'));
 
-    // Highlight the selected button
     const button = document.querySelector(`.rps-button.${choice}`);
     if (button) {
       this.renderer.addClass(button, 'selected');
+      console.log(`[DEBUG] Selected button: ${choice}`);
+    } else {
+      console.error(`[ERROR] Button not found for choice: ${choice}`);
     }
 
-    // Update game logic
-    this.result = `Jouw keuze is ${choice}`;
-    this.opponentChoice = `De tegenstander koos ${this.getOpponentChoice()}`;
-    const winner = this.determineWinner(choice, this.opponentChoice);
+    this.opponentChoice = this.getOpponentChoice();
+    console.log(`[DEBUG] Opponent choice: ${this.opponentChoice}`);
 
-    // Show the popup with the result
-    this.winnerMessage = winner;
+    this.result = this.determineWinner(choice, this.opponentChoice);
     this.showPopup = true;
   }
 
   getOpponentChoice(): string {
     const choices = ['steen', 'papier', 'schaar'];
-    return choices[Math.floor(Math.random() * choices.length)];
+    const choice = choices[Math.floor(Math.random() * choices.length)];
+    console.log(`[DEBUG] Opponent randomly selected: ${choice}`);
+    return choice;
   }
 
   determineWinner(playerChoice: string, opponentChoice: string): string {
     if (playerChoice === opponentChoice) {
+      console.log('[DEBUG] It is a draw');
       return 'Het is gelijkspel!';
     } else if (
       (playerChoice === 'steen' && opponentChoice === 'schaar') ||
@@ -51,15 +54,18 @@ export class RpsComponent {
       (playerChoice === 'schaar' && opponentChoice === 'papier')
     ) {
       this.score++;
+      console.log(`[DEBUG] Player wins! Current score: ${this.score}`);
       return 'Je hebt gewonnen!';
     } else {
+      console.log('[DEBUG] Player loses');
       return 'Je hebt verloren!';
     }
   }
 
   closePopup(): void {
     this.showPopup = false;
-    // Reset previous button state and remove the selected class
+    console.log('[DEBUG] Popup closed');
+    
     const buttons = document.querySelectorAll('.rps-button');
     buttons.forEach((button) => this.renderer.removeClass(button, 'selected'));
   }
