@@ -7,8 +7,8 @@ export interface IRPSGameServer {
   playerAChoice?: RPSChoicesEnum;
   playerBChoice?: RPSChoicesEnum;
 
-  playerAConnected: boolean;
-  playerBConnected: boolean;
+  playerAClientId?: string;
+  playerBClientId?: string;
 
   roundsInfo: IRPSRoundInfo[];
 }

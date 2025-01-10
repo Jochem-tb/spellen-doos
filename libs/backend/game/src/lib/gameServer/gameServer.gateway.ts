@@ -12,9 +12,12 @@ import {
   BaseGatewayEvents,
   IGame,
   IGameGateway,
+  RPSChoicesEnum,
+  RPSGameEvents,
 } from '@spellen-doos/shared/api';
 import { interval } from 'rxjs';
 import { Server, Socket } from 'socket.io';
+import { RPSGameServerController } from './rpsGameServer.controller';
 
 @Injectable()
 @WebSocketGateway({
@@ -26,6 +29,7 @@ import { Server, Socket } from 'socket.io';
 export class RPSGameServerControllerGateway
   implements IGameGateway, OnGatewayConnection, OnGatewayDisconnect
 {
+  private games: Map<string, RPSGameServerController> = new Map();
   queue: string[] = [];
   minPlayerForGame: number = 2;
   maxPlayerForGame: number = 2;
@@ -47,9 +51,27 @@ export class RPSGameServerControllerGateway
         console.log('Requirements met for game');
         const playersForGame = this.queue.splice(0, this.maxPlayerForGame);
         console.log('Starting game with players:', playersForGame);
-        this.server.to(playersForGame).emit(BaseGatewayEvents.START_GAME);
+
+        console.log('Creating new rpsServer');
+        const gameId = this.createGame(playersForGame);
+
+        console.log('Emitting start game event');
+        this.server
+          .to(playersForGame)
+          .emit(BaseGatewayEvents.START_GAME, gameId);
       }
     });
+  }
+
+  private createGame(players: string[]): string {
+    const gameId = `game-${Date.now()}`;
+    console.log(`Game created with ID: ${gameId} for players: ${players}`);
+
+    const newGame = new RPSGameServerController(gameId, players);
+    this.games.set(gameId, newGame);
+
+    console.log('Games:', this.games);
+    return gameId;
   }
 
   // Handle client disconnections
@@ -69,6 +91,16 @@ export class RPSGameServerControllerGateway
       this.queue.length
     );
   }
+
+  // @SubscribeMessage(RPSGameEvents.CHANGE_CHOICE)
+  // changeChoice(
+  //   @MessageBody() data: { choice: RPSChoicesEnum; clientId: string }
+  // ): void {
+  //   const { choice, clientId } = data;
+  //   console.log('Change choice event received');
+  //   console.log('Choice:', choice);
+  //   console.log('Client ID:', clientId);
+  // }
 
   private checkRequirementsForGame(): boolean {
     return this.queue.length >= this.minPlayerForGame;

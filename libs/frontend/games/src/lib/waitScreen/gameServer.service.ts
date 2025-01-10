@@ -42,10 +42,10 @@ export class GameServerService {
     } catch (error) {
       return false;
     }
-    if (window.location.pathname !== '/rpsGame') {
-      console.log('Disconnecting from server');
-      this.socket.disconnect();
-    }
+    // if (window.location.pathname !== '/rpsGame/:id') {
+    //   console.log('Disconnecting from server');
+    //   this.socket.disconnect();
+    // }
     return true;
   }
 
@@ -90,9 +90,9 @@ export class GameServerService {
       console.log('Connected to the control hub:', this.socket.id);
     });
 
-    this.socket.on(BaseGatewayEvents.START_GAME, (data: any) => {
-      console.log('Game started:', data);
-      this.router.navigate(['/rpsGame']);
+    this.socket.on(BaseGatewayEvents.START_GAME, (gameId: any) => {
+      console.log('Game started:', gameId);
+      this.router.navigate([`/rpsGame/${gameId}`]);
     });
 
     // Handle disconnection

@@ -14,4 +14,5 @@ export enum BaseGatewayEvents {
   DISCONNECT = 'disconnect',
   CHECK_NUM_PLAYER_QUEUE = 'checkNumPlayerQueue',
   START_GAME = 'startGame',
+  CONNECT_TO_SERVER = "CONNECT_TO_SERVER",
 }

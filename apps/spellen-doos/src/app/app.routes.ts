@@ -6,10 +6,13 @@ import {
   ProfileComponent,
 } from '@spellen-doos/ui';
 import { AuthGuard } from '@spellen-doos/features';
-import { RpsComponent, WaitScreenComponent } from '@spellen-doos/frontend/games';
+import {
+  RpsComponent,
+  WaitScreenComponent,
+} from '@spellen-doos/frontend/games';
 
 export const appRoutes: Route[] = [
-  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'welcome', component: WelcomeComponent },
   {
     path: 'dashboard',
@@ -27,12 +30,12 @@ export const appRoutes: Route[] = [
     // canActivate: [AuthGuard],
   },
   {
-    path: 'rpsGame',
+    path: 'rpsGame/:id',
     component: RpsComponent,
     // canActivate: [AuthGuard],
   },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
 
-  { path: '**', redirectTo: 'welcome' },
+  { path: '**', redirectTo: 'dashboard' },
 ];

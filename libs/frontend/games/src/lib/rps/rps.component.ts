@@ -1,5 +1,6 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { RPSService } from './rps.service';
+import { RPSChoicesEnum } from '@spellen-doos/shared/api';
 
 @Component({
   selector: 'lib-rps',
@@ -14,7 +15,14 @@ export class RpsComponent {
   winnerMessage: string = '';
   showPopup: boolean = false;
 
+  RPSChoicesEnum = RPSChoicesEnum;
+
   constructor(private renderer: Renderer2, private rpsService: RPSService) {}
+
+  changeChoice(choise: RPSChoicesEnum): void {
+    console.log(`ChangeChoice in rpsCOmponent: ${choise}`);
+    this.rpsService.changeChoice(choise);
+  }
 
   play(choice: string): void {
     console.log(`[DEBUG] Player choice: ${choice}`);
@@ -65,7 +73,7 @@ export class RpsComponent {
   closePopup(): void {
     this.showPopup = false;
     console.log('[DEBUG] Popup closed');
-    
+
     const buttons = document.querySelectorAll('.rps-button');
     buttons.forEach((button) => this.renderer.removeClass(button, 'selected'));
   }
