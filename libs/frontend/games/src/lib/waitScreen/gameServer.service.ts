@@ -8,16 +8,21 @@ import {
   UserRole,
 } from '@spellen-doos/shared/api';
 import { io } from 'socket.io-client';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RPSGameServerController {
-  constructor() {}
+export class GameServerService {
+  constructor(private router: Router) {}
 
   //TESTING SOCKETS
 
-  private socket: any;
+  public getSocket(): any {
+    return this.socket;
+  }
+
+  protected socket: any;
   private NUM_PLAYER_QUEUE: number = -1;
 
   public signIntoQueue(title: string): boolean {
@@ -37,7 +42,10 @@ export class RPSGameServerController {
     } catch (error) {
       return false;
     }
-    this.socket.disconnect();
+    if (window.location.pathname !== '/rpsGame') {
+      console.log('Disconnecting from server');
+      this.socket.disconnect();
+    }
     return true;
   }
 
@@ -77,34 +85,18 @@ export class RPSGameServerController {
         '';
     }
 
-    // this.socket.on(BaseGatewayEvents.CHECK_NUM_PLAYER_QUEUE, (data: any) => {
-    //   console.log('Received number of players in queue');
-    //   this.NUM_PLAYER_QUEUE = data;
-    // });
-
-    this.socket.on('connect', () => {
+    this.socket.on(BaseGatewayEvents.CONNECT, () => {
       console.log('Connected to server');
+      console.log('Connected to the control hub:', this.socket.id);
     });
 
-    this.socket.on('connect', () => {
-      console.log('Connected to the control hub:', this.socket.id);
-
-      // Send a message
-      this.socket.emit('message', {
-        userId: '12345',
-        message: 'Hello, server!',
-      });
-
-      this.socket.emit('changeChoice', { data: 'Hello, server!' });
-
-      // Listen for responses
-      this.socket.on('response', (data: any) => {
-        console.log('Server response:', data);
-      });
+    this.socket.on(BaseGatewayEvents.START_GAME, (data: any) => {
+      console.log('Game started:', data);
+      this.router.navigate(['/rpsGame']);
     });
 
     // Handle disconnection
-    this.socket.on('disconnect', () => {
+    this.socket.on(BaseGatewayEvents.DISCONNECT, () => {
       console.log('Disconnected from the control hub');
     });
   }

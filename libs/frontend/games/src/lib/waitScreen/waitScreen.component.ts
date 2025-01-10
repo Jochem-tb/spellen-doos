@@ -54,7 +54,7 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
   //TESTING
 
   doSomethingWithSocket(): void {
-    // this.RPSGameServerController.sendMessage('Hello, server!');
+    
   }
 
   //TESTING

@@ -13,6 +13,7 @@ import {
   IGame,
   IGameGateway,
 } from '@spellen-doos/shared/api';
+import { interval } from 'rxjs';
 import { Server, Socket } from 'socket.io';
 
 @Injectable()
@@ -41,6 +42,14 @@ export class RPSGameServerControllerGateway
       `Client connected to RPSGameServerControllerGateway clientId: ${client.id}`
     );
     this.queue.push(client.id);
+    interval(1000).subscribe(() => {
+      if (this.checkRequirementsForGame()) {
+        console.log('Requirements met for game');
+        const playersForGame = this.queue.splice(0, this.maxPlayerForGame);
+        console.log('Starting game with players:', playersForGame);
+        this.server.to(playersForGame).emit(BaseGatewayEvents.START_GAME);
+      }
+    });
   }
 
   // Handle client disconnections
@@ -61,19 +70,8 @@ export class RPSGameServerControllerGateway
     );
   }
 
-  // Custom event for handling messages
-  @SubscribeMessage('message')
-  handleMessage(
-    @MessageBody() data: { userId: string; message: string }
-  ): string {
-    console.log(`Received message from user ${data.userId}: ${data.message}`);
-    this.broadcastToAll('response', data);
-    return `Message received: ${data.message}`;
-  }
-
-  // Broadcast a message to all connected clients
-  broadcastToAll(event: string, payload: any) {
-    this.server.emit(event, payload);
+  private checkRequirementsForGame(): boolean {
+    return this.queue.length >= this.minPlayerForGame;
   }
 
   broadCastToSingleClient(clientId: string, event: string, payload: any) {

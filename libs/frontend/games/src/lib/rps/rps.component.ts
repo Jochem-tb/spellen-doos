@@ -1,4 +1,5 @@
-import { Component, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
+import { RPSService } from './rps.service';
 
 @Component({
   selector: 'lib-rps',
@@ -13,7 +14,7 @@ export class RpsComponent {
   winnerMessage: string = '';
   showPopup: boolean = false;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2, private rpsService: RPSService) {}
 
   play(choice: string): void {
     // Reset previous button state
