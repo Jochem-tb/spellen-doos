@@ -73,15 +73,17 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (success: boolean) => {
           if (success) {
+            //setup Connection!
+            //Send to game
+            //Etc
             console.log('signIntoQueue completed');
-            //Wait untill server assigns a game
           } else {
             //Something went wrong with connecting to the queue!
             console.error('signIntoQueue failed');
             this.router.navigate(['/dashboard']);
           }
         },
-        error: (err) => console.error('signIntoQueue failed', err),
+        error: (err: any) => console.error('signIntoQueue failed', err),
       });
     this.subscriptions.push(subscriptionIntoQueue);
 
@@ -96,7 +98,7 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
 
     this.waitScreenService
       .signOutOfQueue()
-      .subscribe(() => console.log('signOutOfQueue completed'));
+      .subscribe((next) => console.log('signOutOfQueue completed'));
 
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
@@ -160,6 +162,10 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
           this.numPlayersInQueue = numPlayers;
         });
       this.numPlayerQueueCounter = 0;
+
+      //TODO: Remove this line
+      //Mock for testing
+      // this.numPlayersInQueue += Math.random() > 0.5 ? 5 : 2;
     }
   }
 }

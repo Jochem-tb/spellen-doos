@@ -77,9 +77,10 @@ export class RPSGameServerController {
         '';
     }
 
-    if (!this.socket.connected) {
-      throw new Error('Socket initialization failed');
-    }
+    // this.socket.on(BaseGatewayEvents.CHECK_NUM_PLAYER_QUEUE, (data: any) => {
+    //   console.log('Received number of players in queue');
+    //   this.NUM_PLAYER_QUEUE = data;
+    // });
 
     this.socket.on('connect', () => {
       console.log('Connected to server');
