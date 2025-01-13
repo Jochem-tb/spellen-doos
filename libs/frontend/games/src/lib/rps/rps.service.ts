@@ -74,7 +74,19 @@ export class RPSService {
 
     this.socket.on(RPSGameEvents.ROUND_RESULT, (data: any) => {
       console.log('Round Results:', data);
-      alert(`Round results: ${data}`);
+      if (this.socket.id === data.playerA) {
+        alert(
+          `Round winner: ${data.winner} \n Round: ${data.round}, \n Your choice: ${data.playerAChoice}, \n Opponent choice: ${data.playerBChoice}`
+        );
+      } else {
+        alert(
+          `Round winner: ${data.winner} \n Round: ${data.round}, \n Your choice: ${data.playerBChoice}, \n Opponent choice: ${data.playerAChoice}`
+        );
+      }
+    });
+
+    this.socket.on(RPSGameEvents.CHANGE_CHOICE, (data: any) => {
+      console.log('My choice in gameController:', data.choice);
     });
   }
 
@@ -89,20 +101,10 @@ export class RPSService {
 
   public changeChoice(choice: RPSChoicesEnum): void {
     console.log(`[DEBUG - RPSService] Player choice: ${choice}`);
-    this.socket.volatile.emit(
-      RPSGameEvents.CHANGE_CHOICE,
-      {
-        choice,
-        clientId: this.socket.id,
-        roomId: this.roomId,
-      },
-      (success: boolean) => {
-        if (success) {
-          console.log('Choice successfully changed');
-        } else {
-          console.log('Failed to change choice');
-        }
-      }
-    );
+    this.socket.volatile.emit(RPSGameEvents.CHANGE_CHOICE, {
+      choice,
+      clientId: this.socket.id,
+      roomId: this.roomId,
+    });
   }
 }

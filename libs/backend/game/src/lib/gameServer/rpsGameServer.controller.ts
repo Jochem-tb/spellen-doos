@@ -37,6 +37,9 @@ export class RPSGameServerController implements IRPSGameServer {
   readonly playerB: Socket;
   roundsInfo: IRPSRoundInfo[] = [];
 
+  timerActive: boolean = false;
+  private activeInterval: NodeJS.Timeout | null = null; // Track the active interval
+
   gateway!: RPSGameServerControllerGateway;
 
   constructor(
@@ -51,44 +54,93 @@ export class RPSGameServerController implements IRPSGameServer {
 
   changeChoice(clientId: string, choice: RPSChoicesEnum): void {
     if (this.playerA.id === clientId) {
-      this.playerAChoice = choice;
+      this.playerAChoice = this.playerAChoice === choice ? undefined : choice;
+      this.alertPlayerChange(this.playerA, this.playerAChoice);
     } else if (this.playerB.id === clientId) {
-      this.playerBChoice = choice;
+      this.playerBChoice = this.playerBChoice === choice ? undefined : choice;
+      this.alertPlayerChange(this.playerB, this.playerBChoice);
     } else {
-      console.error(`Invalid clientId: ${clientId} for game: ${this.gameId}`);
+      console.error(
+        `[ERROR] Invalid clientId: ${clientId} for game: ${this.gameId}`
+      );
       return;
     }
 
     console.log(
-      `Player ${clientId} selected ${choice}. Current choices:`,
-      this.playerAChoice,
-      this.playerBChoice
+      `[DEBUG] Player ${clientId} chose ${choice}. Current choices:`,
+      { playerAChoice: this.playerAChoice, playerBChoice: this.playerBChoice }
     );
 
+    // Stop the timer if it's active
+    if (this.timerActive) {
+      console.warn('[INFO] Timer is active. Stopping current countdown.');
+      this.stopTimer();
+    }
+
+    // Restart timer only if both players have valid choices
     if (this.playerAChoice && this.playerBChoice) {
       this.startCountDown();
     }
   }
 
-  private startCountDown(): void {
-    console.log('Starting countdown for round evaluation');
-    let countDown = 5;
-    let time;
+  private alertPlayerChange(
+    player: Socket,
+    choice: RPSChoicesEnum | undefined
+  ) {
+    this.gateway.broadcastToPlayer(player.id, RPSGameEvents.CHANGE_CHOICE, {
+      choice,
+    });
+  }
 
-    const interval = setInterval(() => {
-      time = countDown;
-      console.warn('Time:', time);
+  private stopTimer(): void {
+    if (this.activeInterval) {
+      clearInterval(this.activeInterval);
+      this.activeInterval = null; // Ensure no dangling intervals
+    }
+
+    if (this.timerActive) {
+      this.timerActive = false; // Mark timer as inactive
+      console.log('[INFO] Timer stopped.');
+
+      // Broadcast -1 to the room to indicate timer stop
       this.gateway.broadcastToRoom(
         this.gameId,
         BaseGatewayEvents.DISPLAY_TIMER,
-        {
-          time,
-        }
+        { time: -1 }
+      );
+    }
+  }
+
+  private startCountDown(): void {
+    if (this.timerActive) {
+      console.log('[INFO] Countdown is already active. Aborting new timer.');
+      return;
+    }
+
+    // Clear any existing interval before starting a new one
+    this.stopTimer();
+
+    let countDown = 5; // Countdown duration
+
+    console.log('[INFO] Starting countdown for round evaluation.');
+    this.timerActive = true;
+
+    this.activeInterval = setInterval(() => {
+      if (!this.timerActive) {
+        this.stopTimer(); // Ensure proper handling when timer is stopped
+        return;
+      }
+
+      console.warn(`[TIMER] Countdown: ${countDown}`);
+      this.gateway.broadcastToRoom(
+        this.gameId,
+        BaseGatewayEvents.DISPLAY_TIMER,
+        { time: countDown }
       );
 
       if (countDown === 0) {
-        clearInterval(interval);
-        this.evaluateRound();
+        this.stopTimer(); // Stop the timer after it finishes
+        this.evaluateRound(); // Evaluate the round
       }
 
       countDown--;
@@ -125,10 +177,12 @@ export class RPSGameServerController implements IRPSGameServer {
       round: this.currentRound + 1,
       playerAChoice: this.playerAChoice,
       playerBChoice: this.playerBChoice,
-      result: winner,
+      winner: winner,
       playerAWins: this.playerAWins,
       playerBWins: this.playerBWins,
       draws: this.draws,
+      playerA: this.playerA.id,
+      playerB: this.playerB.id,
     });
 
     this.roundsInfo.push({
