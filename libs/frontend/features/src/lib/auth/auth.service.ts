@@ -124,6 +124,7 @@ export class AuthService {
     console.log('Logging out...');
     localStorage.removeItem(this.CURRENT_USER);
     localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem('userId');
 
     this.currentUser$.next(null);
 
@@ -138,7 +139,9 @@ export class AuthService {
 
   getUserFromLocalStorage(): Observable<User | null> {
     const userJson = localStorage.getItem(this.CURRENT_USER);
-    if (!userJson) {
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    const userId = localStorage.getItem('userId');
+    if (!userJson || !token || !userId) {
       return of(null);
     }
     try {

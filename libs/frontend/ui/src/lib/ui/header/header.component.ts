@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProfileService } from '../../profile/profile.service';
 import { IUser } from '@spellen-doos/shared/api';
+import { AuthService } from '@spellen-doos/features';
 
 @Component({
   selector: 'app-header',
@@ -11,7 +12,7 @@ import { IUser } from '@spellen-doos/shared/api';
 export class HeaderComponent implements OnInit {
   public profile: IUser | null = null;
   private userId: string | null = null;
-  constructor(private profileService: ProfileService) {}
+  constructor(private profileService: ProfileService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.userId = localStorage.getItem('userId');
@@ -23,5 +24,9 @@ export class HeaderComponent implements OnInit {
     } else {
       console.error('User ID is null');
     }
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }
