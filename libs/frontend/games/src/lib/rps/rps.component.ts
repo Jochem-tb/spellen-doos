@@ -15,13 +15,21 @@ export class RpsComponent {
   winnerMessage: string = '';
   showPopup: boolean = false;
 
+  TIMER_TIME: number = 0;
+
   RPSChoicesEnum = RPSChoicesEnum;
 
-  constructor(private renderer: Renderer2, private rpsService: RPSService) {}
+  constructor(private renderer: Renderer2, private rpsService: RPSService) {
+    this.rpsService.component = this;
+  }
 
   changeChoice(choise: RPSChoicesEnum): void {
     console.log(`ChangeChoice in rpsCOmponent: ${choise}`);
     this.rpsService.changeChoice(choise);
+  }
+
+  public updateTimer(time: number): void {
+    this.TIMER_TIME = time;
   }
 
   play(choice: string): void {

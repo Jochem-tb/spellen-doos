@@ -9,6 +9,7 @@ import {
   IRPSRoundInfo,
   RPSChoicesEnum,
   RPSGameEvents,
+  RPSWinnerEnum,
 } from '@spellen-doos/shared/api';
 import {
   MessageBody,
@@ -19,14 +20,10 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { RPSGameServerControllerGateway } from './gameServer.gateway';
 
-// @WebSocketGateway({
-//   cors: {
-//     origin: '*',
-//   },
-// })
 export class RPSGameServerController implements IRPSGameServer {
-  maxRounds: number = 0;
+  maxRounds: number = 3;
   currentRound: number = 0;
 
   playerAWins: number = 0;
@@ -40,11 +37,15 @@ export class RPSGameServerController implements IRPSGameServer {
   readonly playerB: Socket;
   roundsInfo: IRPSRoundInfo[] = [];
 
-  // @WebSocketServer()
-  // server!: Server;
+  gateway!: RPSGameServerControllerGateway;
 
-  constructor(private readonly gameId: string, players: Socket[]) {
+  constructor(
+    private readonly gameId: string,
+    players: Socket[],
+    gateway: RPSGameServerControllerGateway
+  ) {
     [this.playerA, this.playerB] = players;
+    this.gateway = gateway;
     console.log(`Game controller created for room: ${gameId}`);
   }
 
@@ -65,22 +66,85 @@ export class RPSGameServerController implements IRPSGameServer {
     );
 
     if (this.playerAChoice && this.playerBChoice) {
-      this.evaluateRound();
+      this.startCountDown();
     }
   }
 
-  private evaluateRound(): void {
-    console.log(
-      `Evaluating round for game ${this.gameId}:`,
-      this.playerAChoice,
-      this.playerBChoice
-    );
+  private startCountDown(): void {
+    console.log('Starting countdown for round evaluation');
+    let countDown = 5;
+    let time;
 
-    // Determine the winner logic here
-    // Example: Rock > Scissors, Scissors > Paper, Paper > Rock
+    const interval = setInterval(() => {
+      time = countDown;
+      console.warn('Time:', time);
+      this.gateway.broadcastToRoom(
+        this.gameId,
+        BaseGatewayEvents.DISPLAY_TIMER,
+        {
+          time,
+        }
+      );
+
+      if (countDown === 0) {
+        clearInterval(interval);
+        this.evaluateRound();
+      }
+
+      countDown--;
+    }, 1000);
+  }
+
+  private evaluateRound(): void {
+    console.log('Player A & B have made their choices');
+
+    let winner: RPSWinnerEnum;
+
+    if (this.playerAChoice === this.playerBChoice) {
+      this.draws++;
+      winner = RPSWinnerEnum.Draw;
+      console.log('Round result: Draw');
+    } else if (
+      (this.playerAChoice === RPSChoicesEnum.Steen &&
+        this.playerBChoice === RPSChoicesEnum.Schaar) ||
+      (this.playerAChoice === RPSChoicesEnum.Papier &&
+        this.playerBChoice === RPSChoicesEnum.Steen) ||
+      (this.playerAChoice === RPSChoicesEnum.Schaar &&
+        this.playerBChoice === RPSChoicesEnum.Papier)
+    ) {
+      this.playerAWins++;
+      console.log('Round result: Player A wins');
+      winner = RPSWinnerEnum.PlayerA;
+    } else {
+      this.playerBWins++;
+      winner = RPSWinnerEnum.PlayerB;
+      console.log('Round result: Player B wins');
+    }
+
+    this.gateway.broadcastToRoom(this.gameId, RPSGameEvents.ROUND_RESULT, {
+      round: this.currentRound + 1,
+      playerAChoice: this.playerAChoice,
+      playerBChoice: this.playerBChoice,
+      result: winner,
+      playerAWins: this.playerAWins,
+      playerBWins: this.playerBWins,
+      draws: this.draws,
+    });
+
+    this.roundsInfo.push({
+      round: this.currentRound + 1,
+      playerAChoice: this.playerAChoice!,
+      playerBChoice: this.playerBChoice!,
+      winner: winner,
+    });
+
+    this.currentRound++;
 
     // Reset for the next round
     this.playerAChoice = undefined;
     this.playerBChoice = undefined;
+    console.log(
+      `Round evaluation completed, PlayerA: ${this.playerAWins}, PlayerB: ${this.playerBWins}, Draws: ${this.draws}`
+    );
   }
 }

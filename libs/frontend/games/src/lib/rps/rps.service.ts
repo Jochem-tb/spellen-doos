@@ -11,6 +11,7 @@ import {
 } from '@spellen-doos/shared/api';
 import { io, Socket } from 'socket.io-client';
 import { GameServerService } from '../waitScreen/gameServer.service';
+import { RpsComponent } from './rps.component';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +25,8 @@ export class RPSService {
   private socket!: Socket;
   // private gameServer!: Socket;
   private roomId!: string;
+
+  public component!: RpsComponent;
 
   private initializeSocketConnection(): void {
     console.log('[DEBUG] Initializing socket connection');
@@ -60,7 +63,18 @@ export class RPSService {
 
     this.socket.on(BaseGatewayEvents.GAME_OVER, (data: any) => {
       console.log('Game over');
+      console.debug(data);
       this.handleGameOver();
+    });
+
+    this.socket.on(BaseGatewayEvents.DISPLAY_TIMER, (data: any) => {
+      console.log('Timer updated:', data.time);
+      this.component.updateTimer(data.time);
+    });
+
+    this.socket.on(RPSGameEvents.ROUND_RESULT, (data: any) => {
+      console.log('Round Results:', data);
+      alert(`Round results: ${data}`);
     });
   }
 

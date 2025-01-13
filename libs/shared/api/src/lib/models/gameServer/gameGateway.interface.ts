@@ -17,5 +17,6 @@ export enum BaseGatewayEvents {
   GAME_OVER = 'gameOver',
   CHECK_NUM_PLAYER_QUEUE = 'checkNumPlayerQueue',
   START_GAME = 'startGame',
+  DISPLAY_TIMER = 'displayTimer',
   CONNECT_TO_SERVER = 'CONNECT_TO_SERVER',
 }

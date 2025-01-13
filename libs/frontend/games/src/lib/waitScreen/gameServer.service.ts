@@ -41,13 +41,10 @@ export class GameServerService {
 
   public signOutOfQueue(): boolean {
     try {
+      this.socket.disconnect();
     } catch (error) {
       return false;
     }
-    // if (window.location.pathname !== '/rpsGame/:id') {
-    //   console.log('Disconnecting from server');
-    //   this.socket.disconnect();
-    // }
     return true;
   }
 

@@ -23,8 +23,8 @@ export enum RPSChoicesEnum {
 
 export interface IRPSRoundInfo {
   round: number;
-  playerAChoice: string;
-  playerBChoice: string;
+  playerAChoice: RPSChoicesEnum;
+  playerBChoice: RPSChoicesEnum;
   winner: RPSWinnerEnum;
 }
 
@@ -35,8 +35,6 @@ export enum RPSWinnerEnum {
 }
 
 export enum RPSGameEvents {
-  BaseGameEvents,
-  MESSAGE = 'message',
   CHANGE_CHOICE = 'changeChoice',
-  RESPONSE = 'response',
+  ROUND_RESULT = 'roundResult',
 }
