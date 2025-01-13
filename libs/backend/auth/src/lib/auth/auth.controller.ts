@@ -13,6 +13,7 @@ export class AuthController {
     @Post("login")
     async login(@Body() credentials: IUserCredentials): Promise<IUserIdentity> {
         Logger.log(`Login attempt for user ${credentials.userName}`);
+        credentials.userName = credentials.userName.toLowerCase();
         return this.authService.login(credentials);
     }
 
@@ -22,6 +23,7 @@ export class AuthController {
     async register(@Body() registerDto: CreateUserDto) {
         Logger.log(`Register attempt for new user`);
         Logger.log(registerDto);
+        registerDto.userName = registerDto.userName.toLowerCase();
         return this.authService.register(registerDto);
     }
 }

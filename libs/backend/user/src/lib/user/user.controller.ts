@@ -15,6 +15,7 @@ export class UserController {
     @Get('check-username/:username')
     async checkUsername(@Param('username') username: string): Promise<{ exists: boolean }> {
         Logger.debug(`Checking username ${username}`);
+        username = username.toLowerCase();
         const userExists = await this.userService.findByUsername(username);
         Logger.debug(`User exists: ${userExists ? true : false}`);
         return { exists: !!userExists };
