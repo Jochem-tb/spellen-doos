@@ -57,10 +57,20 @@ export class RPSService {
         this.playerDisconnected(playerId);
       }
     });
+
+    this.socket.on(BaseGatewayEvents.GAME_OVER, (data: any) => {
+      console.log('Game over');
+      this.handleGameOver();
+    });
   }
 
   private playerDisconnected(playerId: string): void {
     alert(`Speler ${playerId} heeft momenteel de game verlaten.`);
+  }
+
+  private handleGameOver(): void {
+    alert('Game over');
+    this.gameServerService.gameOver();
   }
 
   public changeChoice(choice: RPSChoicesEnum): void {

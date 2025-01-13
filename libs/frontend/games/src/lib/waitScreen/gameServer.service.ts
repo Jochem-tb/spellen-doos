@@ -25,10 +25,13 @@ export class GameServerService {
   protected socket: any;
   private NUM_PLAYER_QUEUE: number = -1;
 
+  public gameOver(): void {
+    this.router.navigate(['/dashboard']);
+  }
+
   public signIntoQueue(title: string): boolean {
     try {
       this.initializeSocket(title);
-      this.verifyConnection();
     } catch (error) {
       console.log('Error:', error);
       return false;
@@ -38,7 +41,6 @@ export class GameServerService {
 
   public signOutOfQueue(): boolean {
     try {
-      this.notifyServerOfLeave();
     } catch (error) {
       return false;
     }
@@ -61,14 +63,6 @@ export class GameServerService {
         observer.complete();
       });
     });
-  }
-
-  notifyServerOfLeave() {
-    // throw new Error('Method not implemented.');
-  }
-
-  private verifyConnection() {
-    // throw new Error('Method not implemented.');
   }
 
   private initializeSocket(gameTitle: string): void {
