@@ -18,6 +18,7 @@ import {
 import { interval } from 'rxjs';
 import { Server, Socket } from 'socket.io';
 import { RPSGameServerController } from './rpsGameServer.controller';
+import { MIN } from 'class-validator';
 
 @Injectable()
 @WebSocketGateway({
@@ -27,86 +28,130 @@ import { RPSGameServerController } from './rpsGameServer.controller';
   },
 })
 export class RPSGameServerControllerGateway
-  implements IGameGateway, OnGatewayConnection, OnGatewayDisconnect
+  implements
+    IGameGateway<RPSGameServerController>,
+    OnGatewayConnection,
+    OnGatewayDisconnect
 {
-  private games: Map<string, RPSGameServerController> = new Map();
-  queue: string[] = [];
+  games: Map<string, RPSGameServerController> = new Map();
+  rooms: Map<string, Socket[]> = new Map();
+
+  queue: Socket[] = [];
   minPlayerForGame: number = 2;
   maxPlayerForGame: number = 2;
   recommendedPlayerForGame: number = 2;
-  game?: IGame | undefined;
-  connectedPlayers: string[] = [];
+
+  private readonly TIME_FOR_RECONNECTION_IN_MS = 30000; // 30 seconds
 
   @WebSocketServer()
   server!: Server;
 
-  // Handle new client connections
-  handleConnection(@ConnectedSocket() client: Socket) {
-    console.log(
-      `Client connected to RPSGameServerControllerGateway clientId: ${client.id}`
-    );
-    this.queue.push(client.id);
-    interval(1000).subscribe(() => {
-      if (this.checkRequirementsForGame()) {
-        console.log('Requirements met for game');
-        const playersForGame = this.queue.splice(0, this.maxPlayerForGame);
-        console.log('Starting game with players:', playersForGame);
+  // Handle ALL incoming Connectioning clients
+  handleConnection(@ConnectedSocket() client: Socket): void {
+    console.log(`Client connected: ${client.id}`);
+    this.queue.push(client);
 
-        console.log('Creating new rpsServer');
-        const gameId = this.createGame(playersForGame);
-
-        console.log('Emitting start game event');
-        this.server
-          .to(playersForGame)
-          .emit(BaseGatewayEvents.START_GAME, gameId);
-      }
-    });
+    if (this.checkRequirementsForGame()) {
+      console.log('Requirements met for game');
+      this.createGameRoom();
+    }
   }
-
-  private createGame(players: string[]): string {
-    const gameId = `game-${Date.now()}`;
-    console.log(`Game created with ID: ${gameId} for players: ${players}`);
-
-    const newGame = new RPSGameServerController(gameId, players);
-    this.games.set(gameId, newGame);
-
-    console.log('Games:', this.games);
-    return gameId;
-  }
-
-  // Handle client disconnections
-  handleDisconnect(client: Socket) {
-    this.queue = this.queue.filter((id) => id !== client.id);
-    console.log(`Client disconnected: ${client.id}`);
-  }
-
-  @SubscribeMessage(BaseGatewayEvents.CHECK_NUM_PLAYER_QUEUE)
-  getPlayerQueue(@MessageBody() clientId: string): void {
-    console.log('Returning number of players in queue');
-    console.log('Queue length:', this.queue.length);
-    console.log('Client ID:', clientId);
-    this.broadCastToSingleClient(
-      clientId,
-      BaseGatewayEvents.CHECK_NUM_PLAYER_QUEUE,
-      this.queue.length
-    );
-  }
-
-  // @SubscribeMessage(RPSGameEvents.CHANGE_CHOICE)
-  // changeChoice(
-  //   @MessageBody() data: { choice: RPSChoicesEnum; clientId: string }
-  // ): void {
-  //   const { choice, clientId } = data;
-  //   console.log('Change choice event received');
-  //   console.log('Choice:', choice);
-  //   console.log('Client ID:', clientId);
-  // }
 
   private checkRequirementsForGame(): boolean {
     return this.queue.length >= this.minPlayerForGame;
   }
 
-  broadCastToSingleClient(clientId: string, event: string, payload: any) {
-    this.server.to(clientId).emit(event, payload);
+  private createGameRoom(): void {
+    const players = this.queue.splice(0, this.minPlayerForGame);
+    const roomId = `room-${Date.now()}`;
+    this.rooms.set(roomId, players);
+
+    const gameController = new RPSGameServerController(roomId, players);
+    this.games.set(roomId, gameController);
+
+    players.forEach((player) => {
+      player.join(roomId);
+      player.emit(BaseGatewayEvents.START_GAME, { roomId });
+    });
+  }
+
+  // Handle client disconnections
+  handleDisconnect(client: Socket) {
+    // Remove player from queue if present
+    this.queue = this.queue.filter((socket) => socket.id !== client.id);
+
+    // Remove player from rooms if present
+    this.rooms.forEach((players, roomId) => {
+      this.rooms.set(
+        roomId,
+        players.filter((player) => player.id !== client.id)
+      );
+
+      // If room is empty, remove room and game controller
+      if (this.rooms.get(roomId)?.length === 0) {
+        this.rooms.delete(roomId);
+        this.games.delete(roomId);
+      } else {
+        // If room is not empty, notify the other player of the disconnect
+        console.warn('Player disconnected:', client.id);
+        this.server.to(roomId).emit(BaseGatewayEvents.PLAYER_DISCONNECT, {
+          playerId: client.id,
+        });
+
+        // Set a timeout for reconnection
+        setTimeout(() => {
+          // Check if the connectedPlayers is more than Minimum players for game, otherwise delete room
+          const roomPlayers = this.rooms.get(roomId);
+          if (roomPlayers && roomPlayers.length < this.minPlayerForGame) {
+            this.rooms.delete(roomId);
+            this.games.delete(roomId);
+            this.server.to(roomId).emit(BaseGatewayEvents.GAME_OVER, {
+              reason: 'Not enough players to continue the game.',
+            });
+          }
+        }, this.TIME_FOR_RECONNECTION_IN_MS); // 30 seconds for reconnection
+      }
+    });
+
+    console.log(`Client disconnected: ${client.id}`);
+  }
+
+  //
+  // Handle incoming messages
+  //
+
+  @SubscribeMessage(BaseGatewayEvents.CHECK_NUM_PLAYER_QUEUE)
+  getPlayerQueue(@MessageBody() clientId: string): void {
+    console.log('Return num of Queue: ', this.queue.length);
+    this.server
+      .to(clientId)
+      .emit(BaseGatewayEvents.CHECK_NUM_PLAYER_QUEUE, this.queue.length);
+  }
+
+  @SubscribeMessage(RPSGameEvents.CHANGE_CHOICE)
+  handleChangeChoice(
+    @MessageBody() data: { choice: RPSChoicesEnum; roomId: string },
+    @ConnectedSocket() client: Socket
+  ): void {
+    let roomId;
+    if (!data.roomId) {
+      roomId = Array.from(this.rooms.entries()).find(([, players]) =>
+        players.includes(client)
+      )?.[0];
+    } else {
+      roomId = data.roomId;
+    }
+
+    if (!roomId) {
+      console.error('Client is not part of any room.');
+      return;
+    }
+
+    const game = this.games.get(roomId);
+    if (game) {
+      game.changeChoice(client.id, data.choice);
+    } else {
+      console.error(`No game controller found for room: ${roomId}`);
+    }
   }
 }

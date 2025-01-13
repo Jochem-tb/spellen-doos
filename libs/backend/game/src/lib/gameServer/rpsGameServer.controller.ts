@@ -20,14 +20,12 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway({
-  cors: {
-    origin: '*',
-  },
-})
-export class RPSGameServerController
-  implements IRPSGameServer, OnGatewayConnection, OnGatewayDisconnect
-{
+// @WebSocketGateway({
+//   cors: {
+//     origin: '*',
+//   },
+// })
+export class RPSGameServerController implements IRPSGameServer {
   maxRounds: number = 0;
   currentRound: number = 0;
 
@@ -38,61 +36,51 @@ export class RPSGameServerController
   playerAChoice?: RPSChoicesEnum;
   playerBChoice?: RPSChoicesEnum;
 
-  playerAClientId?: string;
-  playerBClientId?: string;
+  readonly playerA: Socket;
+  readonly playerB: Socket;
   roundsInfo: IRPSRoundInfo[] = [];
 
-  @WebSocketServer()
-  server!: Server;
+  // @WebSocketServer()
+  // server!: Server;
 
-  constructor(private gameId: string, players: string[]) {
-    [this.playerAClientId, this.playerBClientId] = players;
-
-    // Create a unique namespace for this game
-    const namespaceName = `/${gameId}`;
-    this.server = new Server({ cors: { origin: '*' } });
-    console.log(`Created new game server with namespace: ${namespaceName}`);
-    this.server.of(namespaceName).on(BaseGatewayEvents.CONNECT, (socket) => {
-      console.log(`Player connected to game ${gameId}: ${socket.id}`);
-
-      socket.on(BaseGatewayEvents.DISCONNECT, () => {
-        console.log(`Player disconnected from game ${gameId}: ${socket.id}`);
-        // Handle game end or disconnection
-      });
-    });
+  constructor(private readonly gameId: string, players: Socket[]) {
+    [this.playerA, this.playerB] = players;
+    console.log(`Game controller created for room: ${gameId}`);
   }
 
-  handleDisconnect(client: any) {
-    throw new Error('Method not implemented.');
-  }
-  handleConnection(client: Socket, ...args: any[]): void {
-    const gameId = client.handshake.query['gameId']; // Extract the gameId from the query parameters
-    console.log(`Client connected to game ${gameId}: ${client.id}`);
-
-    // Dynamically attach the socket to the namespace
-    const gameNamespace = this.server.of(`/${gameId}`);
-    gameNamespace.on(BaseGatewayEvents.CONNECT, (socket) => {
-      console.log(`Player connected to game ${gameId}: ${socket.id}`);
-
-      socket.on(BaseGatewayEvents.DISCONNECT, () => {
-        console.log(`Player disconnected from game ${gameId}: ${socket.id}`);
-        // Handle game end or disconnection
-      });
-    });
-  }
-
-  @SubscribeMessage(RPSGameEvents.CHANGE_CHOICE)
-  changeChoice(
-    @MessageBody() data: { choice: RPSChoicesEnum; clientId: string }
-  ): void {
-    const { choice, clientId } = data;
-    console.log('Change choice event received');
-    console.log('Choice:', choice);
-    console.log('Client ID:', clientId);
-    if (this.playerAClientId === clientId) {
+  changeChoice(clientId: string, choice: RPSChoicesEnum): void {
+    if (this.playerA.id === clientId) {
       this.playerAChoice = choice;
-    } else if (this.playerBClientId === clientId) {
+    } else if (this.playerB.id === clientId) {
       this.playerBChoice = choice;
+    } else {
+      console.error(`Invalid clientId: ${clientId} for game: ${this.gameId}`);
+      return;
     }
+
+    console.log(
+      `Player ${clientId} selected ${choice}. Current choices:`,
+      this.playerAChoice,
+      this.playerBChoice
+    );
+
+    if (this.playerAChoice && this.playerBChoice) {
+      this.evaluateRound();
+    }
+  }
+
+  private evaluateRound(): void {
+    console.log(
+      `Evaluating round for game ${this.gameId}:`,
+      this.playerAChoice,
+      this.playerBChoice
+    );
+
+    // Determine the winner logic here
+    // Example: Rock > Scissors, Scissors > Paper, Paper > Rock
+
+    // Reset for the next round
+    this.playerAChoice = undefined;
+    this.playerBChoice = undefined;
   }
 }

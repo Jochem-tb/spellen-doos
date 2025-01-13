@@ -18,79 +18,67 @@ import { GameServerService } from '../waitScreen/gameServer.service';
 export class RPSService {
   constructor(private gameServerService: GameServerService) {
     console.log('[DEBUG] RPSService constructor');
-    this.retrieveConnection();
-    console.log('RPSService constructed');
-    console.log('Socket:', this.socket);
+    this.initializeSocketConnection();
   }
 
   private socket!: Socket;
-  private gameServer!: Socket;
+  // private gameServer!: Socket;
+  private roomId!: string;
 
-  private retrieveConnection(): void {
-    console.log('[DEBUG] Retrieve connection');
+  private initializeSocketConnection(): void {
+    console.log('[DEBUG] Initializing socket connection');
     this.socket = this.gameServerService.getSocket();
-    console.log('[DEBUG] got socket:', this.socket);
+    console.log(
+      '[DEBUG] Retrieved socket from GameServerService:',
+      this.socket
+    );
+
     if (!this.socket.connected) {
-      console.log('Socket not connected, attempting to reconnect');
+      console.log('[DEBUG] Socket not connected. Attempting to reconnect...');
+      this.socket.connect();
     }
-    this.connectToGameServer();
+
+    this.setupIncoming();
   }
-
-  private connectToGameServer(): void {
-    console.log('[DEBUG] connectToGameServer()');
-    const gameID = window.location.pathname.split('/').pop();
-    console.log('GameID:', gameID);
-    this.gameServer = io(`http://localhost:3000/${gameID}`, {
-      query: { gameId: gameID }, // Send the gameId as a query parameter
-    });
-    this.gameServer.on(BaseGatewayEvents.CONNECT, () => {
-      console.log('[DEBUG] GameServer connected:', this.gameServer.id);
-      this.setupIncoming();
-    });
-
-    this.gameServer.on('connect_error', (err) => {
-      console.error('[ERROR] GameServer connection error:', err);
-    });
-
-    this.gameServer.on('connect_timeout', () => {
-      console.log('[DEBUG] GameServer connection timeout');
-    });
-
-    this.gameServer.connect();
-    // this.gameServer.connect();
-    // this.connectToGameServer();
-  }
-
   private setupIncoming(): void {
     console.log('[DEBUG] Setup incoming');
-    this.socket.on(BaseGatewayEvents.START_GAME, (gameID: any) => {
-      console.log('Game started');
-      console.log('GameId:', gameID);
 
-      this.socket.emit(RPSGameEvents.CHANGE_CHOICE, RPSChoicesEnum.Steen);
+    this.socket.on(BaseGatewayEvents.START_GAME, (roomId: any) => {
+      console.log('Game started');
+      console.log('RoomId:', roomId);
+      this.roomId = roomId;
     });
+
+    this.socket.on(BaseGatewayEvents.PLAYER_DISCONNECT, (data: any) => {
+      const playerId = data.playerId;
+      if (playerId === this.socket.id) {
+        console.log('You have been disconnected from the game');
+      } else {
+        this.playerDisconnected(playerId);
+      }
+    });
+  }
+
+  private playerDisconnected(playerId: string): void {
+    alert(`Speler ${playerId} heeft momenteel de game verlaten.`);
   }
 
   public changeChoice(choice: RPSChoicesEnum): void {
     console.log(`[DEBUG - RPSService] Player choice: ${choice}`);
-    console.log('GameServer:', this.gameServer);
-    console.log('Socket:', RPSGameEvents.CHANGE_CHOICE, choice);
-    if (this.gameServer.connected) {
-      this.gameServer.emit(RPSGameEvents.CHANGE_CHOICE, {
+    this.socket.volatile.emit(
+      RPSGameEvents.CHANGE_CHOICE,
+      {
         choice,
         clientId: this.socket.id,
-      });
-    } else {
-      console.log(
-        '[DEBUG - changeChoice method] GameServer not connected, attempting to reconnect'
-      );
-      this.gameServer.connect();
-      this.gameServer.once('connect', () => {
-        this.gameServer.emit(RPSGameEvents.CHANGE_CHOICE, {
-          choice,
-          clientId: this.socket.id,
-        });
-      });
-    }
+        roomId: this.roomId,
+      },
+      (success: boolean) => {
+        if (success) {
+          console.log('Choice successfully changed');
+        } else {
+          console.log('Failed to change choice');
+        }
+      }
+    );
   }
 }

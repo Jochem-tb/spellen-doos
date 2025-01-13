@@ -1,3 +1,5 @@
+import { Socket } from 'socket.io';
+
 export interface IRPSGameServer {
   maxRounds: number;
   currentRound: number;
@@ -7,8 +9,8 @@ export interface IRPSGameServer {
   playerAChoice?: RPSChoicesEnum;
   playerBChoice?: RPSChoicesEnum;
 
-  playerAClientId?: string;
-  playerBClientId?: string;
+  playerA: Socket;
+  playerB: Socket;
 
   roundsInfo: IRPSRoundInfo[];
 }

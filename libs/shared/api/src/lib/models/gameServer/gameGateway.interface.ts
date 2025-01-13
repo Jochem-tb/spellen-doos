@@ -1,18 +1,21 @@
+import { Socket } from 'socket.io';
 import { IGame } from '../game.interface';
 
-export interface IGameGateway {
-  queue: string[];
+export interface IGameGateway<T> {
+  games: Map<string, T>;
+  rooms: Map<string, Socket[]>;
+  queue: Socket[];
   minPlayerForGame: number;
   maxPlayerForGame: number;
   recommendedPlayerForGame: number;
-  game?: IGame;
-  connectedPlayers: string[];
 }
 
 export enum BaseGatewayEvents {
   CONNECT = 'connect',
   DISCONNECT = 'disconnect',
+  PLAYER_DISCONNECT = 'player_disconnected',
+  GAME_OVER = 'gameOver',
   CHECK_NUM_PLAYER_QUEUE = 'checkNumPlayerQueue',
   START_GAME = 'startGame',
-  CONNECT_TO_SERVER = "CONNECT_TO_SERVER",
+  CONNECT_TO_SERVER = 'CONNECT_TO_SERVER',
 }
