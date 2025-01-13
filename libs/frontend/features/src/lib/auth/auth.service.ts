@@ -150,7 +150,8 @@ export class AuthService {
     const userJson = localStorage.getItem(this.CURRENT_USER);
     const token = localStorage.getItem(this.TOKEN_KEY);
     const userId = localStorage.getItem('userId');
-    if (!userJson || !token || !userId) {
+    const loginTimestamp = localStorage.getItem(this.LOGIN_TIMESTAMP);
+    if (!userJson || !token || !userId || !loginTimestamp) {
       return of(null);
     }
     try {
