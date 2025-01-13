@@ -16,12 +16,20 @@ export class AuthService {
   public currentUser$ = new BehaviorSubject<IUserIdentity | null>(null);
   private readonly CURRENT_USER = 'currentuser';
   private readonly TOKEN_KEY = 'token';
+  private readonly LOGIN_TIMESTAMP = 'login_timestamp';
+  private readonly ONE_HOUR = 60 * 60 * 1000; // 1 hour in milliseconds
+  // Set timestamp to 10 seconds for testing
+  // private readonly ONE_HOUR = 10000; // 10 seconds in milliseconds
+  
+
   httpService: any;
 
   constructor(
     private http: HttpClient,
     private router: Router
   ) {
+    this.checkLoginTimestamp();
+
     // Load the user from localStorage on service initialization
     this.getUserFromLocalStorage()
       .pipe(
@@ -125,6 +133,7 @@ export class AuthService {
     localStorage.removeItem(this.CURRENT_USER);
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem('userId');
+    localStorage.removeItem(this.LOGIN_TIMESTAMP);
 
     this.currentUser$.next(null);
 
@@ -158,6 +167,22 @@ export class AuthService {
     }
   }
 
+  checkLoginTimestamp(): void {
+    const timestamp = localStorage.getItem(this.LOGIN_TIMESTAMP);
+    if (timestamp) {
+      const loginTime = parseInt(timestamp, 10);
+      const currentTime = Date.now();
+      if (currentTime - loginTime > this.ONE_HOUR) {
+        console.log('Login session expired. Clearing localStorage.');
+        localStorage.removeItem(this.CURRENT_USER);
+        localStorage.removeItem(this.TOKEN_KEY);
+        localStorage.removeItem('userId');
+        localStorage.removeItem(this.LOGIN_TIMESTAMP);
+        this.currentUser$.next(null);
+      }
+    }
+  }
+
   saveUserToLocalStorage(user: IUserIdentity, token: string): void {
     if (!user || !token) {
       console.error('User or token is undefined');
@@ -165,8 +190,10 @@ export class AuthService {
     }
 
     console.log('Saving user to localStorage:', user);
-    localStorage.setItem('currentuser', JSON.stringify(user));
-    localStorage.setItem('token', token);
+    localStorage.setItem(this.CURRENT_USER, JSON.stringify(user));
+    localStorage.setItem(this.TOKEN_KEY, token);
+    localStorage.setItem(this.LOGIN_TIMESTAMP, Date.now().toString());
+
   }
 
   saveUserIdToLocalStorage(userId: string, token: string): void {
@@ -176,6 +203,6 @@ export class AuthService {
     }
 
     console.log('Saving user ID to localStorage:', userId);
-    localStorage.setItem('userId', userId); // Save userId to localStorage
+    localStorage.setItem('userId', userId);
   }
 }
