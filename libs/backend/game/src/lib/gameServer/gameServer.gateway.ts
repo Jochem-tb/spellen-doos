@@ -64,14 +64,15 @@ export class RPSGameServerControllerGateway
   private createGameRoom(): void {
     const players = this.queue.splice(0, this.minPlayerForGame);
     const roomId = `room-${Date.now()}`;
+    console.debug('Creating room:', roomId);
     this.rooms.set(roomId, players);
 
-    const gameController = new RPSGameServerController(roomId, players);
+    const gameController = new RPSGameServerController(roomId, players, this);
     this.games.set(roomId, gameController);
 
     players.forEach((player) => {
       player.join(roomId);
-      player.emit(BaseGatewayEvents.START_GAME, { roomId });
+      player.emit(BaseGatewayEvents.START_GAME, roomId);
     });
   }
 
@@ -114,6 +115,18 @@ export class RPSGameServerControllerGateway
     });
 
     console.log(`Client disconnected: ${client.id}`);
+  }
+
+  //
+  // Handle Outgoing messages for controllers
+  //
+
+  public broadcastToRoom(roomId: string, event: string, data: any): void {
+    this.server.to(roomId).emit(event, data);
+  }
+
+  public broadcastToPlayer(playerId: string, event: string, data: any): void {
+    this.server.to(playerId).emit(event, data);
   }
 
   //
