@@ -10,7 +10,7 @@
       "options": {
         "command": "webpack-cli build",
         "args": ["node-env=production"],
-        "generatoPackageJson": true
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {
@@ -25,7 +25,7 @@
       "options": {
         "buildTarget": "data-api:build",
         "runBuildTargetDependencies": false,
-        "generatoPackageJson": true
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {
