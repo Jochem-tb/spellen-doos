@@ -24,6 +24,9 @@ jobs:
                   npm run build --if-present
                   # npm run test --if-present
 
+            - name: List files in GITHUB_WORKSPACE
+              run: ls -R ${GITHUB_WORKSPACE}
+
             - name: Zip artifacts for deployment
               run: |
                   echo ${GITHUB_WORKSPACE}
