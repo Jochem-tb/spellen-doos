@@ -4,6 +4,8 @@ export const environment: IEnvironment = {
     production: false,
 
     ROOT_DOMAIN_URL: 'dummy',
-    dataApiUrl: 'http://localhost:3000/api',
+    // dataApiUrl: 'http://localhost:3000/api',
     // dataApiUrl:  'http://192.168.2.20:3000/api',
+    dataApiUrl: 'https://spellen-doos-api.azurewebsites.net/api',
+
 };
