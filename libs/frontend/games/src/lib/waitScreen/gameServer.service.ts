@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { delay, map, Observable, of } from 'rxjs';
+import { delay, interval, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import {
   BaseGatewayEvents,
@@ -9,6 +9,7 @@ import {
 } from '@spellen-doos/shared/api';
 import { io } from 'socket.io-client';
 import { Router } from '@angular/router';
+import { WaitScreenComponent } from './waitScreen.component';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +25,7 @@ export class GameServerService {
 
   protected socket: any;
   private NUM_PLAYER_QUEUE: number = -1;
+  public waitScreenComponent!: WaitScreenComponent;
 
   public gameOver(): void {
     this.router.navigate(['/dashboard']);
@@ -82,8 +84,26 @@ export class GameServerService {
     });
 
     this.socket.on(BaseGatewayEvents.START_GAME, (gameId: any) => {
-      console.log('Game started:', gameId);
-      this.router.navigate([`/rpsGame/${gameId}`]);
+      console.log('Game start event received for game:', gameId);
+      this.waitScreenComponent.displayGameFound = true;
+      this.waitScreenComponent.gameFoundMessage = 'Tegenstander(s) gevonden!';
+      of(null)
+        // Wait for 2 seconds before proceeding --> only display gameFoundMessage
+        .pipe(delay(2000))
+        .subscribe(() => {
+          let countdown = 3;
+          const countdownInterval = interval(1000).subscribe(() => {
+            if (countdown >= 0) {
+              console.log('Countdown:', countdown);
+              this.waitScreenComponent.gameFoundTimer = countdown;
+              countdown--;
+            } else {
+              countdownInterval.unsubscribe();
+              this.waitScreenComponent.displayGameFound = false;
+              this.router.navigate([`/rpsGame/${gameId}`]);
+            }
+          });
+        });
     });
 
     // Handle disconnection

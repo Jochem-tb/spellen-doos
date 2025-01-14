@@ -56,13 +56,21 @@
         >
           Wachtrij verlaten
         </button>
-        <button
-          class="p-5 m-5 btn btn-large btn-succes"
-          [routerLink]="['/rpsGame']"
-        >
-          Click Me
-        </button>
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="displayGameFound" class="message-box">
+  <div>
+    <p *ngIf="gameFoundTimer >= 0" class="gameFound-timer">
+      {{ gameFoundTimer }}
+    </p>
+  </div>
+  <h2
+    class="gameFound-message"
+    [ngStyle]="{ opacity: gameFoundTimer >= 0 ? 0.3 : 1 }"
+  >
+    {{ gameFoundMessage }}
+  </h2>
 </div>
