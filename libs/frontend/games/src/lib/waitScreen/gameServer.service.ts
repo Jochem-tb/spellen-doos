@@ -70,7 +70,7 @@ export class GameServerService {
     switch (gameTitle) {
       case 'Steen Papier Schaar':
         this.socket = io(
-          'http://localhost:3000/RPSGameServerControllerGateway'
+          'http://192.168.178.204:3000/RPSGameServerControllerGateway'
         );
         break;
       //Add other gae cases here
@@ -85,11 +85,12 @@ export class GameServerService {
 
     this.socket.on(BaseGatewayEvents.START_GAME, (gameId: any) => {
       console.log('Game start event received for game:', gameId);
+      this.waitScreenComponent.stopTimer();
       this.waitScreenComponent.displayGameFound = true;
       this.waitScreenComponent.gameFoundMessage = 'Tegenstander(s) gevonden!';
       of(null)
-        // Wait for 2 seconds before proceeding --> only display gameFoundMessage
-        .pipe(delay(2000))
+        // Wait for 1.5 seconds before proceeding --> only display gameFoundMessage
+        .pipe(delay(1500))
         .subscribe(() => {
           let countdown = 3;
           const countdownInterval = interval(1000).subscribe(() => {

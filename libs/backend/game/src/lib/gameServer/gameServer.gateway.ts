@@ -51,10 +51,12 @@ export class RPSGameServerControllerGateway
     console.log(`Client connected: ${client.id}`);
     this.queue.push(client);
 
-    if (this.checkRequirementsForGame()) {
-      console.log('Requirements met for game');
-      this.createGameRoom();
-    }
+    setTimeout(() => {
+      if (this.checkRequirementsForGame()) {
+        console.log('Requirements met for game');
+        this.createGameRoom();
+      }
+    }, 1000); // Wait for 1 second before checking the requirements
   }
 
   private checkRequirementsForGame(): boolean {

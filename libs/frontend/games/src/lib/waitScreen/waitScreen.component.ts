@@ -104,7 +104,7 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
     });
   }
 
-  private stopTimer(): void {
+  public stopTimer(): void {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
