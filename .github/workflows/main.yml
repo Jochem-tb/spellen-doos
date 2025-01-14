@@ -98,11 +98,14 @@ jobs:
             - name: Unzip artifact for deployment
               run: unzip data-api-release.zip
 
+            - name: List files in data-api directory
+              run: ls -R ${GITHUB_WORKSPACE}/apps/data-api
+
             - name: Install dependencies
               run: |
-                cd apps/data-api
-                npm install
-
+              cd /${GITHUB_WORKSPACE}/apps/data-api
+              npm install           
+              
             - name: 'Deploy to Azure Web App'
               id: deploy-to-webapp
               uses: azure/webapps-deploy@v3
