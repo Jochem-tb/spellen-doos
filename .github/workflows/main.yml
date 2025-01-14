@@ -26,12 +26,17 @@ jobs:
 
             - name: Zip artifacts for deployment
               run: |
-                  MY_WORK_DIR=${{ github.workspace }}
-                  echo "MY_WORK_DIR=$MY_WORK_DIR" >> $GITHUB_ENV
-                  
                   echo ${GITHUB_WORKSPACE}
-                  cd ${GITHUB_WORKSPACE}/dist/apps/data-api/ && zip ${GITHUB_WORKSPACE}/data-api-release.zip ./* -r
-                  cd ${GITHUB_WORKSPACE}/dist/apps/spellen-doos/ && zip ${GITHUB_WORKSPACE}/spellen-doos-release.zip ./* -r
+                  if [ -d "${GITHUB_WORKSPACE}/dist/apps/data-api/" ]; then
+                    cd ${GITHUB_WORKSPACE}/dist/apps/data-api/ && zip ${GITHUB_WORKSPACE}/data-api-release.zip ./* -r
+                  else
+                    echo "Directory ${GITHUB_WORKSPACE}/dist/apps/data-api/ does not exist."
+                  fi
+                  if [ -d "${GITHUB_WORKSPACE}/dist/apps/spellen-doos/" ]; then
+                    cd ${GITHUB_WORKSPACE}/dist/apps/spellen-doos/ && zip ${GITHUB_WORKSPACE}/spellen-doos-release.zip ./* -r
+                  else
+                    echo "Directory ${GITHUB_WORKSPACE}/dist/apps/spellen-doos/ does not exist."
+                  fi
 
             - name: Upload spellen-doos artifact for deployment job
               uses: actions/upload-artifact@v4
