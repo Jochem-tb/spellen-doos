@@ -1,2 +1,15 @@
-<app-nx-welcome></app-nx-welcome>
-<router-outlet></router-outlet>
+<div *ngIf="!isLandscape" class="overlay">
+  <div class="alert-box">
+    <h1 style="color: red">Horizontale modus is verplicht op deze website</h1>
+    <p>Draai astublieft de ipad 90 graden naar horizontale modus!</p>
+    <hr style="border: 1.25px solid black" />
+    <img
+      src="/rotate/mobile-phone.gif"
+      alt=""
+      style="width: 450px; height: 450px"
+    />
+  </div>
+</div>
+
+<router-outlet class="content"></router-outlet>
+<app-help-button *ngIf="isLandscape"></app-help-button>

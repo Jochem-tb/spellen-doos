@@ -1,0 +1,197 @@
+<div
+  class="bg-dark text-dark frosted-background"
+  style="
+    background-image: url('/backgrounds/background.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.99;
+  "
+>
+  @if (currentStep.key) {
+  <div class="register-container rounded">
+    <h1 class="text-center">Welkom!</h1>
+    @if (currentStepIndex > 0) {
+    <h2>
+      Registreren - Stap {{ currentStepIndex + 1 - 1 }} van
+      {{ steps.length - 1 }}
+    </h2>
+    }
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div>
+        @if (currentStep.key === 'desciption') {
+        <div>
+          <p>
+            Dit is een proces waarin je jezelf registreert voor de spellendoos.
+            Hierin vul je je gegevens in en maak je een account aan.
+            <br /><br />
+            Kijk goed naar wat je moet invullen en veel plezier!
+          </p>
+        </div>
+        } @else if (currentStep.key === 'userName') {
+        <label for="userName" class="fs-4">Gebruikersnaam</label>
+        <input
+          id="userName"
+          formControlName="userName"
+          type="text"
+          placeholder="e.g. janjansen"
+          [ngClass]="{
+            'is-invalid':
+              registerForm.get('userName')?.touched &&
+              registerForm.get('userName')?.invalid
+          }"
+        />
+        <div
+          class="invalid-feedback-container mb-5"
+          [class.visible]="
+            registerForm.get('userName')?.invalid &&
+            registerForm.get('userName')?.touched
+          "
+        >
+          <p
+            id="userName-invalid"
+            *ngIf="registerForm.get('userName')?.hasError('usernameTaken')"
+          >
+            Deze gebruikersnaam is al in gebruik. Kies een andere.
+          </p>
+          <p
+            id="userName-invalid"
+            *ngIf="registerForm.get('userName')?.hasError('required')"
+          >
+            Voer alstublieft een gebruikersnaam in.
+          </p>
+        </div>
+        } @else if (currentStep.key === 'dateOfBirth') {
+        <label for="dateOfBirth" class="fs-4">Geboortedatum</label>
+        <input
+          id="dateOfBirth"
+          formControlName="dateOfBirth"
+          type="date"
+          [ngClass]="{
+            'is-invalid':
+              registerForm.get('dateOfBirth')?.touched &&
+              registerForm.get('dateOfBirth')?.invalid
+          }"
+        />
+        <div
+          class="invalid-feedback-container mb-5"
+          [class.visible]="
+            registerForm.get('dateOfBirth')?.invalid &&
+            registerForm.get('dateOfBirth')?.touched
+          "
+        >
+          <p id="dateOfBirth-invalid">
+            Voer alstublieft een valide geboortedatum in (Min. 13 jaar)
+          </p>
+        </div>
+        } @else if (currentStep.key === 'password') {
+        <label for="password" class="fs-4">Wachtwoord</label>
+        <input
+          id="password"
+          formControlName="password"
+          type="password"
+          placeholder="Wachtwoord"
+          [ngClass]="{
+            'is-invalid':
+              registerForm.get('password')?.touched &&
+              registerForm.get('password')?.invalid
+          }"
+        />
+
+        <div
+          class="invalid-feedback-container"
+          [class.visible]="
+            registerForm.get('password')?.invalid &&
+            registerForm.get('password')?.touched
+          "
+          style="margin-bottom: 20px"
+        >
+          <p id="password-invalid">
+            Voer alstublieft een valide wachtwoord in van minimaal 8 karakters
+          </p>
+        </div>
+
+        <!-- Second Password Input -->
+        <label for="confirmPassword" class="fs-4 mt-5"
+          >Bevestig Wachtwoord</label
+        >
+        <input
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          type="password"
+          placeholder="Bevestig Wachtwoord"
+          [ngClass]="{
+            'is-invalid':
+              registerForm.get('confirmPassword')?.touched &&
+              registerForm.get('confirmPassword')?.invalid
+          }"
+        />
+
+        <div
+          class="invalid-feedback-container password-invalid mb-3"
+          [class.visible]="
+            registerForm.get('confirmPassword')?.invalid &&
+            registerForm.get('confirmPassword')?.touched
+          "
+        >
+          <p id="confirmPassword-invalid">Wachtwoorden komen niet overeen</p>
+        </div>
+        }
+      </div>
+
+      <div class="buttons row justify-content-between">
+        <!-- back button to home -->
+        <button
+          type="button"
+          (click)="previousStep()"
+          class="btn btn-danger col-4"
+          *ngIf="currentStepIndex === 0"
+          routerLink="/"
+        >
+          Terug
+        </button>
+
+        <!-- back button to previous step -->
+        <button
+          type="button"
+          (click)="previousStep()"
+          class="btn btn-info col-4"
+          *ngIf="currentStepIndex > 0"
+        >
+          Vorige
+        </button>
+
+        <!-- next button to next step -->
+        <button
+          type="button"
+          (click)="nextStep()"
+          class="btn btn-success col-4"
+          *ngIf="currentStepIndex > 0 && currentStepIndex < steps.length - 1"
+          [disabled]="registerForm.get(steps[currentStepIndex].key)?.invalid"
+        >
+          Volgende
+        </button>
+
+        <!-- start button -->
+        <button
+          type="button"
+          (click)="nextStep()"
+          class="btn btn-primary col-4"
+          *ngIf="currentStepIndex === 0"
+        >
+          Starten
+        </button>
+
+        <!-- register button -->
+        <button
+          type="submit"
+          class="btn btn-success col-4"
+          *ngIf="currentStepIndex === steps.length - 1"
+          [disabled]="registerForm.invalid"
+        >
+          Registreer
+        </button>
+      </div>
+    </form>
+  </div>
+  }
+</div>
