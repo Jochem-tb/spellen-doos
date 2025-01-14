@@ -76,6 +76,7 @@ jobs:
                   azure_static_web_apps_api_token: ${{ secrets.ANGULAR_PUBLISHTOKEN }}
                   repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
                   action: 'upload'
+                  run: ls /
                   app_location: '/' # App source code path
                   api_location: '' # Api source code path - optional
                   output_location: 'dist/apps/spellen-doos' # Built app content directory - optional
