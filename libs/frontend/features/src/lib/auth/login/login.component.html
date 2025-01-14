@@ -1,0 +1,60 @@
+<div class="bg-dark text-dark frosted-background" 
+     style="background-image: url('/backgrounds/background.jpg'); 
+          background-size: cover; 
+          background-position: center; 
+          opacity: 0.99;">
+
+    <div class="login-container rounded">
+        <div class="login-header">
+            <h1 class="text-center">Login</h1>
+        </div>
+        <div class="login-body">
+            <form [formGroup]="loginForm" (ngSubmit)="login()">   
+
+                <div class="form-group mb-3">
+                    <label for="userName" class="fs-3">Gebruikersnaam</label>
+                    <input 
+                        type="text"
+                        class="form-control" 
+                        id="userName" 
+                        formControlName="userName" 
+                        placeholder="e.g. janjansen"
+                        [ngClass]="{ 
+                            'is-invalid': loginForm.get('userName')?.touched && loginForm.get('userName')?.invalid
+                            }"
+                        >
+                    <div 
+                        class="invalid-feedback-container"
+                        [class.visible]="loginForm.get('userName')?.invalid && loginForm.get('userName')?.touched">
+                        <p id="userName-invalid">Voer een geldig gebruikersnaam in.</p>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="Wachtwoord" class="fs-3">Wachtwoord</label>
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        id="password" 
+                        formControlName="password" 
+                        placeholder="Wachtwoord"
+                        [ngClass]="{ 
+                            'is-invalid': loginForm.get('password')?.touched && loginForm.get('password')?.invalid
+                            }"
+                        >
+                        <div 
+                            class="invalid-feedback-container"
+                            [class.visible]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                            <p id="password-invalid">Voer een geldig wachtwoord in van minimaal 8 karakters.</p>
+                        </div>
+                    </div>
+                
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-danger btn-lg fs-4 mt-3" routerLink="/">Terug</button>
+                    <button type="submit" class="btn btn-primary btn-lg fs-4 mt-3" [disabled]="loginForm.invalid">Login</button>
+                </div>
+            </form>
+            <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+        </div>
+    </div>
+</div>

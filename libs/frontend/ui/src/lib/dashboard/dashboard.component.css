@@ -1,0 +1,53 @@
+html,
+body {
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Card container styling */
+.game-card {
+  position: relative;
+  height: 100%;
+  border: 0;
+  border-radius: 10px;
+}
+
+/* Image styling */
+.game-card img {
+  height: 520px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Overlay styling for name and description */
+.card-overlay {
+  position: absolute;
+  /* margin-top: 17px;
+  margin-left: 17px; */
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 18px;
+  border-radius: 10px 10px 0 0;
+}
+
+/* Button styling */
+.game-button {
+  padding: 10px;
+  width: 80%;
+  border-radius: 12px;
+  border: 1px solid black;
+  background-color: rgb(57, 241, 57);
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  font-size: 1.3rem;
+  text-align: center;
+
+  display: inline-block;
+}
