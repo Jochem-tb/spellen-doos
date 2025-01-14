@@ -26,6 +26,9 @@ jobs:
 
             - name: Zip artifacts for deployment
               run: |
+                  MY_WORK_DIR=${{ github.workspace }}
+                  echo "MY_WORK_DIR=$MY_WORK_DIR" >> $GITHUB_ENV
+                  
                   echo ${GITHUB_WORKSPACE}
                   cd ${GITHUB_WORKSPACE}/dist/apps/data-api/ && zip ${GITHUB_WORKSPACE}/data-api-release.zip ./* -r
                   cd ${GITHUB_WORKSPACE}/dist/apps/spellen-doos/ && zip ${GITHUB_WORKSPACE}/spellen-doos-release.zip ./* -r
