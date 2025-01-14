@@ -30,15 +30,15 @@ jobs:
             - name: Zip artifacts for deployment
               run: |
                   echo ${GITHUB_WORKSPACE}
-                  if [ -d "${GITHUB_WORKSPACE}/apps/data-api/" ]; then
-                    cd ${GITHUB_WORKSPACE}/apps/data-api/ && zip ${GITHUB_WORKSPACE}/data-api-release.zip ./* -r
+                  if [ -d "${GITHUB_WORKSPACE}/dist/apps/data-api/" ]; then
+                    cd ${GITHUB_WORKSPACE}/dist/apps/data-api/ && zip ${GITHUB_WORKSPACE}/data-api-release.zip ./* -r
                   else
-                    echo "Directory ${GITHUB_WORKSPACE}/apps/data-api/ does not exist."
+                    echo "Directory ${GITHUB_WORKSPACE}/dist/apps/data-api/ does not exist."
                   fi
-                  if [ -d "${GITHUB_WORKSPACE}/apps/spellen-doos/" ]; then
-                    cd ${GITHUB_WORKSPACE}/apps/spellen-doos/ && zip ${GITHUB_WORKSPACE}/spellen-doos-release.zip ./* -r
+                  if [ -d "${GITHUB_WORKSPACE}/dist/apps/spellen-doos/" ]; then
+                    cd ${GITHUB_WORKSPACE}/dist/apps/spellen-doos/ && zip ${GITHUB_WORKSPACE}/spellen-doos-release.zip ./* -r
                   else
-                    echo "Directory ${GITHUB_WORKSPACE}/apps/spellen-doos/ does not exist."
+                    echo "Directory ${GITHUB_WORKSPACE}/dist/apps/spellen-doos/ does not exist."
                   fi
 
             - name: Upload spellen-doos artifact for deployment job
@@ -102,9 +102,7 @@ jobs:
               run: ls -R ${GITHUB_WORKSPACE}/apps/data-api
 
             - name: Install dependencies
-              run: 
-                  cd apps/data-api
-                  npm install
+              run: npm install
               
             - name: 'Deploy to Azure Web App'
               id: deploy-to-webapp
