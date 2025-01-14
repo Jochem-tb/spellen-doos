@@ -10,6 +10,8 @@
       "options": {
         "command": "webpack-cli build",
         "args": ["node-env=production"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/data-api/webpack.config.js",
         "generatePackageJson": true
       },
       "configurations": {
