@@ -24,7 +24,8 @@
       "dependsOn": ["build"],
       "options": {
         "buildTarget": "data-api:build",
-        "runBuildTargetDependencies": false
+        "runBuildTargetDependencies": false,
+        "generatoPackageJson": true
       },
       "configurations": {
         "development": {
