@@ -98,9 +98,6 @@ jobs:
             - name: Unzip artifact for deployment
               run: unzip data-api-release.zip
 
-            - name: List files in data-api directory
-              run: ls -R ${GITHUB_WORKSPACE}/apps/data-api
-
             - name: Install dependencies
               run: npm install
               
