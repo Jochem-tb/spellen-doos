@@ -122,9 +122,11 @@ export class RPSService {
   }
 
   private handleGameOver(): void {
-    alert('Game over');
-    this.socket.disconnect();
-    this.gameServerService.gameOver();
+    setTimeout(() => {
+      alert('Game over');
+      this.socket.disconnect();
+      this.gameServerService.gameOver();
+    }, 3000);
   }
 
   public changeChoice(choice: RPSChoicesEnum): void {

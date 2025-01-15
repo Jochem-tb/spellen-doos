@@ -18,6 +18,7 @@ export class RpsComponent {
   winner: boolean = false;
   looser: boolean = false;
   round: number = 1;
+  draw: boolean = false;
 
   RPSChoicesEnum = RPSChoicesEnum;
 
@@ -73,6 +74,7 @@ export class RpsComponent {
     winner?: boolean;
     looser?: boolean;
     round?: number;
+    draw?: boolean;
   }): void {
     console.log('[DEBUG] setData aangeroepen met:', data);
   
@@ -102,12 +104,18 @@ export class RpsComponent {
       this.looser = data.looser;
       console.log('[DEBUG] Looser updated:', this.looser);
     }
+    if(data.winner === false && data.looser === false) {
+      this.winner = false;
+      this.looser = false;
+      this.draw = true;
+    }
   }  
 
   // Popup sluiten
   closePopup(): void {
     this.winner = false;
     this.looser = false;
+    this.draw = false;
     this.choice = undefined;
   }
 }

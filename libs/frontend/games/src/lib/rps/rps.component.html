@@ -32,9 +32,10 @@
   </main>
 
   <!-- Popup tonen wanneer je gewonnen hebt of verloren hebt -->
-  <div class="popup" *ngIf="winner || looser">
+  <div class="popup" *ngIf="winner || looser || draw">
     <div class="popup-content">
       <h2 *ngIf="winner">Gewonnen!</h2>
+      <h2 *ngIf="draw">Gelijkspel!</h2>
       <h2 *ngIf="looser">Verloren!</h2>
 
       <p>Ronde: {{ round }}</p>
