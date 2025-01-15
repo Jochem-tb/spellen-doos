@@ -61,34 +61,49 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     //Set the title of the wait screen
     //TODO: Implement real call with ID in Route
-    this.gameTitle = 'Steen Papier Schaar';
+    console.log('URL:', this.router.url);
+    const gameId = this.router.url.split('/')[2];
+    console.log('GameID:', gameId);
+    this.gameServerService.getGameTitle(gameId).subscribe((title) => {
+      console.log('Setting gametitle:', title);
+      this.gameTitle = title;
+      console.log('GameTitle:', this.gameTitle);
 
-    //Start the timer
-    this.startTimer();
+      //Start the timer
+      this.startTimer();
 
-    // Wait for 5 seconds before proceeding
-    const success = this.gameServerService.signIntoQueue(this.gameTitle);
-    if (success) {
-      console.log('signIntoQueue succesfull');
-    } else {
-      console.error('signIntoQueue failed');
-      this.router.navigate(['/dashboard']);
-    }
+      const success = this.gameServerService.signIntoQueue(this.gameTitle);
+      if (success) {
+        console.log('signIntoQueue succesfull');
+      } else {
+        console.error('signIntoQueue failed');
+        this.router.navigate(['/dashboard']);
+      }
 
-    if (this.gameServerService.getSocket() === undefined) {
-      console.error('Socket not initialized');
-      this.router.navigate(['/dashboard']);
-    }
+      if (this.gameServerService.getSocket() === undefined) {
+        console.error('Socket not initialized');
+        this.router.navigate(['/dashboard']);
+      }
 
-    this.gameServerService
-      .getNumberOfPlayersInQueue()
-      .subscribe((numPlayers) => (this.numPlayersInQueue = numPlayers));
+      this.gameServerService
+        .getNumberOfPlayersInQueue()
+        .subscribe((numPlayers) => (this.numPlayersInQueue = numPlayers));
+    });
   }
 
   ngOnDestroy(): void {
+    console.log('[DEBUG] WaitScreenComponent destroyed');
     // Stop the timer
     this.stopTimer();
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+
+    // Only disconnect the socket if the user is not navigating to A game room
+    if (!this.router.url.includes('/room')) {
+      console.log(
+        '[DEBUG] Disconnecting socket from ngOnDestory Waitscreen...'
+      );
+      this.gameServerService.getSocket().disconnect();
+    }
   }
 
   private startTimer(): void {

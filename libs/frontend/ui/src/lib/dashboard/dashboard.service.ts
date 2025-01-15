@@ -15,7 +15,7 @@ export class DashBoardService {
 
   getGamesApi(): Observable<IGame[]> {
     return this.http
-      .get<{ results: IGame[] }>('http://localhost:3000/api/games')
+      .get<{ results: IGame[] }>('http://localhost:3000/api/game')
       .pipe(map((response) => response.results));
   }
 

@@ -3,6 +3,7 @@ import { delay, interval, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import {
   BaseGatewayEvents,
+  IGame,
   IUser,
   ProfilePictureEnum,
   UserRole,
@@ -15,7 +16,7 @@ import { WaitScreenComponent } from './waitScreen.component';
   providedIn: 'root',
 })
 export class GameServerService {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
   //TESTING SOCKETS
 
@@ -26,6 +27,12 @@ export class GameServerService {
   protected socket: any;
   private NUM_PLAYER_QUEUE: number = -1;
   public waitScreenComponent!: WaitScreenComponent;
+
+  public getGameTitle(id: string): Observable<string> {
+    return this.http
+      .get<{ results: IGame }>('http://192.168.178.204:3000/api/game/' + id)
+      .pipe(map((response) => response.results.name));
+  }
 
   public gameOver(): void {
     this.router.navigate(['/dashboard']);
@@ -56,22 +63,25 @@ export class GameServerService {
   }
 
   private initializeSocket(gameTitle: string): void {
+    console.log('[DEBUG] initializeSocket()');
     if (this.socket && this.socket.connected) {
       console.log('Socket already exists and is connected.');
       return;
     }
 
     //Choose right GameServer
-    console.debug('GameTitle:', gameTitle);
+    console.debug('GameTitle in gameServer.Service:', gameTitle);
     switch (gameTitle) {
-      case 'Steen Papier Schaar':
+      case 'Steen papier schaar':
         this.socket = io(
-          'http://192.168.2.18:3000/RPSGameServerControllerGateway'
+          'http://192.168.178.204:3000/RPSGameServerControllerGateway'
         );
         break;
       //Add other game cases here
       default:
-        '';
+        console.error('Game not found');
+        throw new Error('Game not found');
+        return;
     }
 
     this.socket.on(BaseGatewayEvents.CONNECT, () => {
