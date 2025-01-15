@@ -70,7 +70,7 @@ export class GameServerService {
     switch (gameTitle) {
       case 'Steen Papier Schaar':
         this.socket = io(
-          'http://192.168.178.204:3000/RPSGameServerControllerGateway'
+          'http://192.168.2.18:3000/RPSGameServerControllerGateway'
         );
         break;
       //Add other gae cases here

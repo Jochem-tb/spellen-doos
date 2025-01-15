@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { delay, map, Observable, of } from 'rxjs';
+import { Injectable, NgZone } from '@angular/core';
+import { delay, map, Observable, of, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import {
   BaseGatewayEvents,
@@ -17,6 +17,7 @@ import { RpsComponent } from './rps.component';
   providedIn: 'root',
 })
 export class RPSService {
+  zone: NgZone = new NgZone({ enableLongStackTrace: false });
   constructor(private gameServerService: GameServerService) {
     console.log('[DEBUG] RPSService constructor');
     this.initializeSocketConnection();
@@ -73,18 +74,38 @@ export class RPSService {
     });
 
     this.socket.on(RPSGameEvents.ROUND_RESULT, (data: any) => {
-      console.log('Round Results:', data);
-      if (this.socket.id === data.playerA) {
-        alert(
-          `Round winner: ${data.winner} \n Round: ${data.round}, \n Your choice: ${data.playerAChoice}, \n Opponent choice: ${data.playerBChoice}`
-        );
-      } else {
-        alert(
-          `Round winner: ${data.winner} \n Round: ${data.round}, \n Your choice: ${data.playerBChoice}, \n Opponent choice: ${data.playerAChoice}`
-        );
-      }
+      console.log('[DEBUG] ROUND_RESULT event binnen:', data);
+  
+      // Zorg ervoor dat Angular de UI bijwerkt
+      this.zone.run(() => {
+        if (!this.component) {
+          console.warn('[WARNING] Component is niet gekoppeld aan service!');
+          return;
+        }
+  
+        // Update data in de component
+        if (this.socket.id === data.playerA) {
+          this.component.setData({
+            choice: data.playerAChoice,
+            opponentChoice: data.playerBChoice,
+            score: data.playerAWins,
+            opponentScore: data.playerBWins,
+            winner: data.winner === 'PlayerA',
+            looser: data.winner === 'PlayerB',
+          });
+        } else {
+          this.component.setData({
+            choice: data.playerBChoice,
+            opponentChoice: data.playerAChoice,
+            score: data.playerBWins,
+            opponentScore: data.playerAWins,
+            winner: data.winner === 'PlayerB',
+            looser: data.winner === 'PlayerA',
+          });
+        }
+      });
     });
-
+    
     this.socket.on(RPSGameEvents.CHANGE_CHOICE, (data: any) => {
       console.log('My choice in gameController:', data.choice);
     });
@@ -92,6 +113,10 @@ export class RPSService {
 
   private playerDisconnected(playerId: string): void {
     alert(`Speler ${playerId} heeft momenteel de game verlaten.`);
+  }
+
+  public disconnect(): void {
+    this.socket.disconnect();
   }
 
   private handleGameOver(): void {

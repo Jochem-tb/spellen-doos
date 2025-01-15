@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component } from '@angular/core';
 import { RPSService } from './rps.service';
 import { RPSChoicesEnum } from '@spellen-doos/shared/api';
 
@@ -9,80 +9,107 @@ import { RPSChoicesEnum } from '@spellen-doos/shared/api';
   styleUrls: ['./rps.component.css'],
 })
 export class RpsComponent {
-  result: string = '';
-  score: number = 0;
+  choice: string = '';
   opponentChoice: string = '';
-  winnerMessage: string = '';
-  showPopup: boolean = false;
+  score: number = 0;
+  opponentScore: number = 0;
+  timerTime: number = 0;
+  winner: boolean = false;
+  looser: boolean = false;
 
-  TIMER_TIME: number = 0;
-
-  RPSChoicesEnum = RPSChoicesEnum;
-
-  constructor(private renderer: Renderer2, private rpsService: RPSService) {
+  constructor(private rpsService: RPSService) {
+    // Koppel deze component aan de service (zodat de service kan updaten).
+    console.log('[DEBUG] RPS Component constructor...');
     this.rpsService.component = this;
   }
 
-  changeChoice(choise: RPSChoicesEnum): void {
-    console.log(`ChangeChoice in rpsCOmponent: ${choise}`);
-    this.rpsService.changeChoice(choise);
-  }
-
-  public updateTimer(time: number): void {
-    this.TIMER_TIME = time;
-  }
-
   play(choice: string): void {
-    console.log(`[DEBUG] Player choice: ${choice}`);
+    if (this.choice === choice) {
+      this.choice = '';
 
-    const buttons = document.querySelectorAll('.rps-button');
-    buttons.forEach((button) => this.renderer.removeClass(button, 'selected'));
-
-    const button = document.querySelector(`.rps-button.${choice}`);
-    if (button) {
-      this.renderer.addClass(button, 'selected');
-      console.log(`[DEBUG] Selected button: ${choice}`);
-    } else {
-      console.error(`[ERROR] Button not found for choice: ${choice}`);
+      this.setData({
+        choice: this.rpsService.component.choice,
+        opponentChoice: this.rpsService.component.opponentChoice,
+        score: this.rpsService.component.score,
+        opponentScore: this.rpsService.component.opponentScore,
+        winner: this.rpsService.component.winner,
+        looser: this.rpsService.component.looser
+      });
+      
+      return;
     }
 
-    this.opponentChoice = this.getOpponentChoice();
-    console.log(`[DEBUG] Opponent choice: ${this.opponentChoice}`);
-
-    this.result = this.determineWinner(choice, this.opponentChoice);
-    this.showPopup = true;
+    // Nieuwe keuze doorgeven
+    this.choice = choice;
+    this.rpsService.changeChoice(choice as RPSChoicesEnum);
   }
 
-  getOpponentChoice(): string {
-    const choices = ['steen', 'papier', 'schaar'];
-    const choice = choices[Math.floor(Math.random() * choices.length)];
-    console.log(`[DEBUG] Opponent randomly selected: ${choice}`);
-    return choice;
+  disconnect(): void {
+    console.log('[DEBUG] Disconnecting...');
+    this.rpsService.disconnect();
   }
 
-  determineWinner(playerChoice: string, opponentChoice: string): string {
-    if (playerChoice === opponentChoice) {
-      console.log('[DEBUG] It is a draw');
-      return 'Het is gelijkspel!';
-    } else if (
-      (playerChoice === 'steen' && opponentChoice === 'schaar') ||
-      (playerChoice === 'papier' && opponentChoice === 'steen') ||
-      (playerChoice === 'schaar' && opponentChoice === 'papier')
-    ) {
-      this.score++;
-      console.log(`[DEBUG] Player wins! Current score: ${this.score}`);
-      return 'Je hebt gewonnen!';
-    } else {
-      console.log('[DEBUG] Player loses');
-      return 'Je hebt verloren!';
+  getImageUrl(choice: string): string {
+    return `rps/${choice}.png`;
+  }
+
+  // Timer-update binnenkrijgen vanuit de service
+  updateTimer(time: number): void {
+    this.timerTime = time;
+  }
+
+  // Score bijwerken vanuit de service
+  updateScore(playerScore: number, opponentScore: number): void {
+    this.score = playerScore;
+    this.opponentScore = opponentScore;
+  }
+
+  // Tegenstanderskeuze bijwerken vanuit de service
+  updateOpponentChoice(choice: string): void {
+    this.opponentChoice = choice;
+  }
+
+  // Data van de service (socket) direct naar de component doorzetten
+  setData(data: {
+    choice?: string;
+    opponentChoice?: string;
+    score?: number;
+    opponentScore?: number;
+    timerTime?: number;
+    winner?: boolean;
+    looser?: boolean;
+  }): void {
+    console.log('[DEBUG] setData aangeroepen met:', data);
+  
+    if (data.choice !== undefined) {
+      this.choice = data.choice;
     }
-  }
+    if (data.opponentChoice !== undefined) {
+      this.opponentChoice = data.opponentChoice;
+    }
+    if (data.score !== undefined) {
+      this.score = data.score;
+    }
+    if (data.opponentScore !== undefined) {
+      this.opponentScore = data.opponentScore;
+    }
+    if (data.timerTime !== undefined) {
+      this.timerTime = data.timerTime;
+    }
+    if (data.winner !== undefined) {
+      this.winner = data.winner;
+      console.log('[DEBUG] Winner updated:', this.winner);
+    }
+    if (data.looser !== undefined) {
+      this.looser = data.looser;
+      console.log('[DEBUG] Looser updated:', this.looser);
+    }
+  }  
 
+  // Popup sluiten
   closePopup(): void {
-    this.showPopup = false;
-    console.log('[DEBUG] Popup closed');
-
-    const buttons = document.querySelectorAll('.rps-button');
-    buttons.forEach((button) => this.renderer.removeClass(button, 'selected'));
+    this.winner = false;
+    this.looser = false;
+    this.choice = '';
   }
 }
