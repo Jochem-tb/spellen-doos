@@ -9,7 +9,8 @@
     </button>
     <div class="title-container">
       <h1>Steen Papier Schaar</h1>
-      <h5>Ronde {{ round }}</h5>
+      <h5 *ngIf="round == 0">Ronde 1</h5>
+      <h5 *ngIf="round != 0">Ronde {{ round + 1 }}</h5>
     </div>
     <div class="score">
       <span>Jouw score: {{ score }}</span>
@@ -38,6 +39,7 @@
       <h2 *ngIf="draw">Gelijkspel!</h2>
       <h2 *ngIf="looser">Verloren!</h2>
 
+      
       <p>Ronde: {{ round }}</p>
 
       <p>Jouw keuze: {{ choice }}</p>

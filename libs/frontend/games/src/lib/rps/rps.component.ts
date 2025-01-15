@@ -17,7 +17,7 @@ export class RpsComponent {
   timerTime: number = 0;
   winner: boolean = false;
   looser: boolean = false;
-  round: number = 1;
+  round: number = 0;
   draw: boolean = false;
 
   RPSChoicesEnum = RPSChoicesEnum;
