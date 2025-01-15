@@ -77,6 +77,12 @@ export class GameServerService {
           'http://192.168.178.204:3000/RPSGameServerControllerGateway'
         );
         break;
+      case 'Bingo!!':
+        this.socket = io(
+          'http://192.168.178.204:3000/BingoGameServerControllerGateway'
+        );
+        break;
+
       //Add other game cases here
       default:
         console.error('Game not found');
