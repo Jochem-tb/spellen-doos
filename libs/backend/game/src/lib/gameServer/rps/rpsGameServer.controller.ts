@@ -20,7 +20,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { RPSGameServerControllerGateway } from './gameServer.gateway';
+import { RPSGameServerControllerGateway } from './rpsGameServer.gateway';
 
 export class RPSGameServerController implements IRPSGameServer {
   maxRounds: number = 3;
