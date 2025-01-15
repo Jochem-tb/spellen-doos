@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { RPSService } from './rps.service';
 import { RPSChoicesEnum } from '@spellen-doos/shared/api';
 
@@ -8,7 +8,7 @@ import { RPSChoicesEnum } from '@spellen-doos/shared/api';
   templateUrl: './rps.component.html',
   styleUrls: ['./rps.component.css'],
 })
-export class RpsComponent {
+export class RpsComponent implements OnDestroy {
   result: string = '';
   score: number = 0;
   opponentChoice: string = '';
@@ -21,6 +21,9 @@ export class RpsComponent {
 
   constructor(private renderer: Renderer2, private rpsService: RPSService) {
     this.rpsService.component = this;
+  }
+  ngOnDestroy(): void {
+    this.rpsService.disconnect();
   }
 
   changeChoice(choise: RPSChoicesEnum): void {

@@ -193,6 +193,17 @@ export class RPSGameServerController implements IRPSGameServer {
     });
 
     this.currentRound++;
+    console.log('[DEBUG] Round:', this.currentRound);
+
+    if (this.currentRound === this.maxRounds) {
+      console.log('Game over');
+      this.gateway.broadcastToRoom(this.gameId, BaseGatewayEvents.GAME_OVER, {
+        playerAWins: this.playerAWins,
+        playerBWins: this.playerBWins,
+        draws: this.draws,
+        roundsInfo: this.roundsInfo,
+      });
+    }
 
     // Reset for the next round
     this.playerAChoice = undefined;

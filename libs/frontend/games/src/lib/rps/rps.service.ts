@@ -12,14 +12,20 @@ import {
 import { io, Socket } from 'socket.io-client';
 import { GameServerService } from '../waitScreen/gameServer.service';
 import { RpsComponent } from './rps.component';
+import { Route, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RPSService {
-  constructor(private gameServerService: GameServerService) {
+  constructor(
+    private gameServerService: GameServerService,
+    private router: Router
+  ) {
     console.log('[DEBUG] RPSService constructor');
     this.initializeSocketConnection();
+    this.roomId = this.router.url.split('/')[2];
+    console.log('[DEBUG] RoomId:', this.roomId);
   }
 
   private socket!: Socket;
@@ -45,12 +51,6 @@ export class RPSService {
   }
   private setupIncoming(): void {
     console.log('[DEBUG] Setup incoming');
-
-    this.socket.on(BaseGatewayEvents.START_GAME, (roomId: any) => {
-      console.log('Game started');
-      console.log('RoomId:', roomId);
-      this.roomId = roomId;
-    });
 
     this.socket.on(BaseGatewayEvents.PLAYER_DISCONNECT, (data: any) => {
       const playerId = data.playerId;
@@ -96,6 +96,7 @@ export class RPSService {
 
   private handleGameOver(): void {
     alert('Game over');
+    this.socket.disconnect();
     this.gameServerService.gameOver();
   }
 
@@ -106,5 +107,9 @@ export class RPSService {
       clientId: this.socket.id,
       roomId: this.roomId,
     });
+  }
+
+  public disconnect(): void {
+    this.socket.disconnect();
   }
 }

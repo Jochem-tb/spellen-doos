@@ -75,6 +75,11 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
       this.router.navigate(['/dashboard']);
     }
 
+    if (this.gameServerService.getSocket() === undefined) {
+      console.error('Socket not initialized');
+      this.router.navigate(['/dashboard']);
+    }
+
     this.gameServerService
       .getNumberOfPlayersInQueue()
       .subscribe((numPlayers) => (this.numPlayersInQueue = numPlayers));
@@ -83,8 +88,6 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Stop the timer
     this.stopTimer();
-
-    this.gameServerService.signOutOfQueue();
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
