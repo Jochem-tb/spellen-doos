@@ -9,6 +9,7 @@
     </button>
     <div class="title-container">
       <h1>Steen Papier Schaar</h1>
+      <h5>Ronde {{ round }}</h5>
     </div>
     <div class="score">
       <span>Jouw score: {{ score }}</span>
@@ -48,22 +49,22 @@
   <footer class="buttons-container">
     <button
       class="rps-button steen"
-      [class.selected]="choice === 'steen'"
-      (click)="play('steen')"
+      [class.selected]="choice === RPSChoicesEnum.Steen"
+      (click)="changeChoice(RPSChoicesEnum.Steen)"
     >
       <img src="rps/steen.png" alt="Steen" />
     </button>
     <button
       class="rps-button papier"
-      [class.selected]="choice === 'papier'"
-      (click)="play('papier')"
+      [class.selected]="choice === RPSChoicesEnum.Papier"
+      (click)="changeChoice(RPSChoicesEnum.Papier)"
     >
       <img src="rps/papier.png" alt="Papier" />
     </button>
     <button
       class="rps-button schaar"
-      [class.selected]="choice === 'schaar'"
-      (click)="play('schaar')"
+      [class.selected]="choice === RPSChoicesEnum.Schaar"
+      (click)="changeChoice(RPSChoicesEnum.Schaar)"
     >
       <img src="rps/schaar.png" alt="Schaar" />
     </button>

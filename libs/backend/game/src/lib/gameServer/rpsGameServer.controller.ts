@@ -149,6 +149,9 @@ export class RPSGameServerController implements IRPSGameServer {
 
   private evaluateRound(): void {
     console.log('Player A & B have made their choices');
+    console.log('Evaluating round...');
+    console.log('Player A choice:', this.playerAChoice);
+    console.log('Player B choice:', this.playerBChoice);
 
     let winner: RPSWinnerEnum;
 

@@ -9,13 +9,17 @@ import { RPSChoicesEnum } from '@spellen-doos/shared/api';
   styleUrls: ['./rps.component.css'],
 })
 export class RpsComponent {
-  choice: string = '';
+  choice?: RPSChoicesEnum = undefined;
   opponentChoice: string = '';
   score: number = 0;
   opponentScore: number = 0;
   timerTime: number = 0;
   winner: boolean = false;
   looser: boolean = false;
+  round: number = 1;
+
+  RPSChoicesEnum = RPSChoicesEnum;
+
 
   constructor(private rpsService: RPSService) {
     // Koppel deze component aan de service (zodat de service kan updaten).
@@ -23,19 +27,9 @@ export class RpsComponent {
     this.rpsService.component = this;
   }
 
-  play(choice: string): void {
+  changeChoice(choice: RPSChoicesEnum): void {
     if (this.choice === choice) {
-      this.choice = '';
-
-      this.setData({
-        choice: this.rpsService.component.choice,
-        opponentChoice: this.rpsService.component.opponentChoice,
-        score: this.rpsService.component.score,
-        opponentScore: this.rpsService.component.opponentScore,
-        winner: this.rpsService.component.winner,
-        looser: this.rpsService.component.looser
-      });
-      
+      this.choice = undefined;
       return;
     }
 
@@ -50,6 +44,7 @@ export class RpsComponent {
   }
 
   getImageUrl(choice: string): string {
+    choice = choice.toLowerCase();
     return `rps/${choice}.png`;
   }
 
@@ -64,14 +59,9 @@ export class RpsComponent {
     this.opponentScore = opponentScore;
   }
 
-  // Tegenstanderskeuze bijwerken vanuit de service
-  updateOpponentChoice(choice: string): void {
-    this.opponentChoice = choice;
-  }
-
   // Data van de service (socket) direct naar de component doorzetten
   setData(data: {
-    choice?: string;
+    choice?: RPSChoicesEnum;
     opponentChoice?: string;
     score?: number;
     opponentScore?: number;
@@ -110,6 +100,6 @@ export class RpsComponent {
   closePopup(): void {
     this.winner = false;
     this.looser = false;
-    this.choice = '';
+    this.choice = undefined;
   }
 }
