@@ -92,6 +92,7 @@ export class RPSService {
             opponentScore: data.playerBWins,
             winner: data.winner === 'PlayerA',
             looser: data.winner === 'PlayerB',
+            round: data.round
           });
         } else {
           this.component.setData({
@@ -101,6 +102,7 @@ export class RPSService {
             opponentScore: data.playerAWins,
             winner: data.winner === 'PlayerB',
             looser: data.winner === 'PlayerA',
+            round: data.round
           });
         }
       });

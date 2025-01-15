@@ -72,9 +72,13 @@ export class RpsComponent {
     timerTime?: number;
     winner?: boolean;
     looser?: boolean;
+    round?: number;
   }): void {
     console.log('[DEBUG] setData aangeroepen met:', data);
   
+    if (data.round !== undefined) {
+      this.round = data.round;
+    }
     if (data.choice !== undefined) {
       this.choice = data.choice;
     }
