@@ -10,36 +10,37 @@ import {
 } from '@nestjs/websockets';
 import {
   BaseGatewayEvents,
-  IGame,
+  BingoGameEvents,
   IGameGateway,
-  RPSChoicesEnum,
-  RPSGameEvents,
+  BingoResultEnum,
+  BingoCard,
 } from '@spellen-doos/shared/api';
 import { interval, NotFoundError } from 'rxjs';
 import { Server, Socket } from 'socket.io';
-import { RPSGameServerController } from './rpsGameServer.controller';
+// import { RPSGameServerController } from './rpsGameServer.controller';
 import { MIN } from 'class-validator';
+import { BingoGameServerController } from './bingoGameServer.controller';
 
 @Injectable()
 @WebSocketGateway({
-  namespace: '/RPSGameServerControllerGateway', // Optional namespace
+  namespace: '/BingoGameServerControllerGateway', // Optional namespace
   cors: {
     origin: '*', // Replace with your client URL in production
   },
 })
-export class RPSGameServerControllerGateway
+export class BingoGameServerControllerGateway
   implements
-    IGameGateway<RPSGameServerController>,
+    IGameGateway<BingoGameServerController>,
     OnGatewayConnection,
     OnGatewayDisconnect
 {
-  games: Map<string, RPSGameServerController> = new Map();
+  games: Map<string, BingoGameServerController> = new Map();
   rooms: Map<string, Socket[]> = new Map();
 
   queue: Socket[] = [];
-  minPlayerForGame: number = 2;
-  maxPlayerForGame: number = 2;
-  recommendedPlayerForGame: number = 2;
+  minPlayerForGame: number = 1;
+  maxPlayerForGame: number = 30;
+  recommendedPlayerForGame: number = 15;
 
   private readonly TIME_FOR_RECONNECTION_IN_MS = 30000; // 30 seconds
 
@@ -48,27 +49,33 @@ export class RPSGameServerControllerGateway
 
   // Handle ALL incoming Connectioning clients
   handleConnection(@ConnectedSocket() client: Socket): void {
-    console.log(`Client connected on rpsGateway: ${client.id}`);
+    console.log(`Client connected on bingoGateway: ${client.id}`);
     this.queue.push(client);
-    console.log('RPS Queue:', this.queue.length);
+    console.log('Bingo Queue:', this.queue.length);
 
     if (this.checkRequirementsForGame()) {
-      console.log('Requirements met for rps game');
+      console.log('Requirements met for bingo game');
       this.createGameRoom();
     }
   }
 
   private checkRequirementsForGame(): boolean {
+    //TODO: Implement logic to check dynamic players for game, not always minimum
     return this.queue.length >= this.minPlayerForGame;
   }
 
+  private getPlayersForGame(): Socket[] {
+    //TODO: Implement logic to get dynamic players for game, not always minimum
+    return this.queue.splice(0, this.minPlayerForGame);
+  }
+
   private createGameRoom(): void {
-    const players = this.queue.splice(0, this.minPlayerForGame);
+    const players = this.getPlayersForGame();
     const roomId = `room-${Date.now()}`;
-    console.debug('Creating room:', roomId);
+    console.debug('Creating bingo room:', roomId);
     this.rooms.set(roomId, players);
 
-    const gameController = new RPSGameServerController(roomId, players, this);
+    const gameController = new BingoGameServerController(roomId, players, this);
     this.games.set(roomId, gameController);
 
     players.forEach((player) => {
@@ -146,9 +153,9 @@ export class RPSGameServerControllerGateway
       .emit(BaseGatewayEvents.CHECK_NUM_PLAYER_QUEUE, this.queue.length);
   }
 
-  @SubscribeMessage(RPSGameEvents.CHANGE_CHOICE)
+  @SubscribeMessage(BingoGameEvents.I_HAVE_BINGO)
   handleChangeChoice(
-    @MessageBody() data: { choice: RPSChoicesEnum; roomId: string },
+    @MessageBody() data: { playerCard: BingoCard; roomId: string },
     @ConnectedSocket() client: Socket
   ): void {
     let roomId;
@@ -169,7 +176,7 @@ export class RPSGameServerControllerGateway
 
     const game = this.games.get(roomId);
     if (game) {
-      game.changeChoice(client.id, data.choice);
+      game.someoneCalledBingo(client.id, data.playerCard);
     } else {
       console.error(`No game controller found for room: ${roomId}`);
       console.warn('Closing room:', roomId);

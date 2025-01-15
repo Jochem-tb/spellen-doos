@@ -8,3 +8,4 @@ export * from './lib/models/helpButton.interface';
 
 export * from './lib/models/gameServer/gameGateway.interface';
 export * from './lib/models/gameServer/rpsGameServer.interface';
+export * from './lib/models/gameServer/bingoGameServer.interface';
