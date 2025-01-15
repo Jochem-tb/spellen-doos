@@ -7,6 +7,7 @@ import {
 } from '@spellen-doos/ui';
 import { AuthGuard } from '@spellen-doos/features';
 import {
+  BingoComponent,
   RpsComponent,
   WaitScreenComponent,
 } from '@spellen-doos/frontend/games';
@@ -32,6 +33,11 @@ export const appRoutes: Route[] = [
   {
     path: 'rpsGame/:id',
     component: RpsComponent,
+    // canActivate: [AuthGuard],
+  },
+  {
+    path: 'bingoGame/:id',
+    component: BingoComponent,
     // canActivate: [AuthGuard],
   },
   { path: 'register', component: RegisterComponent },
