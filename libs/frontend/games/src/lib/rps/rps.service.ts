@@ -123,7 +123,7 @@ export class RPSService {
 
   private handleGameOver(): void {
     setTimeout(() => {
-      alert('Game over');
+      alert('Het spel is voorbij!\nBedankt voor het spelen!\nJe wordt nu teruggestuurd naar het dashboard.');
       this.socket.disconnect();
       this.gameServerService.gameOver();
     }, 3000);
