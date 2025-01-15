@@ -41,15 +41,6 @@ export class GameServerService {
     return true;
   }
 
-  public signOutOfQueue(): boolean {
-    try {
-      this.socket.disconnect();
-    } catch (error) {
-      return false;
-    }
-    return true;
-  }
-
   public getNumberOfPlayersInQueue(): Observable<number> {
     return new Observable<number>((observer) => {
       this.socket.emit(
@@ -65,6 +56,11 @@ export class GameServerService {
   }
 
   private initializeSocket(gameTitle: string): void {
+    if (this.socket && this.socket.connected) {
+      console.log('Socket already exists and is connected.');
+      return;
+    }
+
     //Choose right GameServer
     console.debug('GameTitle:', gameTitle);
     switch (gameTitle) {
@@ -73,17 +69,17 @@ export class GameServerService {
           'http://192.168.2.18:3000/RPSGameServerControllerGateway'
         );
         break;
-      //Add other gae cases here
+      //Add other game cases here
       default:
         '';
     }
 
     this.socket.on(BaseGatewayEvents.CONNECT, () => {
       console.log('Connected to server');
-      console.log('Connected to the control hub:', this.socket.id);
+      console.log('[DEBUG] Socket ID:', this.socket.id);
     });
 
-    this.socket.on(BaseGatewayEvents.START_GAME, (gameId: any) => {
+    this.socket.on(BaseGatewayEvents.SETUP_GAME, (gameId: any) => {
       console.log('Game start event received for game:', gameId);
       this.waitScreenComponent.stopTimer();
       this.waitScreenComponent.displayGameFound = true;

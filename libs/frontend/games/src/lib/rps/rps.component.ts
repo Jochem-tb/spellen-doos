@@ -10,8 +10,9 @@ import { RPSChoicesEnum } from '@spellen-doos/shared/api';
 })
 export class RpsComponent {
   choice?: RPSChoicesEnum = undefined;
-  opponentChoice: string = '';
+  result: string = '';
   score: number = 0;
+  opponentChoice: string = '';
   opponentScore: number = 0;
   timerTime: number = 0;
   winner: boolean = false;
@@ -25,6 +26,9 @@ export class RpsComponent {
     // Koppel deze component aan de service (zodat de service kan updaten).
     console.log('[DEBUG] RPS Component constructor...');
     this.rpsService.component = this;
+  }
+  ngOnDestroy(): void {
+    this.rpsService.disconnect();
   }
 
   changeChoice(choice: RPSChoicesEnum): void {

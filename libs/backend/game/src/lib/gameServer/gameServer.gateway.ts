@@ -15,7 +15,7 @@ import {
   RPSChoicesEnum,
   RPSGameEvents,
 } from '@spellen-doos/shared/api';
-import { interval } from 'rxjs';
+import { interval, NotFoundError } from 'rxjs';
 import { Server, Socket } from 'socket.io';
 import { RPSGameServerController } from './rpsGameServer.controller';
 import { MIN } from 'class-validator';
@@ -51,12 +51,10 @@ export class RPSGameServerControllerGateway
     console.log(`Client connected: ${client.id}`);
     this.queue.push(client);
 
-    setTimeout(() => {
-      if (this.checkRequirementsForGame()) {
-        console.log('Requirements met for game');
-        this.createGameRoom();
-      }
-    }, 1000); // Wait for 1 second before checking the requirements
+    if (this.checkRequirementsForGame()) {
+      console.log('Requirements met for game');
+      this.createGameRoom();
+    }
   }
 
   private checkRequirementsForGame(): boolean {
@@ -74,7 +72,7 @@ export class RPSGameServerControllerGateway
 
     players.forEach((player) => {
       player.join(roomId);
-      player.emit(BaseGatewayEvents.START_GAME, roomId);
+      player.emit(BaseGatewayEvents.SETUP_GAME, roomId);
     });
   }
 
@@ -97,8 +95,12 @@ export class RPSGameServerControllerGateway
       } else {
         // If room is not empty, notify the other player of the disconnect
         console.warn('Player disconnected:', client.id);
-        this.server.to(roomId).emit(BaseGatewayEvents.PLAYER_DISCONNECT, {
-          playerId: client.id,
+        players.forEach((player) => {
+          if (player.id !== client.id) {
+            player.emit(BaseGatewayEvents.PLAYER_DISCONNECT, {
+              playerId: client.id,
+            });
+          }
         });
 
         // Set a timeout for reconnection
@@ -150,10 +152,12 @@ export class RPSGameServerControllerGateway
   ): void {
     let roomId;
     if (!data.roomId) {
+      console.warn('No roomId provided. Attempting to find room for client.');
       roomId = Array.from(this.rooms.entries()).find(([, players]) =>
         players.includes(client)
       )?.[0];
     } else {
+      console.log('[DEBUG] RoomId provided:', data.roomId);
       roomId = data.roomId;
     }
 
@@ -167,6 +171,31 @@ export class RPSGameServerControllerGateway
       game.changeChoice(client.id, data.choice);
     } else {
       console.error(`No game controller found for room: ${roomId}`);
+      console.warn('Closing room:', roomId);
+      try {
+        this.closeGameRoom(roomId);
+      } catch (error) {
+        console.error('Error closing room');
+        client.emit(BaseGatewayEvents.GAME_OVER, {});
+      }
     }
+  }
+
+  private closeGameRoom(roomId: string): void {
+    const players = this.rooms.get(roomId);
+    if (!players) {
+      console.error(`Room ${roomId} not found.`);
+      throw new Error(`Room ${roomId} not found.`);
+      return;
+    }
+
+    players.forEach((player) => {
+      player.leave(roomId);
+      this.broadcastToPlayer(player.id, BaseGatewayEvents.GAME_OVER, {
+        reason: 'Game room closed.',
+      });
+    });
+    this.rooms.delete(roomId);
+    this.games.delete(roomId);
   }
 }
