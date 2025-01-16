@@ -8,8 +8,15 @@ import {
 import { AuthGuard } from '@spellen-doos/features';
 
 export const appRoutes: Route[] = [
-  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
-  { path: 'welcome', component: WelcomeComponent },
+  { 
+    path: '', 
+    redirectTo: 'welcome', 
+    pathMatch: 'full' 
+  },
+  { 
+    path: 'welcome', 
+    component: WelcomeComponent 
+  },
   {
     path: 'dashboard',
     component: DashBoardComponent,
@@ -20,8 +27,18 @@ export const appRoutes: Route[] = [
     component: ProfileComponent,
     canActivate: [AuthGuard],
   },
-  { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'register',
+    component: RegisterComponent,
+  },
+  { 
+    path: 'login', 
+    component: LoginComponent 
+  },
 
-  { path: '**', redirectTo: 'welcome' },
+  // Redirect to welcome page if no route found
+  { 
+    path: '**', 
+    redirectTo: 'welcome' 
+  }
 ];

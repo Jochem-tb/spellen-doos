@@ -13,17 +13,17 @@ export class AuthService {
     ) {}
 
     async login(credentials: IUserCredentials): Promise<IUserIdentity> {
+        const normalizedUserName = credentials.userName.toLowerCase();
+    
         return await this.userModel
-            .findOne({ 
-                userName: credentials.userName 
+            .findOne({
+                userName: { $regex: new RegExp(`^${normalizedUserName}$`, "i") }, 
             })
             .select("+password")
             .exec()
             .then((user) => {
                 if (user) {
-                    const payload = { 
-                        user_id: user._id 
-                    };
+                    const payload = { user_id: user._id };
                     return {
                         _id: user._id,
                         userName: user.userName,

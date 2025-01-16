@@ -95,7 +95,7 @@ export class ProfileComponent implements OnInit {
             this.updateProfileApi();
           }
         } else {
-          alert('U moet minimaal 13 jaar zijn.');
+          alert('U moet minimaal 16 jaar zijn.');
           field.value = field.originalValue; // Reset the value
 
           }
@@ -188,8 +188,8 @@ export class ProfileComponent implements OnInit {
   }
 
 
-  isValidDate(date: Date): boolean { // validates the date (13+ years old)
-    const thirteenYearsAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 13));
+  isValidDate(date: Date): boolean { // validates the date (16+ years old)
+    const thirteenYearsAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 16));
     thirteenYearsAgo.setHours(0, 0, 0, 0);
     return date < thirteenYearsAgo;
   } 
