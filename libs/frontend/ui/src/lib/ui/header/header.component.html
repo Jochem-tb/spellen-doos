@@ -8,7 +8,7 @@
     </div>
     <div class="d-flex align-items-center justify-content-between position-relative" style="z-index: 1;">
       <div class="d-flex align-items-center">
-        <button class="btn btn-danger mt-2 fs-3" (click)="logout()">Uitloggen</button>
+        <button *ngIf="logoutShown" class="btn btn-danger mt-2 fs-3" (click)="logout()">Uitloggen</button>
       </div>
       <div class="d-flex align-items-center" style="cursor: pointer;" [routerLink]="['/profile']">
         <span class="me-3 fs-3">{{ profile?.userName }}</span>
