@@ -13,15 +13,8 @@ import {
 } from '@spellen-doos/frontend/games';
 
 export const appRoutes: Route[] = [
-  { 
-    path: '', 
-    redirectTo: 'welcome', 
-    pathMatch: 'full' 
-  },
-  { 
-    path: 'welcome', 
-    component: WelcomeComponent 
-  },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: 'welcome', component: WelcomeComponent },
   {
     path: 'dashboard',
     component: DashBoardComponent,
@@ -47,18 +40,6 @@ export const appRoutes: Route[] = [
     component: BingoComponent,
     // canActivate: [AuthGuard],
   },
-  {
-    path: 'register',
-    component: RegisterComponent,
-  },
-  { 
-    path: 'login', 
-    component: LoginComponent 
-  },
 
-  // Redirect to welcome page if no route found
-  { 
-    path: '**', 
-    redirectTo: 'welcome' 
-  }
+  { path: '**', redirectTo: 'dashboard' },
 ];

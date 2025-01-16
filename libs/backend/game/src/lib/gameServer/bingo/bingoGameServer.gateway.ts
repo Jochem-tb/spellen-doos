@@ -153,6 +153,23 @@ export class BingoGameServerControllerGateway
       .emit(BaseGatewayEvents.CHECK_NUM_PLAYER_QUEUE, this.queue.length);
   }
 
+  @SubscribeMessage(BaseGatewayEvents.PLAYER_READY)
+  playerReady(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() data: { roomId: string }
+  ): void {
+    console.log('Player is ready event:', socket.id);
+    const roomId = this.getRoomIdForClient(socket, data);
+    if (roomId) {
+      const game = this.games.get(roomId);
+      if (game) {
+        game.playerReady(socket);
+      } else {
+        console.error(`No game controller found for room: ${roomId}`);
+      }
+    }
+  }
+
   @SubscribeMessage(BingoGameEvents.BINGO_CARD)
   getBingoCard(
     @MessageBody() data: any,

@@ -19,4 +19,5 @@ export enum BaseGatewayEvents {
   START_GAME = 'startGame',
   SETUP_GAME = 'setupGame',
   DISPLAY_TIMER = 'displayTimer',
+  PLAYER_READY = 'playerReady',
 }

@@ -1,12 +1,15 @@
-.bingo-container {
+body {
+  background-color: #1a1a1a;
+  color: white;
   font-family: Arial, sans-serif;
-  height: 95vh;
+}
+.bingo-container {
   display: flex;
   flex-direction: column;
-  background-color: #1a1a1a;
-  color: aliceblue;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
-
 .header {
   display: flex;
   justify-content: center;
@@ -14,7 +17,6 @@
   padding: 10px 20px;
   background-color: #2b2b2b;
 }
-
 .title-container {
   display: flex;
   flex-direction: column;
@@ -22,38 +24,69 @@
   text-align: center;
   justify-content: center;
 }
-
 .back-button {
   position: absolute;
   top: 0;
   left: 0;
   margin: 40px;
 }
+.drawn-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffc107;
+  background-color: #333;
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
 
 .bingo-card {
-  max-width: 600px;
-  margin: 0 auto;
-  background-color: #fff;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 5px; /* Ensures even spacing */
+  background: rgb(173, 173, 173);
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: fit-content; /* Fixed width to maintain square shape */
+  height: fit-content; /* Fixed height to maintain square shape */
 }
 
-.bingo-card-row {
-  margin-bottom: 10px;
-}
-
-.bingo-card-cell {
-  height: 70px;
-  background-color: #e9ecef;
-  font-size: 1.2rem;
+.bingo-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
   font-weight: bold;
-  text-transform: uppercase;
-  color: #495057;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  background-color: #e9ecef;
+  color: #333;
+  border-radius: 50%; /* Circular shape */
+  transition: all 0.3s ease;
+  width: 70px;
+  height: 70px;
+  cursor: pointer; /* Indicate clickability */
 }
 
-.bingo-card-cell:hover {
+.bingo-cell:hover {
   background-color: #ffc107;
-  transform: scale(1.1);
+}
+
+.bingo-cell.selected {
+  background-color: #ffd700; /* Bright yellow for selection */
+}
+.bingo-button {
+  margin-top: 20px;
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 15px 40px;
+  border-radius: 10px;
+  background: #28a745;
+  color: white;
+  transition: background 0.3s ease;
+}
+.bingo-button:hover {
+  background: #218838;
 }

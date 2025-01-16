@@ -35,6 +35,7 @@ export class BingoGameServerController implements IBingoGameServer {
     (_, i) => i + 1
   );
   connectedPlayers!: Socket[];
+  private playerReadiness: Map<Socket, boolean> = new Map();
 
   timerActive: boolean = false;
   private activeInterval: NodeJS.Timeout | null = null; // Track the active interval
@@ -48,12 +49,87 @@ export class BingoGameServerController implements IBingoGameServer {
   ) {
     this.connectedPlayers = players;
     this.gateway = gateway;
-    console.log(`Bingo game controller created for room: ${gameId}`);
-    console.log('[DEBUG] Connected players:', this.connectedPlayers.length);
-    console.log('[DEBUG] Available numbers:', this.availableNumbers);
-    console.log('[DEBUG] Generateing bingo cards...');
+    console.log(
+      `%cBingo game controller created for room: ${gameId}`,
+      'color: blue;'
+    );
+    console.log(
+      '%c[DEBUG] Connected players:',
+      'color: green;',
+      this.connectedPlayers.length
+    );
+    console.log(
+      '%c[DEBUG] Available numbers:',
+      'color: orange;',
+      this.availableNumbers
+    );
+    console.log('%c[DEBUG] Generating bingo cards...', 'color: purple;');
     this.bingoCards = this.generateBingoCards(players);
-    console.log('[DEBUG] Bingo cards:', this.bingoCards.size);
+    console.log('%c[DEBUG] Bingo cards:', 'color: red;', this.bingoCards.size);
+
+    // Initialize the readiness map for all connected players
+    console.log('[DEBUG] Initializing player readiness to false...');
+    players.forEach((playerSocket) => {
+      this.playerReadiness.set(playerSocket, false); // Set all players as "not ready"
+    });
+  }
+
+  playerReady(playerSocket: Socket): void {
+    this.playerReadiness.set(playerSocket, true);
+    console.log(`[BINGO] Player ${playerSocket.id} is now ready.`);
+
+    if (this.allPlayersReady()) {
+      this.startNumberCalling(8000); // All players are ready, start number calling
+    }
+  }
+
+  // Method to check if all players are ready
+  allPlayersReady(): boolean {
+    // Check if every player is marked as ready
+    return this.connectedPlayers.every(
+      (playerSocket) => this.playerReadiness.get(playerSocket) === true
+    );
+  }
+
+  startNumberCalling(intervalMs: number = 8000): void {
+    if (this.timerActive) {
+      console.warn('[BINGO] Number calling is already active.');
+      return;
+    }
+
+    console.log('[BINGO] Starting number calling...');
+
+    this.timerActive = true;
+    this.activeInterval = setInterval(() => {
+      if (this.availableNumbers.length === 0) {
+        console.log('[BINGO] No more numbers to call!');
+        this.stopNumberCalling();
+        return;
+      }
+
+      const randomIndex = Math.floor(
+        Math.random() * this.availableNumbers.length
+      );
+      const calledNumber = this.availableNumbers.splice(randomIndex, 1)[0]; // Remove from availableNumbers
+      this.calledNumbers.push(calledNumber); // Add to calledNumbers
+
+      console.log(`[BINGO] Called Number: ${calledNumber}`);
+
+      // Broadcast the new number to all players
+      this.gateway.broadcastToRoom(this.gameId, BingoGameEvents.NUMBER_CALLED, {
+        number: calledNumber,
+        remaining: this.availableNumbers.length,
+      });
+    }, intervalMs);
+  }
+
+  stopNumberCalling(): void {
+    if (this.activeInterval) {
+      clearInterval(this.activeInterval);
+      this.activeInterval = null;
+      this.timerActive = false;
+      console.log('[BINGO] Number calling stopped.');
+    }
   }
 
   getBingoCard(clientSocket: Socket): BingoCard | undefined {
@@ -103,7 +179,57 @@ export class BingoGameServerController implements IBingoGameServer {
   }
 
   private evaluateBingo(bingoCard: BingoCard): BingoResultEnum {
+    const card = bingoCard.card; // 2D array representing the bingo card
+    const gridSize = card.length; // Assuming a square grid (5x5)
+
+    if (this.checkHorizontalBingo(card)) {
+      console.log('[BINGO] Horizontal bingo detected!');
+      return BingoResultEnum.VALID;
+    }
+
+    if (this.checkVerticalBingo(card, gridSize)) {
+      console.log('[BINGO] Vertical bingo detected!');
+      return BingoResultEnum.VALID;
+    }
+
+    if (this.checkDiagonalBingo(card, gridSize)) {
+      console.log('[BINGO] Diagonal bingo detected!');
+      return BingoResultEnum.VALID;
+    }
+
+    // No valid bingo found
     return BingoResultEnum.NOT_VALID;
+  }
+
+  private checkHorizontalBingo(card: number[][]): boolean {
+    for (let row of card) {
+      if (row.every((num) => this.calledNumbers.includes(num))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private checkVerticalBingo(card: number[][], gridSize: number): boolean {
+    for (let col = 0; col < gridSize; col++) {
+      let columnNumbers = card.map((row) => row[col]);
+      if (columnNumbers.every((num) => this.calledNumbers.includes(num))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private checkDiagonalBingo(card: number[][], gridSize: number): boolean {
+    let leftToRight = card.every((row, i) =>
+      this.calledNumbers.includes(row[i])
+    );
+
+    let rightToLeft = card.every((row, i) =>
+      this.calledNumbers.includes(row[gridSize - 1 - i])
+    );
+
+    return leftToRight || rightToLeft;
   }
 
   private generateBingoCards(players: Socket[]): Map<Socket, BingoCard> {
