@@ -23,7 +23,6 @@ export class AuthController {
     async register(@Body() registerDto: CreateUserDto) {
         Logger.log(`Register attempt for new user`);
         Logger.log(registerDto);
-        registerDto.userName = registerDto.userName.toLowerCase();
         return this.authService.register(registerDto);
     }
 }
