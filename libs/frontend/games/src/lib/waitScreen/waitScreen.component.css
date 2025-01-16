@@ -1,0 +1,196 @@
+/* Root container for full-screen layout */
+.fullscreen-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+  margin: 0;
+  overflow: hidden; /* Prevent scrolling */
+}
+
+/* Ensure the container covers the full viewport */
+.waitscreen-container {
+  background-color: #f8f9fa; /* Light background color */
+  min-height: 100vh; /* Full height of the viewport */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden; /* Prevent scrollbars from appearing */
+  margin: 0; /* Remove any default margins */
+  padding: 0;
+}
+
+/* Background Wrapper for the Rectangle */
+.background-wrapper {
+  position: relative;
+  width: 90%; /* Adjust width as needed */
+  height: 80vh;
+  max-width: 110vh; /* Limit the width for portrait shape */
+  aspect-ratio: 4/1; /* Portrait rectangle shape */
+  background: url('/backgrounds/waitScreenBackgroundGif.gif') no-repeat center
+    center;
+  background-size: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff; /* White text for contrast */
+  font-weight: bold;
+  text-align: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.4); /* Transparent black background */
+  border-radius: 10px; /* Match the border radius of the rectangle */
+}
+
+/* Styles for inner elements */
+.title {
+  font-family: 'Arial', sans-serif;
+  margin-top: 40px;
+  font-size: 2rem;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.gameTitle {
+  font-family: 'Arial', sans-serif;
+  font-size: 2.8rem;
+  font-style: normal;
+}
+
+.timer {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 15vh;
+}
+.timer span {
+  position: relative;
+  bottom: 110px;
+  text-align: center;
+  color: #fff; /* Dark gray text */
+  font-size: 3rem;
+  font-weight: 600;
+}
+
+.leave-box {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 15vh;
+}
+
+.leave-button {
+  position: relative;
+  padding: 1.2rem 1.5rem;
+  transition: transform 0.2s ease-in-out, background-color 0.3s;
+}
+
+.leave-button:hover {
+  transform: scale(1.05);
+  background-color: #c82333 !important; /* Slightly darker red on hover */
+}
+
+/* Styles for the tips */
+.overlay-tips {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  width: 50%;
+}
+
+.tip {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: #fff; /* White text */
+  text-align: center;
+  padding: 1rem;
+  border-radius: 10px;
+  margin: 0 1rem;
+}
+
+.overlay-numPlayerQueue {
+  position: absolute;
+  right: 0;
+  padding: 0px;
+  margin: 0px;
+  /* display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto; */
+  /* width: 50%; */
+}
+
+.numPlayer {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: #fff; /* White text */
+  text-align: center;
+  padding: 1rem;
+  /* border-radius: 10px; */
+  margin: 0 1rem;
+}
+
+.message-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: auto;
+  min-width: 40vw;
+  max-width: 45vw;
+  height: 15vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 6rem;
+  background-color: #f8f9fa;
+  border: 4px solid #dee2e6;
+  border-radius: 6rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.401);
+  background: linear-gradient(
+    110deg,
+    #c1cbcb 0%,
+    #f8f9fa 20%,
+    #f8f9fa 80%,
+    #c1cbcb 100%
+  );
+}
+
+.gameFound-message {
+  font-size: 3.5rem;
+  font-weight: 600;
+  color: #007804;
+}
+
+.gameFound-timer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 8.5rem;
+  font-weight: 750;
+  color: #ff0d00;
+  z-index: 10; /* Ensure it is above other text */
+}

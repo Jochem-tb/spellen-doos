@@ -3,4 +3,5 @@ export interface IEnvironment {
 
     ROOT_DOMAIN_URL: string;
     dataApiUrl: string;
+    socketUrl: string;
 }
