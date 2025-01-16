@@ -21,13 +21,12 @@ export class GameService {
     return items;
   }
 
-  // async findOne(_id: string): Promise<IGame | null> {
-  //   this.logger.log(`finding game with id ${_id}`);
-  //   const item = await this.gameModel.findOne({ _id }).exec();
-  //   if (!item) {
-  //     this.logger.debug('Item not found');
-  //   }
-  //   return item;
-  // }
-
+  async findOne(_id: string): Promise<IGame | null> {
+    this.logger.log(`finding game with id ${_id}`);
+    const item = await this.gameModel.findOne({ _id }).exec();
+    if (!item) {
+      this.logger.debug('Item not found');
+    }
+    return item;
+  }
 }
