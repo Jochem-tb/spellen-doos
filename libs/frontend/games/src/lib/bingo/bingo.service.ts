@@ -5,6 +5,7 @@ import {
   BaseGatewayEvents,
   BingoCard,
   BingoGameEvents,
+  BingoResultEnum,
 } from '@spellen-doos/shared/api';
 import { io, Socket } from 'socket.io-client';
 import { GameServerService } from '../waitScreen/gameServer.service';
@@ -73,6 +74,49 @@ export class BingoService {
       console.debug(card);
       this.component.updateBingoCard(card);
     });
+
+    this.socket.on(
+      BingoGameEvents.BINGO_CALLED,
+      (data: { clientId: string }) => {
+        console.log('Bingo called by: ', data.clientId);
+        if (this.socket.id && data.clientId !== this.socket.id) {
+          this.handleBingoCalled(data.clientId);
+        }
+      }
+    );
+
+    this.socket.on(
+      BingoGameEvents.BINGO_RESULT,
+      (data: { clientId: string; result: BingoResultEnum }) => {
+        console.log('Bingo result received from server for: ', data.clientId);
+        this.handleBingoResult(data.clientId, data.result);
+      }
+    );
+  }
+
+  private handleBingoCalled(playerId: string): void {
+    alert(`Speler ${playerId} heeft bingo geroepen`);
+  }
+
+  private handleBingoResult(playerId: string, result: BingoResultEnum): void {
+    switch (result) {
+      case BingoResultEnum.VALID:
+        this.validBingo(playerId);
+        break;
+      case BingoResultEnum.NOT_VALID:
+        this.invalidBingo(playerId);
+        break;
+      default:
+        console.error('Something went wrong while handling BingoResult');
+    }
+  }
+
+  private validBingo(playerId: string): void {
+    alert(`Speler ${playerId} heeft geldige bingo!`);
+  }
+
+  private invalidBingo(playerId: string): void {
+    alert(`Speler ${playerId} heeft ongeldige bingo!`);
   }
 
   private playerDisconnected(playerId: string): void {
@@ -91,10 +135,12 @@ export class BingoService {
     }, 3000);
   }
 
-  public callBingo(clientId: string): void {
-    console.log(`[DEBUG - BingoService] Player: ${clientId} called Bingo!`);
+  public callBingo(card: BingoCard): void {
+    console.log(
+      `[DEBUG - BingoService] Player: ${this.socket.id} called Bingo!`
+    );
     this.socket.emit(BingoGameEvents.I_HAVE_BINGO, {
-      clientId: this.socket.id,
+      playerCard: card,
       roomId: this.roomId,
     });
   }

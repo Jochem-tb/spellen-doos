@@ -34,6 +34,9 @@ export class BingoComponent {
     this.bingoService.disconnect();
   }
 
+  iHaveBingo(): void {
+    this.bingoService.callBingo(this.playerCard);
+  }
   updateBingoCard(card: BingoCard): void {
     this.playerCard = card;
   }

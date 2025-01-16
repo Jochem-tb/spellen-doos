@@ -60,20 +60,35 @@ export class BingoGameServerController implements IBingoGameServer {
     return this.bingoCards.get(clientSocket);
   }
 
-  someoneCalledBingo(clientId: string, bingoCard: BingoCard): void {
-    if (!this.connectedPlayers.some((player) => player.id === clientId)) {
+  someoneCalledBingo(playerSocket: Socket, bingoCard: BingoCard): void {
+    console.log(
+      `someoneCalledBingo called for player: ${playerSocket.id} in game: ${this.gameId} with card: ${bingoCard}`
+    );
+    if (
+      !this.connectedPlayers.some((player) => player.id === playerSocket.id)
+    ) {
       console.error(
-        `[ERROR] Invalid clientId: ${clientId} for game: ${this.gameId}`
+        `[ERROR] Invalid clientId: ${playerSocket.id} for game: ${this.gameId}`
       );
       return;
     }
 
-    console.log(`Player ${clientId} called bingo!`);
-    console.log('[DEBUG] Bingo card:', bingoCard);
+    console.log(`Player ${playerSocket.id} called bingo!`);
+
+    const bingoCardById = this.bingoCards.get(playerSocket);
+    if (
+      bingoCardById === undefined ||
+      !this.compareBingoCards(bingoCardById, bingoCard)
+    ) {
+      console.error(
+        `[ERROR] Bingo card mismatch for player: ${playerSocket.id}`
+      );
+      return;
+    }
 
     // Broadcast to all players in the room
     this.gateway.broadcastToRoom(this.gameId, BingoGameEvents.BINGO_CALLED, {
-      clientId,
+      clientId: playerSocket.id,
     });
 
     // Evaluate the bingo card
@@ -82,13 +97,13 @@ export class BingoGameServerController implements IBingoGameServer {
 
     // Broadcast the result to all players in the room
     this.gateway.broadcastToRoom(this.gameId, BingoGameEvents.BINGO_RESULT, {
-      clientId,
+      clientId: playerSocket.id,
       result: validBingo,
     });
   }
 
   private evaluateBingo(bingoCard: BingoCard): BingoResultEnum {
-    return BingoResultEnum.UNKNOWN;
+    return BingoResultEnum.NOT_VALID;
   }
 
   private generateBingoCards(players: Socket[]): Map<Socket, BingoCard> {
@@ -99,5 +114,22 @@ export class BingoGameServerController implements IBingoGameServer {
       bingoCards.set(playerSocket, card);
     });
     return bingoCards;
+  }
+
+  private compareBingoCards(
+    bingoCard1: BingoCard,
+    bingoCard2: BingoCard
+  ): boolean {
+    console.log('[DEBUG] Comparing bingo cards...');
+    const card1 = bingoCard1.card;
+    const card2 = bingoCard2.card;
+    if (card1.length !== card2.length) return false;
+    for (let i = 0; i < card1.length; i++) {
+      if (card1[i].length !== card2[i].length) return false;
+      for (let j = 0; j < card1[i].length; j++) {
+        if (card1[i][j] !== card2[i][j]) return false;
+      }
+    }
+    return true;
   }
 }

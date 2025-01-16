@@ -203,10 +203,10 @@ export class BingoGameServerControllerGateway
     @ConnectedSocket() client: Socket
   ): void {
     const roomId = this.getRoomIdForClient(client, data);
-    if (!roomId) {
+    if (roomId) {
       const game = this.games.get(roomId!);
       if (game) {
-        game.someoneCalledBingo(client.id, data.playerCard);
+        game.someoneCalledBingo(client, data.playerCard);
       } else {
         console.error(`No game controller found for room: ${roomId}`);
         console.warn('Closing room:', roomId);
