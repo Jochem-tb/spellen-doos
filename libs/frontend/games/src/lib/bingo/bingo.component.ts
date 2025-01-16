@@ -14,7 +14,10 @@ import {
 })
 export class BingoComponent {
   playerCard!: BingoCard;
+  selectedCells: Set<Number> = new Set();
   hasBingo: boolean = false;
+
+  currentCalledNumber = -1;
 
   constructor(private bingoService: BingoService) {
     // Koppel deze component aan de service (zodat de service kan updaten).
@@ -39,5 +42,22 @@ export class BingoComponent {
   }
   updateBingoCard(card: BingoCard): void {
     this.playerCard = card;
+  }
+
+  updateCalledNumber(number: number): void {
+    console.log('[DEBUG] Updating called number:', number);
+    this.currentCalledNumber = number;
+  }
+
+  toggleCell(cellValue: number): void {
+    if (this.selectedCells.has(cellValue)) {
+      this.selectedCells.delete(cellValue); // Deselect
+    } else {
+      this.selectedCells.add(cellValue); // Select
+    }
+  }
+
+  isCellSelected(cellValue: number): boolean {
+    return this.selectedCells.has(cellValue);
   }
 }
