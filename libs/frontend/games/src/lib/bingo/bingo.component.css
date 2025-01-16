@@ -63,14 +63,19 @@ body {
   font-weight: bold;
   background-color: #e9ecef;
   color: #333;
-  border-radius: 50%; /* Circular cells */
+  border-radius: 50%; /* Circular shape */
   transition: all 0.3s ease;
   width: 70px;
   height: 70px;
+  cursor: pointer; /* Indicate clickability */
 }
 
 .bingo-cell:hover {
   background-color: #ffc107;
+}
+
+.bingo-cell.selected {
+  background-color: #ffd700; /* Bright yellow for selection */
 }
 .bingo-button {
   margin-top: 20px;

@@ -73,6 +73,8 @@ export class BingoService {
       console.log('Bingo card received from server');
       console.debug(card);
       this.component.updateBingoCard(card);
+      console.log('Emitting player ready event...');
+      this.socket.emit(BaseGatewayEvents.PLAYER_READY, { roomId: this.roomId });
     });
 
     this.socket.on(
@@ -90,6 +92,14 @@ export class BingoService {
       (data: { clientId: string; result: BingoResultEnum }) => {
         console.log('Bingo result received from server for: ', data.clientId);
         this.handleBingoResult(data.clientId, data.result);
+      }
+    );
+
+    this.socket.on(
+      BingoGameEvents.NUMBER_CALLED,
+      (data: { number: number; remaining: number }) => {
+        console.log('Bingo number received: ', data.number);
+        this.component.updateCalledNumber(data.number);
       }
     );
   }

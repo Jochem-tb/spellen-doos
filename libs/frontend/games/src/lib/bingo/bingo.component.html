@@ -12,10 +12,17 @@
         <h1>Bingo</h1>
       </div>
     </header>
-    <div class="drawn-number" id="drawnNumber">Drawn Number: --</div>
+    <div class="drawn-number" id="drawnNumber">
+      Drawn Number: {{ currentCalledNumber }}
+    </div>
 
     <div class="bingo-card">
-      <div *ngFor="let cell of playerCard.card.flat()" class="bingo-cell">
+      <div
+        *ngFor="let cell of playerCard.card.flat()"
+        class="bingo-cell"
+        [ngClass]="{ selected: isCellSelected(cell) }"
+        (click)="toggleCell(cell)"
+      >
         {{ cell }}
       </div>
     </div>
