@@ -10,6 +10,7 @@ import {
   BingoComponent,
   RpsComponent,
   WaitScreenComponent,
+  GameTutorialComponent,
 } from '@spellen-doos/frontend/games';
 
 export const appRoutes: Route[] = [
@@ -24,6 +25,10 @@ export const appRoutes: Route[] = [
     path: 'profile',
     component: ProfileComponent,
     // canActivate: [AuthGuard],
+  },
+  {
+    path: 'gameTutorial/:id',
+    component: GameTutorialComponent
   },
   {
     path: 'waitScreen/:id',
