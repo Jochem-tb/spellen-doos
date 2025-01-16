@@ -15,9 +15,14 @@ export class DashBoardComponent implements OnInit {
   constructor(private dashBoardService: DashBoardService) {}
 
   ngOnInit(): void {
+    // this.dashBoardService.getGames().subscribe((games) => {
+    //   this.availableGames = games;
+    // });
+
     this.dashBoardService.getGamesApi().subscribe((games) => {
       this.availableGames = games;
       console.log('games from api:' + games);
+      this.availableGames = games;
     });
   }
 }
