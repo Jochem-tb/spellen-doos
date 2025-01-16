@@ -127,6 +127,7 @@ export class GameServerService {
       of(null)
         // Wait for 1.5 seconds before proceeding --> only display gameFoundMessage
         //TODO set back to 1500 and 1000
+
         .pipe(delay(1500))
         .subscribe(() => {
           let countdown = 3;

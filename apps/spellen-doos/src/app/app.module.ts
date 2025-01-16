@@ -18,7 +18,6 @@ import { WaitScreenComponent, GamesModule } from '@spellen-doos/frontend/games';
     HttpClientModule,
     FeatureModule,
     HelpButtonComponent,
-
     GamesModule,
   ],
   providers: [],

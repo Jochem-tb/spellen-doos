@@ -18,7 +18,6 @@
         "isolatedConfig": true,
         "webpackConfig": "apps/data-api/webpack.config.js",
         "generatePackageJson": true
-
       },
       "configurations": {
         "development": {}

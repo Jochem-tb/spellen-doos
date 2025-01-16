@@ -1,0 +1,111 @@
+name: Build and deploy frontend and backend app to Azure
+
+on:
+    push:
+        branches:
+            - release
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        name: Build and zip apps from /dist
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Node.js version
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '18.x'
+
+            - name: npm install, build, and test
+              run: |
+                  npm install
+                  npm run build --if-present
+                  # npm run test --if-present
+
+            - name: List files in GITHUB_WORKSPACE
+              run: ls -R ${GITHUB_WORKSPACE}
+
+            - name: Zip artifacts for deployment
+              run: |
+                  echo ${GITHUB_WORKSPACE}
+                  if [ -d "${GITHUB_WORKSPACE}/dist/apps/data-api/" ]; then
+                    cd ${GITHUB_WORKSPACE}/dist/apps/data-api/ && zip ${GITHUB_WORKSPACE}/data-api-release.zip ./* -r
+                  else
+                    echo "Directory ${GITHUB_WORKSPACE}/dist/apps/data-api/ does not exist."
+                  fi
+                  if [ -d "${GITHUB_WORKSPACE}/dist/apps/spellen-doos/" ]; then
+                    cd ${GITHUB_WORKSPACE}/dist/apps/spellen-doos/ && zip ${GITHUB_WORKSPACE}/spellen-doos-release.zip ./* -r
+                  else
+                    echo "Directory ${GITHUB_WORKSPACE}/dist/apps/spellen-doos/ does not exist."
+                  fi
+
+            - name: Upload spellen-doos artifact for deployment job
+              uses: actions/upload-artifact@v4
+              with:
+                  name: spellen-doos
+                  path: spellen-doos-release.zip
+
+            - name: Upload data-api artifact for deployment job
+              uses: actions/upload-artifact@v4
+              with:
+                  name: data-api
+                  path: data-api-release.zip
+
+    deploy-spellen-doos:
+        runs-on: ubuntu-latest
+        name: Deploy Angular Frontend
+        needs: build
+        environment:
+            name: 'Production'
+
+        steps:
+            - name: Download artifact from build job
+              uses: actions/download-artifact@v4
+              with:
+                  name: spellen-doos
+
+            - name: Unzip artifact for deployment
+              run: unzip spellen-doos-release.zip
+
+            - name: Deploy to static azure web app
+              id: builddeploy
+              uses: Azure/static-web-apps-deploy@v1
+              with:
+                  azure_static_web_apps_api_token: ${{ secrets.ANGULAR_PUBLISHTOKEN }}
+                  repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+                  action: 'upload'
+                  app_location: '/' # App source code path
+                  api_location: '' # Api source code path - optional
+                  output_location: 'dist/apps/spellen-doos' # Built app content directory - optional
+                  github_id_token: ${{ steps.idtoken.outputs.result }}
+
+    deploy-data-api:
+        runs-on: ubuntu-latest
+        name: Deploy NestJs data-api backend
+        needs: build
+        environment:
+            name: 'Production'
+            url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+        steps:
+            - name: Download artifact from build job
+              uses: actions/download-artifact@v4
+              with:
+                  name: data-api
+
+            - name: Unzip artifact for deployment
+              run: unzip data-api-release.zip
+
+            - name: Install dependencies
+              run: npm install
+              
+            - name: 'Deploy to Azure Web App'
+              id: deploy-to-webapp
+              uses: azure/webapps-deploy@v3
+              with:
+                  app-name: 'Spellen-doos-api'
+                  slot-name: 'Production'
+                  publish-profile: ${{ secrets.NESTJS_PUBLISHPROFILE }}
+                  package: .

@@ -4,7 +4,13 @@ export const environment: IEnvironment = {
     production: false,
 
     ROOT_DOMAIN_URL: 'dummy',
-    dataApiUrl: 'http://localhost:3000/api',
-    socketUrl: 'http://localhost:3000',
-    // dataApiUrl:  'http://192.168.2.20:3000/api',
+
+    //* API for CRUD operations
+//     dataApiUrl: 'http://localhost:3000/api',
+    dataApiUrl:  'https://spellen-doos-api.azurewebsites.net/api',
+
+    //* Socket URL for games
+//     socketUrl: 'http://localhost:3000',
+     socketUrl: 'https://spellen-doos-api.azurewebsites.net'
+  
 };

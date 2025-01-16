@@ -19,7 +19,6 @@ export class UserController {
         Logger.debug(`User exists: ${userExists ? true : false}`);
         return { exists: !!userExists };
     }
-
   
     // @Put()
     // async updateUser(user: IUser): Promise<IUser | null> {

@@ -24,7 +24,6 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.userId = localStorage.getItem('userId');
     console.log('Retrieved userId from localStorage:', this.userId);
-
     if (this.userId) {
       this.profileService.getProfileById(this.userId).subscribe((profile) => {
         this.profile = profile;
