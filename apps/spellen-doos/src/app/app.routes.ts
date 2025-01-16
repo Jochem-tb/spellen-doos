@@ -6,6 +6,11 @@ import {
   ProfileComponent,
 } from '@spellen-doos/ui';
 import { AuthGuard } from '@spellen-doos/features';
+import {
+  BingoComponent,
+  RpsComponent,
+  WaitScreenComponent,
+} from '@spellen-doos/frontend/games';
 
 export const appRoutes: Route[] = [
   { 
@@ -20,12 +25,27 @@ export const appRoutes: Route[] = [
   {
     path: 'dashboard',
     component: DashBoardComponent,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
   {
     path: 'profile',
     component: ProfileComponent,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
+  },
+  {
+    path: 'waitScreen/:id',
+    component: WaitScreenComponent,
+    // canActivate: [AuthGuard],
+  },
+  {
+    path: 'rpsGame/:id',
+    component: RpsComponent,
+    // canActivate: [AuthGuard],
+  },
+  {
+    path: 'bingoGame/:id',
+    component: BingoComponent,
+    // canActivate: [AuthGuard],
   },
   {
     path: 'register',

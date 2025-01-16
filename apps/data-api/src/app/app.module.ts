@@ -6,7 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from '@spellen-doos/backend-user';
 import { HelpButtonModule } from '@spellen-doos/backend/helpButton';
-import { GameModule } from '@spellen-doos/backend-game';
+import { GameModule } from '@spellen-doos/backend/game';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { GameModule } from '@spellen-doos/backend-game';
     AuthModule,
     UserModule,
     HelpButtonModule,
-    GameModule
+    GameModule,
   ],
   controllers: [AppController],
   providers: [AppService],

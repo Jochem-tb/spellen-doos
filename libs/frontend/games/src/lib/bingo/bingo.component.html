@@ -1,0 +1,30 @@
+<div class="bingo-container">
+  <header class="header">
+    <button
+      class="btn btn-primary fs-2 back-button"
+      (click)="disconnect()"
+      routerLink="/dashboard"
+    >
+      Terug
+    </button>
+    <div class="title-container">
+      <h1>Bingo</h1>
+    </div>
+  </header>
+
+  <div class="bingo-game d-flex justify-content-center">
+    <button class="btn btn-success btn-lg fs-1" (click)="iHaveBingo()">
+      BINGO
+    </button>
+    <div *ngIf="playerCard" class="bingo-card">
+      <div class="bingo-card-row row gx-2" *ngFor="let row of playerCard.card">
+        <div
+          class="bingo-card-cell col text-center d-flex align-items-center justify-content-center border rounded shadow-sm p-2"
+          *ngFor="let cell of row"
+        >
+          <span class="fs-4 fw-semibold">{{ cell }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
