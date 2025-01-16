@@ -125,10 +125,11 @@ export class GameServerService {
       this.waitScreenComponent.gameFoundMessage = gameFoundMessage;
       of(null)
         // Wait for 1.5 seconds before proceeding --> only display gameFoundMessage
-        .pipe(delay(1500))
+        //TODO set back to 1500 and 1000
+        .pipe(delay(150))
         .subscribe(() => {
           let countdown = 3;
-          const countdownInterval = interval(1000).subscribe(() => {
+          const countdownInterval = interval(100).subscribe(() => {
             if (countdown >= 0) {
               console.log('Countdown:', countdown);
               this.waitScreenComponent.gameFoundTimer = countdown;
