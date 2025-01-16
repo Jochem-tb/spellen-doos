@@ -21,9 +21,8 @@ export class GameController {
     return await this.gameService.findAll();
   }
 
-  // @Get(':id')
-  // async findOne(@Param('id') id: string): Promise<IGame | null> {
-  //   return this.gameService.findOne(id);
-  // }
-
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<IGame | null> {
+    return this.gameService.findOne(id);
+  }
 }
