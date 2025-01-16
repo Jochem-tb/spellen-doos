@@ -1,12 +1,37 @@
-<app-header></app-header>
+<header class="p-4 border-bottom">
+    <div class="container position-relative p-4">
+      <div
+        class="text-center display-5 position-absolute top-50 start-50 translate-middle"
+      >
+        De Spellendoos
+      </div>
+    </div>
+  </header>
 
-<!-- <body class="d-flex justify-content-center align-items-center vh-100 bg-light"> -->
-<div class="container text-center p-4 bg-white" style="max-width: 500px;">
-    <div [innerHTML]="tutorialContent" class="tutorial mb-4">
-        
+<div class="fullscreen-layout">
+    <!-- Header Section -->
+  
+    <div class="gametutorial-container shadow rounded">
+      <!-- Background with Overlayed Text -->
+      <div class="background-wrapper">
+        <div class="text-overlay">
+          <h1 class="title">
+            Speluitleg:
+            <br />
+            <span class="gameTitle">{{ gameTitle }}</span>
+          </h1>
+        </div>
+
+        <div [innerHTML]="tutorialContent" class="tutorial mb-4"></div>
+  
+        <div class="start-box">
+          <button
+            class="btn btn-lg px-5 start-button"
+            [routerLink]="['/waitScreen', gameId]"
+          >
+            Spel starten
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="d-flex justify-content-between">
-        <button class="btn btn-primary" onclick="gaNaarVorige()">Vorige</button>
-        <button class="btn btn-primary" onclick="gaNaarVolgende()">Volgende</button>
-    </div>
-</div>
+  </div>

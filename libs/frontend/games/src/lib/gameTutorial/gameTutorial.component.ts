@@ -11,6 +11,7 @@ import { GameTutorialService } from './gameTutorial.service';
 export class GameTutorialComponent implements OnInit{
   tutorialContent = 'Aan het laden...'; // Default content while loading
   gameTitle = '' // Default content while loading
+  gameId = '';
 
   constructor(
     private router: Router,
@@ -19,12 +20,16 @@ export class GameTutorialComponent implements OnInit{
 
   ngOnInit(): void {
     // Listen for route changes
-        // this.router.events.subscribe((event) => {
-        //   if (event instanceof NavigationEnd) {
-        //     this.loadTutorial(this.router.url);
-        //   }
-        // });
-        this.loadTutorialMock();
+    // this.router.events.subscribe((event) => {
+    //   if (event instanceof NavigationEnd) {
+    //     this.loadTutorial(this.router.url);
+    //   }
+    // });
+    this.loadTutorialMock();
+
+    console.log('URL:', this.router.url);
+    this.gameId = this.router.url.split('/')[2];
+    console.log('GameID:', this.gameId);
   }
 
   loadTutorial(url: string) {
@@ -47,7 +52,7 @@ export class GameTutorialComponent implements OnInit{
     this.gameTutorialService.getHelpContentMock('mock').subscribe({
       next: (results) => {
         this.tutorialContent = results;
-        this.gameTitle = 'Mock Title'; // Voeg een mock titel toe als je dat wilt
+        this.gameTitle = 'Steen Papier Schaar'; // Voeg een mock titel toe als je dat wilt
       },
       error: (err) => console.error('Error loading tutorial content', err),
       complete: () => console.log('Tutorial content loaded')

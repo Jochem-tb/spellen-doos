@@ -30,7 +30,6 @@ export class GameTutorialService {
     console.log('mock aangeroepen');
     return new Observable<string>((observer) => {
       observer.next(`
-        <h2>Steen Papier Schaar</h2>
             <p>
                 Steen, Papier, Schaar is een klassiek spel dat gespeeld wordt met twee spelers. Beide spelers kiezen tegelijkertijd een van de drie opties: steen, papier of schaar. 
                 <br><br>
