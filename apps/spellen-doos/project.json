@@ -20,7 +20,7 @@
             "glob": "**/*",
             "input": "apps/spellen-doos/public"
           },
-          "apps/spellen-doos/staticwebapp.config.json"
+          "apps/spellen-doos/src/staticwebapp.config.json"
         ],
         "styles": [
           "apps/spellen-doos/src/styles.css",
