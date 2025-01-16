@@ -15,9 +15,11 @@ export class UserService {
     }
 
     async findByUsername(userName: string): Promise<User | null> {
-        return this.userModel.findOne({ userName }).exec();
+        return this.userModel.findOne({
+            userName: { $regex: new RegExp(`^${userName}$`, "i") }, 
+        }).exec();
     }
-
+    
     async findById(id: string): Promise<User | undefined | null> {
         return this.userModel.findById(id);
     }
