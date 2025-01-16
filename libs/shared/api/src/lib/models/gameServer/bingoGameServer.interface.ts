@@ -20,6 +20,7 @@ export enum BingoGameEvents {
   BINGO_CALLED = 'bingoCalled',
   BINGO_RESULT = 'bingoResult',
   BINGO_CARD = 'bingoCard',
+  NUMBER_CALLED = 'numberCalled',
 }
 
 export interface IBingoCard {

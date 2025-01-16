@@ -25,5 +25,4 @@ export class GameController {
   async findOne(@Param('id') id: string): Promise<IGame | null> {
     return this.gameService.findOne(id);
   }
-
 }

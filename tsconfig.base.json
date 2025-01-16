@@ -21,14 +21,14 @@
       "@spellen-doos/backend/dto": ["libs/backend/dto/src/index.ts"],
       "@spellen-doos/backend/featurs": ["libs/backend/features/src/index.ts"],
       "@spellen-doos/backend/game": ["libs/backend/game/src/index.ts"],
+      "@spellen-doos/backend/helpButton": ["libs/backend/helpButton/src/index.ts"],
       "@spellen-doos/common": ["libs/frontend/common/src/index.ts"],
       "@spellen-doos/features": ["libs/frontend/features/src/index.ts"],
       "@spellen-doos/frontend/games": ["libs/frontend/games/src/index.ts"],
       "@spellen-doos/shared/api": ["libs/shared/api/src/index.ts"],
       "@spellen-doos/ui": ["libs/frontend/ui/src/index.ts"],
       "@spellen-doos/user": ["libs/backend/user/src/index.ts"],
-      "@spellen-doos/backend/helpButton": ["libs/backend/helpButton/src/index.ts"],
-      "@spellen-doos/environment": ["libs/shared/util-env/src/index.ts"]
+      "@spellen-doos/environment": ["libs/shared/util-env/src/index.ts"],
     }
   },
   "exclude": ["node_modules", "tmp"]
