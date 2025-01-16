@@ -1,7 +1,11 @@
 import { Injectable, NgZone } from '@angular/core';
 import { delay, map, Observable, of, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { BaseGatewayEvents, BingoGameEvents } from '@spellen-doos/shared/api';
+import {
+  BaseGatewayEvents,
+  BingoCard,
+  BingoGameEvents,
+} from '@spellen-doos/shared/api';
 import { io, Socket } from 'socket.io-client';
 import { GameServerService } from '../waitScreen/gameServer.service';
 import { BingoComponent } from './bingo.component';
@@ -42,6 +46,9 @@ export class BingoService {
     }
 
     this.setupIncoming();
+
+    console.log('[DEBUG] Requesting bingo card from server...');
+    this.socket.emit(BingoGameEvents.BINGO_CARD, { roomId: this.roomId });
   }
   private setupIncoming(): void {
     console.log('[DEBUG] Setup incoming');
@@ -59,6 +66,12 @@ export class BingoService {
       console.log('Game over');
       console.debug(data);
       this.handleGameOver();
+    });
+
+    this.socket.on(BingoGameEvents.BINGO_CARD, (card: BingoCard) => {
+      console.log('Bingo card received from server');
+      console.debug(card);
+      this.component.updateBingoCard(card);
     });
   }
 

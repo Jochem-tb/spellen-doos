@@ -13,7 +13,7 @@
   </header>
 
   <div class="bingo-game d-flex justify-content-center">
-    <div class="bingo-card">
+    <div *ngIf="playerCard" class="bingo-card">
       <div class="bingo-card-row row gx-2" *ngFor="let row of playerCard.card">
         <div
           class="bingo-card-cell col text-center d-flex align-items-center justify-content-center border rounded shadow-sm p-2"

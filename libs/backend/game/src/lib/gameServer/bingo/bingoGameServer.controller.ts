@@ -27,6 +27,7 @@ import { DefaultEventsMap, Server, Socket } from 'socket.io';
 import { BingoGameServerControllerGateway } from './bingoGameServer.gateway';
 
 export class BingoGameServerController implements IBingoGameServer {
+  bingoCards: Map<Socket, BingoCard>;
   maximumNumber: number = 99;
   calledNumbers: number[] = [];
   availableNumbers: number[] = Array.from(
@@ -50,6 +51,13 @@ export class BingoGameServerController implements IBingoGameServer {
     console.log(`Bingo game controller created for room: ${gameId}`);
     console.log('[DEBUG] Connected players:', this.connectedPlayers.length);
     console.log('[DEBUG] Available numbers:', this.availableNumbers);
+    console.log('[DEBUG] Generateing bingo cards...');
+    this.bingoCards = this.generateBingoCards(players);
+    console.log('[DEBUG] Bingo cards:', this.bingoCards.size);
+  }
+
+  getBingoCard(clientSocket: Socket): BingoCard | undefined {
+    return this.bingoCards.get(clientSocket);
   }
 
   someoneCalledBingo(clientId: string, bingoCard: BingoCard): void {
@@ -81,5 +89,15 @@ export class BingoGameServerController implements IBingoGameServer {
 
   private evaluateBingo(bingoCard: BingoCard): BingoResultEnum {
     return BingoResultEnum.UNKNOWN;
+  }
+
+  private generateBingoCards(players: Socket[]): Map<Socket, BingoCard> {
+    // Generate bingo cards for all players
+    const bingoCards: Map<Socket, BingoCard> = new Map();
+    players.forEach((playerSocket) => {
+      const card = new BingoCard();
+      bingoCards.set(playerSocket, card);
+    });
+    return bingoCards;
   }
 }

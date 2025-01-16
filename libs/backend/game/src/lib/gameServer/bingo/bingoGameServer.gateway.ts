@@ -153,11 +153,31 @@ export class BingoGameServerControllerGateway
       .emit(BaseGatewayEvents.CHECK_NUM_PLAYER_QUEUE, this.queue.length);
   }
 
-  @SubscribeMessage(BingoGameEvents.I_HAVE_BINGO)
-  handleChangeChoice(
-    @MessageBody() data: { playerCard: BingoCard; roomId: string },
+  @SubscribeMessage(BingoGameEvents.BINGO_CARD)
+  getBingoCard(
+    @MessageBody() data: any,
     @ConnectedSocket() client: Socket
   ): void {
+    const roomIdForClient = this.getRoomIdForClient(client, data);
+
+    if (!roomIdForClient) {
+      console.error('Client is not part of any room.');
+      return;
+    }
+
+    console.log('Gettting controller for room:', roomIdForClient);
+    const game = this.games.get(roomIdForClient);
+    if (game) {
+      console.log('Getting bingo card for client:', client.id);
+      const card = game.getBingoCard(client);
+      console.log('Return card for client: ', client.id, card);
+      this.server.to(client.id).emit(BingoGameEvents.BINGO_CARD, card);
+    } else {
+      console.error(`No game controller found for room: ${roomIdForClient}`);
+    }
+  }
+
+  private getRoomIdForClient(client: Socket, data: any): string | undefined {
     let roomId;
     if (!data.roomId) {
       console.warn('No roomId provided. Attempting to find room for client.');
@@ -174,17 +194,28 @@ export class BingoGameServerControllerGateway
       return;
     }
 
-    const game = this.games.get(roomId);
-    if (game) {
-      game.someoneCalledBingo(client.id, data.playerCard);
-    } else {
-      console.error(`No game controller found for room: ${roomId}`);
-      console.warn('Closing room:', roomId);
-      try {
-        this.closeGameRoom(roomId);
-      } catch (error) {
-        console.error('Error closing room');
-        client.emit(BaseGatewayEvents.GAME_OVER, {});
+    return roomId;
+  }
+
+  @SubscribeMessage(BingoGameEvents.I_HAVE_BINGO)
+  iHaveBingo(
+    @MessageBody() data: { playerCard: BingoCard; roomId: string },
+    @ConnectedSocket() client: Socket
+  ): void {
+    const roomId = this.getRoomIdForClient(client, data);
+    if (!roomId) {
+      const game = this.games.get(roomId!);
+      if (game) {
+        game.someoneCalledBingo(client.id, data.playerCard);
+      } else {
+        console.error(`No game controller found for room: ${roomId}`);
+        console.warn('Closing room:', roomId);
+        try {
+          this.closeGameRoom(roomId!);
+        } catch (error) {
+          console.error('Error closing room');
+          client.emit(BaseGatewayEvents.GAME_OVER, {});
+        }
       }
     }
   }

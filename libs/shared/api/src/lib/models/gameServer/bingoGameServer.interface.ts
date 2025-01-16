@@ -19,6 +19,7 @@ export enum BingoGameEvents {
   I_HAVE_BINGO = 'iHaveBingo',
   BINGO_CALLED = 'bingoCalled',
   BINGO_RESULT = 'bingoResult',
+  BINGO_CARD = 'bingoCard',
 }
 
 export interface IBingoCard {
@@ -49,7 +50,6 @@ export class BingoCard implements IBingoCard {
       maxTry++;
     } while (this.usedNumbers.includes(number) || maxTry > 100);
     this.usedNumbers.push(number);
-    console.log('[DEBUG] usedNumbers:', this.usedNumbers);
     return number;
   }
 }

@@ -20,8 +20,8 @@ export class BingoComponent {
     // Koppel deze component aan de service (zodat de service kan updaten).
     console.log('[DEBUG] Bingo Component constructor...');
     this.bingoService.component = this;
-    console.log('[DEBUG] Generating player card...');
-    this.playerCard = new BingoCard();
+    // console.log('[DEBUG] Generating player card...');
+    // this.playerCard = new BingoCard();
     console.log('[DEBUG] Player card:', this.playerCard);
   }
 
@@ -32,5 +32,9 @@ export class BingoComponent {
   disconnect(): void {
     console.log('[DEBUG] Disconnecting...');
     this.bingoService.disconnect();
+  }
+
+  updateBingoCard(card: BingoCard): void {
+    this.playerCard = card;
   }
 }
