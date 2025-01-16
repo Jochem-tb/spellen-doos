@@ -29,7 +29,8 @@
       "@spellen-doos/frontend/games": ["libs/frontend/games/src/index.ts"],
       "@spellen-doos/shared/api": ["libs/shared/api/src/index.ts"],
       "@spellen-doos/ui": ["libs/frontend/ui/src/index.ts"],
-      "@spellen-doos/user": ["libs/backend/user/src/index.ts"]
+      "@spellen-doos/user": ["libs/backend/user/src/index.ts"],
+      "@spellen-doos/environment": ["libs/shared/util-env/src/index.ts"],
     }
   },
   "exclude": ["node_modules", "tmp"]
