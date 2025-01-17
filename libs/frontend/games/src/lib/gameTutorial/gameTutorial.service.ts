@@ -30,9 +30,10 @@ export class GameTutorialService {
     console.log('mock aangeroepen');
     return new Observable<string>((observer) => {
       observer.next(`
-            <p>
                 Steen, Papier, Schaar is een klassiek spel dat gespeeld wordt met twee spelers. Beide spelers kiezen tegelijkertijd een van de drie opties: steen, papier of schaar. 
                 <br><br>
+                De regels gaan als volgt:
+                <br>
                 - Steen verslaat schaar (steen breekt schaar).
                 <br>
                 - Schaar verslaat papier (schaar knipt papier).
@@ -40,7 +41,6 @@ export class GameTutorialService {
                 - Papier verslaat steen (papier bedekt steen).
                 <br><br>
                 Het doel is om je tegenstander te verslaan door een optie te kiezen die hun keuze verslaat.
-            </p>
         `);
       observer.complete();
     });

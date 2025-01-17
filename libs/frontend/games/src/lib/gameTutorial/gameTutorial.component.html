@@ -1,8 +1,6 @@
 <header class="p-4 border-bottom">
-    <div class="container position-relative p-4">
-      <div
-        class="text-center display-5 position-absolute top-50 start-50 translate-middle"
-      >
+    <div class="container position-relative p-4" style="margin-bottom: 9px;">
+      <div class="text-center display-5 position-absolute top-50 start-50 translate-middle">
         De Spellendoos
       </div>
     </div>
@@ -22,7 +20,11 @@
           </h1>
         </div>
 
-        <div [innerHTML]="tutorialContent" class="tutorial mb-4"></div>
+        <div class="tutorial mb-4 tutorial-container">
+            <p [innerHTML]="tutorialContent" class="tutorial-text">
+
+            </p>
+        </div>
   
         <div class="start-box">
           <button

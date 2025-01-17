@@ -9,7 +9,6 @@
   
   /* Ensure the container covers the full viewport */
   .gametutorial-container {
-    background-color: #f8f9fa; /* Light background color */
     min-height: 100vh; /* Full height of the viewport */
     display: flex;
     flex-direction: column;
@@ -17,6 +16,7 @@
     overflow: hidden; /* Prevent scrollbars from appearing */
     margin: 0; /* Remove any default margins */
     padding: 0;
+    background-image: url('/backgrounds/dash-background.jpg');
   }
   
   /* Background Wrapper for the Rectangle */
@@ -25,15 +25,33 @@
     width: 90%; /* Adjust width as needed */
     height: 80vh;
     max-width: 110vh; /* Limit the width for portrait shape */
-    /* aspect-ratio: 4/1; /* Portrait rectangle shape */
-    /* background: url('/backgrounds/waitScreenBackgroundGif.gif') no-repeat center
-      center; */
     background-size: cover;
     border-radius: 10px;
-    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
     margin-bottom: 2rem;
     margin-top: 2rem;
-    background-color: white !important;
+    background-color: #f8f9fa !important; /* Light background color */
+    /* background-image: url('/backgrounds/tutorialAchtergrond.jpg'); */
+  }
+
+  .tutorial-container {
+    position: absolute;
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: 50%;
+  }
+
+  .tutorial-text {
+    font-size: 1.05rem;
+    font-weight: 400;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 0 1rem;
   }
   
   .text-overlay {
