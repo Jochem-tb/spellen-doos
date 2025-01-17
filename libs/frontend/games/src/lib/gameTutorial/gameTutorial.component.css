@@ -35,6 +35,7 @@
 
   .tutorial-container {
     position: absolute;
+
     top: 53%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -43,6 +44,20 @@
     align-items: center;
     height: auto;
     width: 50%;
+  }
+
+  .tutorial-image-holder {
+    grid-row: 1;
+    border-radius: 10px;
+  }
+
+  .tutorial-text-holder {
+    grid-row: 0;
+  }
+
+  .tutorial-image {
+    width: 100%;
+    height: auto;
   }
 
   .tutorial-text {

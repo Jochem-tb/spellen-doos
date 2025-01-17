@@ -12,6 +12,7 @@ export class GameTutorialComponent implements OnInit{
   tutorialContent = 'Aan het laden...'; // Default content while loading
   gameTitle = '' // Default content while loading
   gameId = '';
+  gamePicture = 'https://www.leukebordspellen.nl/wp-content/uploads/2022/09/steen-papier-schaar-3.jpg';
 
   constructor(
     private router: Router,
@@ -25,26 +26,22 @@ export class GameTutorialComponent implements OnInit{
     //     this.loadTutorial(this.router.url);
     //   }
     // });
-    this.loadTutorialMock();
-
     console.log('URL:', this.router.url);
     this.gameId = this.router.url.split('/')[2];
     console.log('GameID:', this.gameId);
+    this.loadGame();
+    this.loadTutorialMock();
   }
 
-  loadTutorial(url: string) {
-    this.tutorialContent = '<h5>Aan het laden...</h5>'; // Set loading state
-    this.gameTutorialService.getHelpContent(url).subscribe({
-      next: (results) => (
-        (this.tutorialContent = results.content), (this.gameTitle = results.title)
-      ),
-      error: (err) => {
-        console.error('Failed to load help content', err);
-        this.tutorialContent =
-          '<h3>Oeps.</h3><h5>Er is iets fout gegaan. Probeer het later nog een keer.</h5>';
-        this.gameTitle = '';
+  loadGame() {
+    this.gameTutorialService.getGameContent(this.gameId).subscribe({
+      next: (results) => {
+        this.gameTitle = results.name;
+        this.gamePicture = results.cardImage;
       },
-    });
+      error: (err) => console.error('Error loading game content', err),
+      complete: () => console.log('Game content loaded')
+    });    
   }
 
   loadTutorialMock() {
