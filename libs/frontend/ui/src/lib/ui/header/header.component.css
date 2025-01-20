@@ -1,0 +1,59 @@
+.logout-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 22px;
+  background: #ff3e3e;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 10px 20px rgba(255, 62, 62, 0.5);
+}
+.logout-btn .icon {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+  background: url('https://img.icons8.com/ios-filled/50/ffffff/logout-rounded-left.png') no-repeat center center / contain;
+  transition: transform 0.4s ease;
+}
+.logout-btn .text {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.4s ease;
+}
+.logout-btn::before, .logout-btn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 140%;
+  height: 140%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent);
+  transition: all 0.6s ease;
+  border-radius: 50%;
+  z-index: 0;
+  transform: translate(-50%, -50%) scale(0);
+}
+.logout-btn:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.logout-btn:hover .icon {
+  transform: translateX(-10px) rotate(-360deg);
+}
+
+.logout-btn:hover .text {
+  transform: translateX(10px);
+}
+
+.logout-btn:hover {
+  background: #ff1e1e;
+  transform: scale(1.08);
+}
