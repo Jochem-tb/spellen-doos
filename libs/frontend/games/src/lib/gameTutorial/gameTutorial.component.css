@@ -6,11 +6,6 @@
     margin: 0;
     overflow: hidden; /* Prevent scrolling */
   }
-
-  header {
-    padding-bottom: 3.5rem !important;
-    padding-top: 3rem !important;
-  }
   
   /* Ensure the container covers the full viewport */
   .gametutorial-container {
@@ -139,6 +134,11 @@
     border: none;
   } */
 
+  header {
+    padding-bottom: 3.5rem !important;
+    padding-top: 3rem !important;
+  }
+  
   .terug-btn {
     position: absolute;
     top: -1.1rem;
