@@ -125,3 +125,11 @@
     transform: scale(1.05);
     background-color: #2ED32E !important; /* Slightly darker green on hover */
   }
+
+  .btn-secondary {
+    position: absolute;
+    left: 7rem;
+    top: 8rem;
+    background-color: #6c757d;
+    border: none;
+  }
