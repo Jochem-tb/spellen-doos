@@ -144,16 +144,26 @@ export class BingoService {
   }
 
   private validBingo(playerId: string): void {
-    alert(`Speler ${playerId} heeft geldige bingo!`);
-    this.component.successBingo = true;
+    if (playerId === this.socket.id) {
+      this.component.successBingo = true;
+      alert('Je hebt geldige bingo!');
+    } else {
+      alert(`Een andere speler heeft geldige bingo!`);
+    }
   }
 
   private invalidBingo(playerId: string): void {
-    alert(`Speler ${playerId} heeft ongeldige bingo!`);
-    this.component.successBingo = true;
+    if (playerId === this.socket.id) {
+      alert(`Je hebt ongeldige bingo!`);
+    }
+    this.component.successBingo = false;
   }
 
   private playerDisconnected(playerId: string): void {
+    if (this.socket.id === playerId) {
+      alert('Er is een fout opgetreden. Je bent uit de game gezet.');
+      this.router.navigate(['/']);
+    }
     alert(`Speler ${playerId} heeft momenteel de game verlaten.`);
   }
 
