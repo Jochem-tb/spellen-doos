@@ -3,7 +3,7 @@ export interface IGame {
   name: string;
   shortDescription?: string;
   longDescription?: string;
-  tutorialSteps?: ITutorialStep[];
+  tutorialContent?: string;
   cardImage: string;
   maxPlayers: number;
   minPlayers: number;

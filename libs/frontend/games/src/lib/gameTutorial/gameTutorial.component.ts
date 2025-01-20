@@ -20,17 +20,10 @@ export class GameTutorialComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    // Listen for route changes
-    // this.router.events.subscribe((event) => {
-    //   if (event instanceof NavigationEnd) {
-    //     this.loadTutorial(this.router.url);
-    //   }
-    // });
     console.log('URL:', this.router.url);
     this.gameId = this.router.url.split('/')[2];
     console.log('GameID:', this.gameId);
     this.loadGame();
-    this.loadTutorialMock();
   }
 
   loadGame() {
@@ -38,21 +31,10 @@ export class GameTutorialComponent implements OnInit{
       next: (results) => {
         this.gameTitle = results.name;
         this.gamePicture = results.cardImage;
+        this.tutorialContent = results.tutorialContent ?? 'Dit spel bezit geen uitleg, maar is wel leuk om te spelen!';
       },
       error: (err) => console.error('Error loading game content', err),
       complete: () => console.log('Game content loaded')
     });    
-  }
-
-  loadTutorialMock() {
-    console.log('Loading mock tutorial content');
-    this.gameTutorialService.getHelpContentMock('mock').subscribe({
-      next: (results) => {
-        this.tutorialContent = results;
-        this.gameTitle = 'Steen Papier Schaar'; // Voeg een mock titel toe als je dat wilt
-      },
-      error: (err) => console.error('Error loading tutorial content', err),
-      complete: () => console.log('Tutorial content loaded')
-    });
   }
 }
