@@ -51,8 +51,8 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   margin-top: 20px;
   margin-bottom: 20px;
-  width: fit-content; /* Fixed width to maintain square shape */
-  height: fit-content; /* Fixed height to maintain square shape */
+  height: 7vh;
+  width: 24vw;
 }
 
 .bingo-cell {
