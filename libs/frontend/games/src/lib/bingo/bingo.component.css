@@ -1,3 +1,4 @@
+
 body {
   background-color: #1a1a1a;
   color: white;
@@ -10,6 +11,7 @@ body {
   justify-content: center;
   height: 100vh;
 }
+
 .header {
   display: flex;
   justify-content: center;
@@ -17,6 +19,7 @@ body {
   padding: 10px 20px;
   background-color: #2b2b2b;
 }
+
 .title-container {
   display: flex;
   flex-direction: column;
@@ -24,12 +27,14 @@ body {
   text-align: center;
   justify-content: center;
 }
+
 .back-button {
   position: absolute;
   top: 0;
   left: 0;
   margin: 40px;
 }
+
 .drawn-number {
   font-size: 2rem;
   font-weight: bold;
@@ -38,6 +43,8 @@ body {
   padding: 10px 20px;
   border-radius: 10px;
   margin-top: 10px;
+  height: 7vh;
+  width: 17vw;
 }
 
 .bingo-card {
@@ -51,8 +58,8 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   margin-top: 20px;
   margin-bottom: 20px;
-  height: 7vh;
-  width: 24vw;
+  width: fit-content; /* Fixed width to maintain square shape */
+  height: fit-content; /* Fixed height to maintain square shape */
 }
 
 .bingo-cell {
@@ -89,4 +96,13 @@ body {
 }
 .bingo-button:hover {
   background: #218838;
+}
+
+/* Responsive design */
+
+@media  (max-width: 1366px) {
+  .drawn-number {
+    height: 7vh;
+    width: 24vw;
+  }
 }
