@@ -1,1 +1,43 @@
-<p>gameTutorial works!</p>
+<header class="p-4 border-bottom">
+    <div class="container position-relative p-4" style="margin-bottom: 9px;">
+      <div class="text-center display-5 position-absolute top-50 start-50 translate-middle">
+        De Spellendoos
+      </div>
+    </div>
+  </header>
+
+<div class="fullscreen-layout">
+    <!-- Header Section -->
+  
+    <div class="gametutorial-container">
+
+      <button class="btn btn-secondary p-3 ps-4 pe-4 mt-1 mb-3" routerLink="/dashboard"> Terug </button>
+      <!-- Background with Overlayed Text -->
+      <div class="background-wrapper">
+        <div class="text-overlay">
+          <h1 class="title">
+            Speluitleg:
+            <br />
+            <span class="gameTitle">{{ gameTitle }}</span>
+          </h1>
+        </div>
+
+        <div class="tutorial mb-4 tutorial-container">
+
+            <p [innerHTML]="tutorialContent" class="tutorial-text">
+
+            </p>
+
+        </div>
+  
+        <div class="start-box">
+          <button
+            class="btn btn-lg px-5 start-button"
+            [routerLink]="['/waitScreen', gameId]"
+          >
+            Spel starten
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

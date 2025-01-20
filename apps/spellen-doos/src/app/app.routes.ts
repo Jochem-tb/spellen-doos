@@ -10,6 +10,7 @@ import {
   BingoComponent,
   RpsComponent,
   WaitScreenComponent,
+  GameTutorialComponent,
 } from '@spellen-doos/frontend/games';
 
 export const appRoutes: Route[] = [
@@ -31,6 +32,10 @@ export const appRoutes: Route[] = [
     path: 'profile',
     component: ProfileComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'gameTutorial/:id',
+    component: GameTutorialComponent
   },
   {
     path: 'waitScreen/:id',
@@ -56,9 +61,5 @@ export const appRoutes: Route[] = [
     component: LoginComponent 
   },
 
-  // Redirect to welcome page if no route found
-  { 
-    path: '**', 
-    redirectTo: 'welcome' 
-  }
+  { path: '**', redirectTo: 'welcome' },
 ];
