@@ -137,7 +137,7 @@ export class AuthService {
 
     this.currentUser$.next(null);
 
-    this.router.navigate(['/login']).then((success) => {
+    this.router.navigate(['/welcome']).then((success) => {
       if (success) {
         console.log('Logged out successfully.');
       } else {
