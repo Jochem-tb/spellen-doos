@@ -78,49 +78,37 @@ export class RPSGameServerControllerGateway
   }
 
   // Handle client disconnections
-  handleDisconnect(client: Socket) {
+  handleDisconnect(client: Socket): void {
     // Remove player from queue if present
     this.queue = this.queue.filter((socket) => socket.id !== client.id);
-
-    // Remove player from rooms if present
+  
+    // Iterate through rooms to find the one the client belongs to
     this.rooms.forEach((players, roomId) => {
-      this.rooms.set(
-        roomId,
-        players.filter((player) => player.id !== client.id)
-      );
-
-      // If room is empty, remove room and game controller
-      if (this.rooms.get(roomId)?.length === 0) {
-        this.rooms.delete(roomId);
-        this.games.delete(roomId);
-      } else {
-        // If room is not empty, notify the other player of the disconnect
-        console.warn('Player disconnected:', client.id);
-        players.forEach((player) => {
-          if (player.id !== client.id) {
-            player.emit(BaseGatewayEvents.PLAYER_DISCONNECT, {
-              playerId: client.id,
-            });
-          }
-        });
-
-        // Set a timeout for reconnection
-        setTimeout(() => {
-          // Check if the connectedPlayers is more than Minimum players for game, otherwise delete room
-          const roomPlayers = this.rooms.get(roomId);
-          if (roomPlayers && roomPlayers.length < this.minPlayerForGame) {
-            this.rooms.delete(roomId);
-            this.games.delete(roomId);
-            this.server.to(roomId).emit(BaseGatewayEvents.GAME_OVER, {
-              reason: 'Not enough players to continue the game.',
-            });
-          }
-        }, this.TIME_FOR_RECONNECTION_IN_MS); // 30 seconds for reconnection
+      if (players.some((player) => player.id === client.id)) {
+        // Remove the player from the room
+        this.rooms.set(
+          roomId,
+          players.filter((player) => player.id !== client.id)
+        );
+  
+        console.log(`Player ${client.id} disconnected from room ${roomId}`);
+  
+        // If room is empty, remove room and game controller
+        if (this.rooms.get(roomId)?.length === 0) {
+          this.rooms.delete(roomId);
+          this.games.delete(roomId);
+          console.log(`Room ${roomId} is now empty and has been removed.`);
+        } else {
+          // Notify remaining players in the room of the disconnect
+          this.server.to(roomId).emit(BaseGatewayEvents.PLAYER_DISCONNECT, {
+            playerId: client.id,
+          });
+        }
       }
     });
-
+  
     console.log(`Client disconnected: ${client.id}`);
-  }
+  }  
 
   //
   // Handle Outgoing messages for controllers

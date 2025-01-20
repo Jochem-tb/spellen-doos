@@ -13,6 +13,7 @@ import { io, Socket } from 'socket.io-client';
 import { GameServerService } from '../waitScreen/gameServer.service';
 import { RpsComponent } from './rps.component';
 import { Route, Router } from '@angular/router';
+import { time } from 'console';
 
 @Injectable({
   providedIn: 'root',
@@ -115,6 +116,10 @@ export class RPSService {
 
   private playerDisconnected(playerId: string): void {
     alert(`Speler ${playerId} heeft momenteel de game verlaten.`);
+    setTimeout(() => {
+    this.socket.disconnect();
+    this.router.navigate(['/dashboard']);
+    }, 3000);
   }
 
   public disconnect(): void {
