@@ -59,8 +59,6 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    //RESET the gameServerService Socket!!!!
-    // this.gameServerService.resetSocket();
     //Set the title of the wait screen
     console.log('URL:', this.router.url);
     const gameId = this.router.url.split('/')[2];

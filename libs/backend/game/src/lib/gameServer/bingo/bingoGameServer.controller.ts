@@ -213,23 +213,21 @@ export class BingoGameServerController implements IBingoGameServer {
 
     console.log('[DEBUG] Evaluating bingo card:', card);
 
+    let result: BingoResultEnum = BingoResultEnum.NOT_VALID;
+
     if (this.checkHorizontalBingo(card)) {
       console.log('[BINGO] Horizontal bingo detected!');
-      return BingoResultEnum.VALID;
-    }
-
-    if (this.checkVerticalBingo(card, gridSize)) {
+      result = BingoResultEnum.VALID;
+    } else if (this.checkVerticalBingo(card, gridSize)) {
       console.log('[BINGO] Vertical bingo detected!');
-      return BingoResultEnum.VALID;
-    }
-
-    if (this.checkDiagonalBingo(card, gridSize)) {
+      result = BingoResultEnum.VALID;
+    } else if (this.checkDiagonalBingo(card, gridSize)) {
       console.log('[BINGO] Diagonal bingo detected!');
-      return BingoResultEnum.VALID;
+      result = BingoResultEnum.VALID;
     }
 
-    // No valid bingo found
-    return BingoResultEnum.NOT_VALID;
+    console.log(`[DEBUG] Bingo card evaluation result: ${result}`);
+    return result;
   }
 
   private checkHorizontalBingo(card: number[][]): boolean {
