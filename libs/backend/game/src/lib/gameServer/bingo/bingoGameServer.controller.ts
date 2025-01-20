@@ -41,6 +41,7 @@ export class BingoGameServerController implements IBingoGameServer {
   private activeInterval: NodeJS.Timeout | null = null; // Track the active interval
 
   gateway!: BingoGameServerControllerGateway;
+  alreadyCheckingBingo: boolean = false;
 
   constructor(
     private readonly gameId: string,
@@ -152,6 +153,15 @@ export class BingoGameServerController implements IBingoGameServer {
   }
 
   someoneCalledBingo(playerSocket: Socket, bingoCard: BingoCard): void {
+    if (this.alreadyCheckingBingo) {
+      console.warn(
+        `[BINGO] Bingo call already in progress for game: ${this.gameId}`
+      );
+      return;
+    }
+
+    this.alreadyCheckingBingo = true;
+
     console.log(
       `someoneCalledBingo called for player: ${playerSocket.id} in game: ${this.gameId} with card: ${bingoCard}`
     );
@@ -161,6 +171,7 @@ export class BingoGameServerController implements IBingoGameServer {
       console.error(
         `[ERROR] Invalid clientId: ${playerSocket.id} for game: ${this.gameId}`
       );
+      this.alreadyCheckingBingo = false;
       return;
     }
 
@@ -174,6 +185,7 @@ export class BingoGameServerController implements IBingoGameServer {
       console.error(
         `[ERROR] Bingo card mismatch for player: ${playerSocket.id}`
       );
+      this.alreadyCheckingBingo = false;
       return;
     }
 
@@ -191,6 +203,8 @@ export class BingoGameServerController implements IBingoGameServer {
       clientId: playerSocket.id,
       result: validBingo,
     });
+
+    this.alreadyCheckingBingo = false;
   }
 
   private evaluateBingo(bingoCard: BingoCard): BingoResultEnum {
