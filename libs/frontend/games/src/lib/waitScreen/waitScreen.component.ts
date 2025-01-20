@@ -105,7 +105,7 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
     }
   }
 
-  private startTimer(): void {
+  public startTimer(): void {
     this.timerSubscription = interval(1000).subscribe(() => {
       //Update the time
       this.elapsedSeconds++;
