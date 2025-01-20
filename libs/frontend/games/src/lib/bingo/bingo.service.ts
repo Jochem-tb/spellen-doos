@@ -145,10 +145,12 @@ export class BingoService {
 
   private validBingo(playerId: string): void {
     alert(`Speler ${playerId} heeft geldige bingo!`);
+    this.component.successBingo = true;
   }
 
   private invalidBingo(playerId: string): void {
     alert(`Speler ${playerId} heeft ongeldige bingo!`);
+    this.component.successBingo = true;
   }
 
   private playerDisconnected(playerId: string): void {

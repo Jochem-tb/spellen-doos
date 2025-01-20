@@ -47,7 +47,7 @@ export class BingoComponent {
   selectedCells: Set<Number> = new Set();
   hasBingo: boolean = false;
 
-  successBingo: boolean = true;
+  public successBingo: boolean = false;
   currentCalledNumber = -1;
 
   startMessage: string | undefined = undefined;

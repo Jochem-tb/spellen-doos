@@ -40,7 +40,9 @@ export class BingoGameServerControllerGateway
   queue: Socket[] = [];
   minPlayerForGame: number = 1;
   maxPlayerForGame: number = 30;
-  recommendedPlayerForGame: number = 15;
+  recommendedPlayerForGame: number = 12;
+  buffer: number = 3;
+  gameCreationTimeout: NodeJS.Timeout | null = null;
 
   private readonly TIME_FOR_RECONNECTION_IN_MS = 30000; // 30 seconds
 
@@ -56,17 +58,21 @@ export class BingoGameServerControllerGateway
     if (this.checkRequirementsForGame()) {
       console.log('Requirements met for bingo game');
       this.createGameRoom();
+    } else {
+      this.scheduleGameCreation();
     }
   }
 
   private checkRequirementsForGame(): boolean {
-    //TODO: Implement logic to check dynamic players for game, not always minimum
-    return this.queue.length >= this.minPlayerForGame;
+    const playersInQueue = this.queue.length;
+    return (
+      playersInQueue >= this.recommendedPlayerForGame - this.buffer &&
+      playersInQueue <= this.recommendedPlayerForGame + this.buffer
+    );
   }
 
   private getPlayersForGame(): Socket[] {
-    //TODO: Implement logic to get dynamic players for game, not always minimum
-    return this.queue.splice(0, this.minPlayerForGame);
+    return this.queue.splice(0, this.maxPlayerForGame); // Always take max number of players, or as close as possible
   }
 
   private createGameRoom(): void {
@@ -82,6 +88,33 @@ export class BingoGameServerControllerGateway
       player.join(roomId);
       player.emit(BaseGatewayEvents.SETUP_GAME, roomId);
     });
+  }
+
+  private scheduleGameCreation(): void {
+    const waitTime = this.calculateWaitTime();
+    console.log(`Scheduling game creation in ${waitTime} ms`);
+
+    if (this.gameCreationTimeout) {
+      clearTimeout(this.gameCreationTimeout);
+    }
+
+    this.gameCreationTimeout = setTimeout(() => {
+      if (this.queue.length >= this.minPlayerForGame) {
+        console.log(
+          `Requirements met for bingo game after wait time ${waitTime}`
+        );
+        this.createGameRoom();
+      }
+    }, waitTime);
+  }
+
+  private calculateWaitTime(): number {
+    const playersInQueue = this.queue.length;
+
+    // Apply the dynamic calculation: 60 seconds for 1 player, 55 seconds for 2, 40 for 5, etc.
+    let waitTime: number = Math.max(60000 - (playersInQueue - 1) * 10000, 2000);
+
+    return waitTime;
   }
 
   // Handle client disconnections
