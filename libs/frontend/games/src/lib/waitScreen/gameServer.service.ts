@@ -36,7 +36,7 @@ export class GameServerService {
 
   public getGameTitle(id: string): Observable<string> {
     return this.http
-      .get<{ results: IGame }>('http://192.168.178.204:3000/api/game/' + id)
+      .get<{ results: IGame }>('http://localhost:3000/api/game/' + id)
       .pipe(map((response) => response.results.name));
   }
 
@@ -81,13 +81,13 @@ export class GameServerService {
       case WaitScreenGames.RPS:
         this.waitScreenGame = WaitScreenGames.RPS;
         this.socket = io(
-          'http://192.168.178.204:3000/RPSGameServerControllerGateway'
+          'http://localhost:3000/RPSGameServerControllerGateway'
         );
         break;
       case WaitScreenGames.BINGO:
         this.waitScreenGame = WaitScreenGames.BINGO;
         this.socket = io(
-          'http://192.168.178.204:3000/BingoGameServerControllerGateway'
+          'http://localhost:3000/BingoGameServerControllerGateway'
         );
         break;
 
