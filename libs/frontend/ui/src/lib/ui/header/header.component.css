@@ -14,7 +14,6 @@
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 10px 20px rgba(255, 62, 62, 0.5);
 }
 .logout-btn .icon {
   width: 25px;

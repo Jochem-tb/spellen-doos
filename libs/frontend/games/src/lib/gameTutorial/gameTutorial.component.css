@@ -6,6 +6,11 @@
     margin: 0;
     overflow: hidden; /* Prevent scrolling */
   }
+
+  header {
+    padding-bottom: 3.5rem !important;
+    padding-top: 3rem !important;
+  }
   
   /* Ensure the container covers the full viewport */
   .gametutorial-container {
@@ -126,10 +131,24 @@
     background-color: #2ED32E !important; /* Slightly darker green on hover */
   }
 
-  .btn-secondary {
+  /* .btn-secondary {
     position: absolute;
     left: 7rem;
     top: 8rem;
     background-color: #6c757d;
     border: none;
+  } */
+
+  .terug-btn {
+    position: absolute;
+    padding: 8px 50px;
+    background-color: #6c757d;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    overflow: hidden;
   }
