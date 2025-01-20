@@ -28,7 +28,6 @@ export class BingoService {
   }
 
   private socket!: Socket;
-  // private gameServer!: Socket;
   private roomId!: string;
 
   public component!: BingoComponent;
@@ -72,9 +71,16 @@ export class BingoService {
     this.socket.on(BingoGameEvents.BINGO_CARD, (card: BingoCard) => {
       console.log('Bingo card received from server');
       console.debug(card);
-      this.component.updateBingoCard(card);
-      console.log('Emitting player ready event...');
-      this.socket.emit(BaseGatewayEvents.PLAYER_READY, { roomId: this.roomId });
+      if (card) {
+        this.component.updateBingoCard(card);
+        console.log('Emitting player ready event...');
+        this.socket.emit(BaseGatewayEvents.PLAYER_READY, {
+          roomId: this.roomId,
+        });
+      } else {
+        console.log('No bingo card received, requesting again...');
+        this.socket.emit(BingoGameEvents.BINGO_CARD, { roomId: this.roomId });
+      }
     });
 
     this.socket.on(
@@ -100,6 +106,22 @@ export class BingoService {
       (data: { number: number; remaining: number }) => {
         console.log('Bingo number received: ', data.number);
         this.component.updateCalledNumber(data.number);
+      }
+    );
+
+    this.socket.on(BingoGameEvents.START_NUMBER_CALLING, (data: any) => {
+      console.log('Number calling started event received');
+      this.component.startNumberCalling();
+    });
+  }
+
+  public getBingoCard(): void {
+    console.log('[DEBUG] Requesting bingo card from server...');
+    this.socket.emit(
+      BingoGameEvents.BINGO_CARD,
+      { roomId: this.roomId },
+      () => {
+        console.log('Bingo card requested');
       }
     );
   }

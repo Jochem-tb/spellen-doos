@@ -98,31 +98,39 @@ export class BingoGameServerControllerGateway
 
       // If room is empty, remove room and game controller
       if (this.rooms.get(roomId)?.length === 0) {
+        console.log('Room is empty. Closing room:', roomId);
         this.rooms.delete(roomId);
+        const gameController = this.games.get(roomId);
+        if (gameController) {
+          console.warn('Send stopgame command to roomController:', roomId);
+          gameController.stopGame();
+        }
         this.games.delete(roomId);
       } else {
         // If room is not empty, notify the other player of the disconnect
         console.warn('Player disconnected:', client.id);
-        players.forEach((player) => {
-          if (player.id !== client.id) {
-            player.emit(BaseGatewayEvents.PLAYER_DISCONNECT, {
-              playerId: client.id,
-            });
-          }
+        this.broadcastToRoom(roomId, BaseGatewayEvents.PLAYER_DISCONNECT, {
+          playerId: client.id,
         });
 
-        // Set a timeout for reconnection
-        setTimeout(() => {
-          // Check if the connectedPlayers is more than Minimum players for game, otherwise delete room
-          const roomPlayers = this.rooms.get(roomId);
-          if (roomPlayers && roomPlayers.length < this.minPlayerForGame) {
-            this.rooms.delete(roomId);
-            this.games.delete(roomId);
-            this.server.to(roomId).emit(BaseGatewayEvents.GAME_OVER, {
-              reason: 'Not enough players to continue the game.',
-            });
+        // Check if the connectedPlayers is more than Minimum players for game, otherwise delete room
+        const roomPlayers = this.rooms.get(roomId);
+        if (roomPlayers && roomPlayers.length < this.minPlayerForGame) {
+          console.warn(
+            'Not enough players to continue the game. Closing room:',
+            roomId
+          );
+          const roomController = this.games.get(roomId);
+          if (roomController) {
+            console.warn('Send stopgame command to roomController:', roomId);
+            roomController.stopGame();
           }
-        }, this.TIME_FOR_RECONNECTION_IN_MS); // 30 seconds for reconnection
+          this.rooms.delete(roomId);
+          this.games.delete(roomId);
+          this.server.to(roomId).emit(BaseGatewayEvents.GAME_OVER, {
+            reason: 'Not enough players to continue the game.',
+          });
+        }
       }
     });
 

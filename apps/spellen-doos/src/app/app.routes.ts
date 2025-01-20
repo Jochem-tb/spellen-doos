@@ -14,14 +14,14 @@ import {
 } from '@spellen-doos/frontend/games';
 
 export const appRoutes: Route[] = [
-  { 
-    path: '', 
-    redirectTo: 'welcome', 
-    pathMatch: 'full' 
+  {
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full',
   },
-  { 
-    path: 'welcome', 
-    component: WelcomeComponent 
+  {
+    path: 'welcome',
+    component: WelcomeComponent,
   },
   {
     path: 'dashboard',
@@ -35,7 +35,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'gameTutorial/:id',
-    component: GameTutorialComponent
+    component: GameTutorialComponent,
   },
   {
     path: 'waitScreen/:id',
@@ -56,10 +56,10 @@ export const appRoutes: Route[] = [
     path: 'register',
     component: RegisterComponent,
   },
-  { 
-    path: 'login', 
-    component: LoginComponent 
+  {
+    path: 'login',
+    component: LoginComponent,
   },
 
-  { path: '**', redirectTo: 'welcome' },
+  { path: '**', redirectTo: 'dashboard' },
 ];

@@ -22,7 +22,10 @@ export enum WaitScreenGames {
   providedIn: 'root',
 })
 export class GameServerService {
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient) {
+    console.error('[DEBUG] GameServerService constructor');
+    // this.resetSocket();
+  }
 
   //TESTING SOCKETS
 
@@ -34,6 +37,20 @@ export class GameServerService {
   private NUM_PLAYER_QUEUE: number = -1;
   private waitScreenGame!: WaitScreenGames;
   public waitScreenComponent!: WaitScreenComponent;
+
+  public resetSocket(): void {
+    console.log('[DEBUG] Resetting socket...');
+    if (this.socket) {
+      this.socket.disconnect();
+      this.socket = undefined;
+    }
+    const gameId = this.router.url.split('/')[2];
+    this.getGameTitle(gameId).subscribe((title) => {
+      console.log('GameTitle:', title);
+      console.log('Reinitializing socket...');
+      this.initializeSocket(title);
+    });
+  }
 
   public getGameTitle(id: string): Observable<string> {
     return this.http
@@ -128,10 +145,10 @@ export class GameServerService {
         // Wait for 1.5 seconds before proceeding --> only display gameFoundMessage
         //TODO set back to 1500 and 1000
 
-        .pipe(delay(1500))
+        .pipe(delay(150))
         .subscribe(() => {
           let countdown = 3;
-          const countdownInterval = interval(1000).subscribe(() => {
+          const countdownInterval = interval(100).subscribe(() => {
             if (countdown >= 0) {
               console.log('Countdown:', countdown);
               this.waitScreenComponent.gameFoundTimer = countdown;

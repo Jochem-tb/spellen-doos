@@ -74,12 +74,16 @@ export class BingoGameServerController implements IBingoGameServer {
     });
   }
 
+  stopGame(): void {
+    this.stopNumberCalling();
+  }
+
   playerReady(playerSocket: Socket): void {
     this.playerReadiness.set(playerSocket, true);
     console.log(`[BINGO] Player ${playerSocket.id} is now ready.`);
 
     if (this.allPlayersReady()) {
-      this.startNumberCalling(8000); // All players are ready, start number calling
+      this.startNumberCalling(10000); // All players are ready, start number calling
     }
   }
 
@@ -98,6 +102,11 @@ export class BingoGameServerController implements IBingoGameServer {
     }
 
     console.log('[BINGO] Starting number calling...');
+    this.gateway.broadcastToRoom(
+      this.gameId,
+      BingoGameEvents.START_NUMBER_CALLING,
+      {}
+    );
 
     this.timerActive = true;
     this.activeInterval = setInterval(() => {
@@ -107,13 +116,19 @@ export class BingoGameServerController implements IBingoGameServer {
         return;
       }
 
+      if (this.connectedPlayers.length === 0) {
+        console.log('[BINGO] No more players connected!');
+        this.stopGame();
+        return;
+      }
+
       const randomIndex = Math.floor(
         Math.random() * this.availableNumbers.length
       );
       const calledNumber = this.availableNumbers.splice(randomIndex, 1)[0]; // Remove from availableNumbers
       this.calledNumbers.push(calledNumber); // Add to calledNumbers
 
-      console.log(`[BINGO] Called Number: ${calledNumber}`);
+      console.log(`[BINGO - ${this.gameId}] Called Number: ${calledNumber}`);
 
       // Broadcast the new number to all players
       this.gateway.broadcastToRoom(this.gameId, BingoGameEvents.NUMBER_CALLED, {
@@ -181,6 +196,8 @@ export class BingoGameServerController implements IBingoGameServer {
   private evaluateBingo(bingoCard: BingoCard): BingoResultEnum {
     const card = bingoCard.card; // 2D array representing the bingo card
     const gridSize = card.length; // Assuming a square grid (5x5)
+
+    console.log('[DEBUG] Evaluating bingo card:', card);
 
     if (this.checkHorizontalBingo(card)) {
       console.log('[BINGO] Horizontal bingo detected!');
