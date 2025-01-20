@@ -141,6 +141,8 @@
 
   .terug-btn {
     position: absolute;
+    top: -1.1rem;
+    left: 1.5rem;
     padding: 8px 50px;
     background-color: #6c757d;
     color: #fff;
