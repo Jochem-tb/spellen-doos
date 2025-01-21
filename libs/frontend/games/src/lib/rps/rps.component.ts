@@ -94,7 +94,9 @@ export class RpsComponent implements OnDestroy {
   }
 
   disconnect(): void {
+    console.log('[DEBUG] - Disconnecting from RPS game');
     this.rpsService.disconnect();
+    this.router.navigate(['/dashboard']);
   }
 
   getImageUrl(choice: string): string {
