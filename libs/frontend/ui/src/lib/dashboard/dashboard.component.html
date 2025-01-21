@@ -19,9 +19,13 @@
             <div class="card-body p-0">
               <a
                 [routerLink]="['/gameTutorial', game._id]"
+                [class.disabled]="game.name === 'Memory'"
                 class="btn btn-succes game-button"
                 >Speel</a
               >
+            </div>
+            <div *ngIf="game.name === 'Memory'" class="lock-overlay">
+              <img src="underconstruction.png" class="lock-icon" alt="Locked" />
             </div>
           </div>
         </div>
