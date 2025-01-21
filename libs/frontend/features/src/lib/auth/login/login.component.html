@@ -4,7 +4,7 @@
           background-position: center; 
           opacity: 0.99;">
 
-    <div class="login-container rounded">
+    <div class="login-container">
         <div class="login-header">
             <h1 class="text-center">Login</h1>
         </div>
@@ -50,8 +50,8 @@
                     </div>
                 
                 <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-danger btn-lg fs-4 mt-3" routerLink="/">Terug</button>
-                    <button type="submit" class="btn btn-primary btn-lg fs-4 mt-3" [disabled]="loginForm.invalid">Login</button>
+                    <button type="button" class="btn btn-danger btn-lg mt-3 col-4" routerLink="/">Terug</button>
+                    <button type="submit" class="btn btn-primary btn-lg mt-3 col-4" [disabled]="loginForm.invalid">Login</button>
                 </div>
             </form>
             <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>

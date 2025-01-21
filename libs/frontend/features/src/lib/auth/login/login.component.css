@@ -25,6 +25,7 @@ html, body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    border-radius: 30px;
 }
 
 .invalid-feedback-container {
@@ -45,4 +46,10 @@ html, body {
   margin: 0; 
   color: red;
   font-size: medium;
+}
+
+button {
+  border-radius: 50px;
+  font-size: 20px!important;
+  text-align: center;
 }
