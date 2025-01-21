@@ -21,6 +21,8 @@ export enum RPSChoicesEnum {
   Schaar = 'Schaar',
   PlayerB = "PlayerB",
   PlayerA = "PlayerA",
+  Visible = "visible",
+  Hidden = "hidden"
 }
 
 export interface IRPSRoundInfo {

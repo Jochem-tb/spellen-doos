@@ -68,13 +68,22 @@
   </div>
 
   <div class="score-row">
-    <div class="score-box" (click)="changeChoice(RPSChoicesEnum.Steen)">
+    <div 
+      class="score-box" 
+      [class.disabled]="!roundActive"
+      (click)="onChoiceClick(RPSChoicesEnum.Steen)">
       <img src="rps/steen.png" alt="Steen" />
     </div>
-    <div class="score-box" (click)="changeChoice(RPSChoicesEnum.Papier)">
+    <div 
+      class="score-box" 
+      [class.disabled]="!roundActive"
+      (click)="onChoiceClick(RPSChoicesEnum.Papier)">
       <img src="rps/papier.png" alt="Papier" />
     </div>
-    <div class="score-box" (click)="changeChoice(RPSChoicesEnum.Schaar)">
+    <div 
+      class="score-box" 
+      [class.disabled]="!roundActive"
+      (click)="onChoiceClick(RPSChoicesEnum.Schaar)">
       <img src="rps/schaar.png" alt="Schaar" />
     </div>
   </div>
