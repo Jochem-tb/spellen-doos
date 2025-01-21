@@ -26,16 +26,16 @@
     </div>
 
     <div class="timer-between">
-      <ng-container *ngIf="timerTime === 6; else timerOrOther">
+      <ng-container *ngIf="timerTime === -1 && !winner && !looser && !draw; else timerOrResult">
       Maak uw keuze
       </ng-container>
 
-      <ng-template #timerOrOther>
-      <ng-container *ngIf="timerTime <= 5 && timerTime >= 0; else afterTimer">
+      <ng-template #timerOrResult>
+      <ng-container *ngIf="timerTime > 0; else result">
         {{ timerTime }} sec
       </ng-container>
 
-      <ng-template #afterTimer>
+      <ng-template #result>
         <ng-container *ngIf="winner; else loserOrDraw">
         Gewonnen
         </ng-container>
@@ -46,7 +46,7 @@
         </ng-template>
         <ng-template #draw>
         <ng-container *ngIf="draw">
-          Gelijk
+          Gelijkspel
         </ng-container>
         </ng-template>
       </ng-template>

@@ -19,6 +19,8 @@ export enum RPSChoicesEnum {
   Steen = 'Steen',
   Papier = 'Papier',
   Schaar = 'Schaar',
+  PlayerB = "PlayerB",
+  PlayerA = "PlayerA",
 }
 
 export interface IRPSRoundInfo {

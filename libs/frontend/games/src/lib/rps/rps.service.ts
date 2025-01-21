@@ -90,8 +90,8 @@ export class RPSService {
             opponentChoice: data.playerBChoice,
             score: data.playerAWins,
             opponentScore: data.playerBWins,
-            winner: data.winner === 'PlayerA',
-            looser: data.winner === 'PlayerB',
+            winner: data.winner === RPSChoicesEnum.PlayerA,
+            looser: data.winner === RPSChoicesEnum.PlayerB,
             round: data.round
           });
         } else {
@@ -100,8 +100,8 @@ export class RPSService {
             opponentChoice: data.playerAChoice,
             score: data.playerBWins,
             opponentScore: data.playerAWins,
-            winner: data.winner === 'PlayerB',
-            looser: data.winner === 'PlayerA',
+            winner: data.winner === RPSChoicesEnum.PlayerB,
+            looser: data.winner === RPSChoicesEnum.PlayerA,
             round: data.round
           });
         }

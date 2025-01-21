@@ -105,8 +105,8 @@ body {
 }
 
 .choice-box img {
-  max-width: 110%;
-  max-height: 110%;
+  max-width: 140%;
+  max-height: 140%;
 }
 
 .crown {
@@ -125,6 +125,8 @@ body {
   padding: 1rem 2rem;
   border-radius: 8px;
   border: 2px solid #fff;
+  min-width: 333px;
+  text-align: center;
 }
 
 .score-row {
