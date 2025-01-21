@@ -47,3 +47,13 @@ i.bi-person-circle {
   overflow: hidden;
   z-index: 2;
 }
+
+.clickable-image {
+  cursor: pointer; /* Makes the cursor a pointer (useful for hybrid devices) */
+  transition: transform 0.2s, opacity 0.2s; /* Smooth effect for hover and press */
+}
+
+.clickable-image:active {
+  transform: scale(0.95); /* Slightly shrink the image on press */
+  opacity: 0.8; /* Reduce opacity to give a "pressed" effect */
+}
