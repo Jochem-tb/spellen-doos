@@ -9,11 +9,6 @@ html, body {
   gap: 50px; /* Spacing between buttons */
   padding: 30px;
 }
-.btn-custom {
-  font-size: 2rem;
-  width: 350px;
-  height: 100px;
-}
 
 .frosted-background::before {
   content: '';
@@ -25,4 +20,48 @@ html, body {
   background: inherit;
   filter: blur(15px);
   z-index: -1;
+}
+
+.title {
+  margin-bottom: 0px !important;
+}
+
+.btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  width: 375px;
+  height: 100px;
+  background: #0d6efd;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+.btn .icon-login {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  background: url('https://img.icons8.com/?size=100&id=39802&format=png&color=FFFFFF') no-repeat center center / contain;
+  transition: transform 0.4s ease;
+}
+
+.btn .icon-register {
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+  background: url('https://img.icons8.com/?size=100&id=39803&format=png&color=FFFFFF') no-repeat center center / contain;
+  transition: transform 0.4s ease;
+}
+
+.btn .text {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.4s ease;
 }
