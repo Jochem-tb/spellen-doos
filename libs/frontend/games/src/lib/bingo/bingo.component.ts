@@ -52,7 +52,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         animate(
           '1.5s ease-in',
           style({
-            transform: 'translateX(-100vh)',
+            transform: 'translateX(-100vw)',
             opacity: 0,
           })
         ),
@@ -76,7 +76,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         animate(
           '1.5s ease-in',
           style({
-            transform: 'translateX(100vh)',
+            transform: 'translateX(100vw)',
             opacity: 0,
           })
         ),
