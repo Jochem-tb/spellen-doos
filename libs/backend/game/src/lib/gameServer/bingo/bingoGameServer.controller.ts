@@ -25,6 +25,7 @@ import {
 } from '@nestjs/websockets';
 import { DefaultEventsMap, Server, Socket } from 'socket.io';
 import { BingoGameServerControllerGateway } from './bingoGameServer.gateway';
+import { interval } from 'rxjs';
 
 export class BingoGameServerController implements IBingoGameServer {
   bingoCards: Map<Socket, BingoCard>;
@@ -96,7 +97,7 @@ export class BingoGameServerController implements IBingoGameServer {
     );
   }
 
-  startNumberCalling(intervalMs: number = 8000): void {
+  startNumberCalling(intervalMs: number = 10000): void {
     if (this.timerActive) {
       console.warn('[BINGO] Number calling is already active.');
       return;
@@ -204,7 +205,16 @@ export class BingoGameServerController implements IBingoGameServer {
       result: validBingo,
     });
 
-    this.alreadyCheckingBingo = false;
+    if (validBingo === BingoResultEnum.VALID) {
+      this.stopGame();
+      interval(13000).subscribe(() => {
+        this.gateway.broadcastToRoom(this.gameId, BaseGatewayEvents.GAME_OVER, {
+          reason: 'Iemand heeft een goede bingo!',
+        });
+      });
+    } else {
+      this.alreadyCheckingBingo = false;
+    }
   }
 
   private evaluateBingo(bingoCard: BingoCard): BingoResultEnum {

@@ -32,6 +32,27 @@
     {{ startMessage }}
   </div>
 
+  <div class="bingo-message" *ngIf="displayBingoMessage">
+    {{ bingoMessage }}
+  </div>
+
+  <div class="bingo-called-image-container">
+    <img
+      *ngIf="bingoPictureBool"
+      class="bingo-called-image-left"
+      src="bingo/bingo_called_picture.png"
+      alt="Bingo-success"
+      @enterPictureFromLeftSideScreen
+    />
+    <img
+      *ngIf="bingoPictureBool"
+      class="bingo-called-image-right"
+      src="bingo/bingo_called_picture.png"
+      alt="Bingo-success"
+      @enterPictureFromRightSideScreen
+    />
+  </div>
+
   <img
     *ngIf="successBingo"
     class="bingo-success-image"

@@ -42,6 +42,36 @@ body {
   border-radius: 15px;
 }
 
+.bingo-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  font-weight: bold !important;
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 45px;
+  background-color: #e1b400; /* Bright bingo yellow color */
+  color: fff;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.7); /* Add a glowing effect */
+  animation: festiveGlow 1.5s infinite alternate; /* Festive animation */
+  z-index: 1000;
+}
+
+@keyframes festiveGlow {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.5);
+  }
+}
+
 .number-container {
   position: relative;
   width: 100%;
@@ -168,6 +198,39 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
+  object-fit: cover;
+  border-radius: 10px;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.bingo-called-image-container {
+  position: fixed;
+  top: 40vh;
+  left: 0;
+  width: 100vw;
+  height: 30vh;
+  display: flex;
+  justify-content: space-between; /* Changed to space-between */
+  align-items: center;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.bingo-called-image-left {
+  width: 30vw;
+  margin-left: 30px; /* Adjusted margin */
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 10px;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.bingo-called-image-right {
+  width: 30vw;
+  margin-right: 30px; /* Adjusted margin */
+  aspect-ratio: 16/9;
   object-fit: cover;
   border-radius: 10px;
   z-index: 50;

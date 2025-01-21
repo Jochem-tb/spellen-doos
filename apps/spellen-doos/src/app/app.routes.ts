@@ -16,7 +16,7 @@ import {
 export const appRoutes: Route[] = [
   {
     path: '',
-    redirectTo: 'welcome',
+    redirectTo: 'dashboard',
     pathMatch: 'full',
   },
   {
@@ -61,5 +61,5 @@ export const appRoutes: Route[] = [
     component: LoginComponent,
   },
 
-  { path: '**', redirectTo: 'welcome' },
+  { path: '**', redirectTo: 'dashboard' },
 ];

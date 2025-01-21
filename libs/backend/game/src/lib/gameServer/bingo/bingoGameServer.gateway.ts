@@ -44,8 +44,6 @@ export class BingoGameServerControllerGateway
   buffer: number = 3;
   gameCreationTimeout: NodeJS.Timeout | null = null;
 
-  private readonly TIME_FOR_RECONNECTION_IN_MS = 30000; // 30 seconds
-
   @WebSocketServer()
   server!: Server;
 
@@ -112,7 +110,7 @@ export class BingoGameServerControllerGateway
     const playersInQueue = this.queue.length;
 
     // Apply the dynamic calculation: 60 seconds for 1 player, 55 seconds for 2, 40 for 5, etc.
-    let waitTime: number = Math.max(60000 - (playersInQueue - 1) * 10000, 2000);
+    let waitTime: number = Math.max(60000 - (playersInQueue - 1) * 15000, 2000);
 
     return waitTime;
   }

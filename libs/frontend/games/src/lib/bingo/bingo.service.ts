@@ -87,9 +87,7 @@ export class BingoService {
       BingoGameEvents.BINGO_CALLED,
       (data: { clientId: string }) => {
         console.log('Bingo called by: ', data.clientId);
-        if (this.socket.id && data.clientId !== this.socket.id) {
-          this.handleBingoCalled(data.clientId);
-        }
+        this.handleBingoCalled(data.clientId);
       }
     );
 
@@ -97,7 +95,9 @@ export class BingoService {
       BingoGameEvents.BINGO_RESULT,
       (data: { clientId: string; result: BingoResultEnum }) => {
         console.log('Bingo result received from server for: ', data.clientId);
-        this.handleBingoResult(data.clientId, data.result);
+        setTimeout(() => {
+          this.handleBingoResult(data.clientId, data.result);
+        }, 3000);
       }
     );
 
@@ -127,7 +127,10 @@ export class BingoService {
   }
 
   private handleBingoCalled(playerId: string): void {
-    alert(`Speler ${playerId} heeft bingo geroepen`);
+    this.component.displayBingoPicture(true);
+    setTimeout(() => {
+      this.component.displayBingoPicture(false);
+    }, 5000);
   }
 
   private handleBingoResult(playerId: string, result: BingoResultEnum): void {
@@ -144,17 +147,22 @@ export class BingoService {
   }
 
   private validBingo(playerId: string): void {
+    let message;
+
     if (playerId === this.socket.id) {
-      this.component.successBingo = true;
-      alert('Je hebt geldige bingo!');
+      message = 'Je hebt geldige bingo!';
     } else {
-      alert(`Een andere speler heeft geldige bingo!`);
+      message = `Een andere speler heeft geldige bingo!`;
     }
+
+    this.component.bingoMessage = message;
+    this.component.displayBingoMessage = true;
+    this.component.successBingo = true;
   }
 
   private invalidBingo(playerId: string): void {
     if (playerId === this.socket.id) {
-      alert(`Je hebt ongeldige bingo!`);
+      // alert(`Je hebt ongeldige bingo!`);
     }
     this.component.successBingo = false;
   }
@@ -172,11 +180,8 @@ export class BingoService {
   }
 
   private handleGameOver(): void {
-    setTimeout(() => {
-      alert('Game over');
-      this.socket.disconnect();
-      this.gameServerService.gameOver();
-    }, 3000);
+    this.socket.disconnect();
+    this.gameServerService.gameOver();
   }
 
   public callBingo(card: BingoCard): void {
