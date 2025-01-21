@@ -1,21 +1,17 @@
 <body>
   <div class="bingo-container">
-    <header class="header">
-      <button
-        class="btn btn-primary fs-2 back-button"
-        (click)="disconnect()"
-        routerLink="/dashboard"
+    <!-- <header class="header"> -->
+    <button class="back-button" (click)="disconnect()" routerLink="/dashboard">
+      Terug
+    </button>
+    <div class="number-container">
+      <div
+        class="drawn-number"
+        *ngIf="currentCalledNumber !== -1"
+        @rollAnimation
       >
-        Terug
-      </button>
-      <div class="title-container">
-        <h1>Bingo</h1>
+        {{ currentCalledNumber }}
       </div>
-    </header>
-    <div class="drawn-number" id="drawnNumber">
-      @if (currentCalledNumber !== -1) {
-        Drawn Number: {{ currentCalledNumber }}
-      }
     </div>
 
     <div class="bingo-card">
@@ -31,4 +27,36 @@
 
     <button class="bingo-button" (click)="iHaveBingo()">BINGO!</button>
   </div>
+
+  <div class="start-message" *ngIf="startMessage">
+    {{ startMessage }}
+  </div>
+
+  <div class="bingo-message" *ngIf="displayBingoMessage">
+    {{ bingoMessage }}
+  </div>
+
+  <div class="bingo-called-image-container">
+    <img
+      *ngIf="bingoPictureBool"
+      class="bingo-called-image-left"
+      src="bingo/bingo_called_picture.png"
+      alt="Bingo-success"
+      @enterPictureFromLeftSideScreen
+    />
+    <img
+      *ngIf="bingoPictureBool"
+      class="bingo-called-image-right"
+      src="bingo/bingo_called_picture.png"
+      alt="Bingo-success"
+      @enterPictureFromRightSideScreen
+    />
+  </div>
+
+  <img
+    *ngIf="successBingo"
+    class="bingo-success-image"
+    src="bingo/bingo_success.gif"
+    alt="Bingo-success"
+  />
 </body>

@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit {
 
     this.router.events.subscribe(() => {
       const currentRoute = this.router.url.split('/').pop();
-      console.log('[DEBUG] Current route:', currentRoute);
+      // console.log('[DEBUG] Current route:', currentRoute);
       this.logoutShown = currentRoute === 'dashboard';
     });
   }
