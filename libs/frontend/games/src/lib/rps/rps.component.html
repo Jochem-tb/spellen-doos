@@ -1,77 +1,90 @@
-<div class="rps-container">
-  <header class="header">
-    <button
-      class="btn btn-primary fs-2"
-      (click)="disconnect()"
-      routerLink="/dashboard"
-    >
-      Terug
-    </button>
-    <div class="title-container">
-      <h1>Steen Papier Schaar</h1>
-      <h5 *ngIf="round == 0">Ronde 1</h5>
-      <h5 *ngIf="round != 0">Ronde {{ round + 1 }}</h5>
+<div class="game-container">
+  <div class="header-row">
+    <button class="back-button" (click)="disconnect()">Terug</button>
+    <div class="header-center">
+      <h1>Steen papier schaar</h1>
     </div>
-    <div class="score">
-      <span>Jouw score: {{ score }}</span>
-      <span>Tegenstander: {{ opponentScore }}</span>
-    </div>
-  </header>
-
-  <main class="main">
-    <div class="timer">
-      {{ timerTime > 0 ? timerTime : '' }}
-    </div>
-
-    <!-- Gekozen keuze in het midden, alleen tonen als er iets geselecteerd is -->
-    <div class="selected-choice">
-      <div *ngIf="choice" class="player-choice">
-        <h2>Jij koos: {{ choice }}</h2>
-        <img [src]="getImageUrl(choice)" alt="Jouw keuze" />
+    <div class="score-container">
+      <div class="score-pair user-score-pair">
+        <div class="score-label">Eigen Score:</div>
+        <div class="score-value">{{ score }}</div>
       </div>
-    </div>
-  </main>
-
-  <!-- Popup tonen wanneer je gewonnen hebt of verloren hebt -->
-  <div class="popup" *ngIf="winner || looser || draw">
-    <div class="popup-content">
-      <h2 *ngIf="winner">Gewonnen!</h2>
-      <h2 *ngIf="draw">Gelijkspel!</h2>
-      <h2 *ngIf="looser">Verloren!</h2>
-
-      
-      <p>Ronde: {{ round }}</p>
-
-      <p>Jouw keuze: {{ choice }}</p>
-      <p>Tegenstander: {{ opponentChoice }}</p>
-      <p>Jouw score: {{ score }}</p>
-      <p>Score tegenstander: {{ opponentScore }}</p>
-
-      <button class="btn btn-primary" (click)="closePopup()">Sluiten</button>
+      <div class="score-pair opponent-score-pair">
+        <div class="score-label">Tegenstander Score:</div>
+        <div class="score-value">{{ opponentScore }}</div>
+      </div>
     </div>
   </div>
 
-  <footer class="buttons-container">
-    <button
-      class="rps-button steen"
-      [class.selected]="choice === RPSChoicesEnum.Steen"
-      (click)="changeChoice(RPSChoicesEnum.Steen)"
-    >
+  <div class="choices-row">
+    <div class="choice-section own-choice">
+      <img *ngIf="winner" class="crown" src="rps/kroon.png" alt="Crown" />
+      <h2>Uw keuze</h2>
+      <div class="choice-box" [@slideIn]="userChoiceState">
+        <img *ngIf="choice" [src]="getImageUrl(choice)" [alt]="choice" />
+      </div>
+    </div>
+
+    <div class="timer-between">
+      <ng-container *ngIf="timerTime === 6; else timerOrOther">
+      Maak uw keuze
+      </ng-container>
+
+      <ng-template #timerOrOther>
+      <ng-container *ngIf="timerTime <= 5 && timerTime >= 0; else afterTimer">
+        {{ timerTime }} sec
+      </ng-container>
+
+      <ng-template #afterTimer>
+        <ng-container *ngIf="winner; else loserOrDraw">
+        Gewonnen
+        </ng-container>
+        <ng-template #loserOrDraw>
+        <ng-container *ngIf="looser; else draw">
+          Verloren
+        </ng-container>
+        </ng-template>
+        <ng-template #draw>
+        <ng-container *ngIf="draw">
+          Gelijk
+        </ng-container>
+        </ng-template>
+      </ng-template>
+      </ng-template>
+    </div>
+
+    <!-- Opponent choice -->
+    <div class="choice-section opponent-choice">
+      <img *ngIf="looser" class="crown" src="rps/kroon.png" alt="Crown" />
+      <h2>Keuze tegenstander</h2>
+      <div class="choice-box" [@slideInOpponent]="opponentChoiceState">
+        <img
+          *ngIf="opponentChoice"
+          [src]="getImageUrl(opponentChoice)"
+          [alt]="opponentChoice"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="score-row">
+    <div class="score-box" (click)="changeChoice(RPSChoicesEnum.Steen)">
       <img src="rps/steen.png" alt="Steen" />
-    </button>
-    <button
-      class="rps-button papier"
-      [class.selected]="choice === RPSChoicesEnum.Papier"
-      (click)="changeChoice(RPSChoicesEnum.Papier)"
-    >
+    </div>
+    <div class="score-box" (click)="changeChoice(RPSChoicesEnum.Papier)">
       <img src="rps/papier.png" alt="Papier" />
-    </button>
-    <button
-      class="rps-button schaar"
-      [class.selected]="choice === RPSChoicesEnum.Schaar"
-      (click)="changeChoice(RPSChoicesEnum.Schaar)"
-    >
+    </div>
+    <div class="score-box" (click)="changeChoice(RPSChoicesEnum.Schaar)">
       <img src="rps/schaar.png" alt="Schaar" />
-    </button>
-  </footer>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" *ngIf="isGameOver">
+  <div class="popup">
+    <h2>Game Over</h2>
+    <p>Bedankt voor het spelen!</p>
+    <p>Eindstand: {{ score }} - {{ opponentScore }}</p>
+    <button (click)="leaveGame()">Naar Dashboard</button>
+  </div>
 </div>

@@ -1,70 +1,127 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { RPSService } from './rps.service';
 import { RPSChoicesEnum } from '@spellen-doos/shared/api';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+} from '@angular/animations';
 
 @Component({
   selector: 'lib-rps',
   standalone: false,
   templateUrl: './rps.component.html',
   styleUrls: ['./rps.component.css'],
+  animations: [
+    trigger('slideIn', [
+      state('hidden', style({ transform: 'translateX(-100%)', opacity: 0 })),
+      state('visible', style({ transform: 'translateX(0)', opacity: 1 })),
+      transition('hidden => visible', [animate('0.5s ease-in-out')]),
+    ]),
+    trigger('slideInOpponent', [
+      state('hidden', style({ transform: 'translateX(100%)', opacity: 0 })),
+      state('visible', style({ transform: 'translateX(0)', opacity: 1 })),
+      transition('hidden => visible', [animate('0.5s ease-in-out')]),
+    ]),
+  ],
 })
-export class RpsComponent {
-  choice?: RPSChoicesEnum = undefined;
-  result: string = '';
-  score: number = 0;
-  opponentChoice: string = '';
-  opponentScore: number = 0;
-  timerTime: number = 0;
-  winner: boolean = false;
-  looser: boolean = false;
-  round: number = 0;
-  draw: boolean = false;
-
+export class RpsComponent implements OnDestroy {
   RPSChoicesEnum = RPSChoicesEnum;
 
+  choice?: RPSChoicesEnum;
+  opponentChoice: string = '';
+  score: number = 0;
+  opponentScore: number = 0;
 
-  constructor(private rpsService: RPSService) {
-    // Koppel deze component aan de service (zodat de service kan updaten).
-    console.log('[DEBUG] RPS Component constructor...');
+  timerTime: number = 6;
+
+  winner: boolean = false;
+  looser: boolean = false;
+  draw: boolean = false;
+  round: number = 0;
+
+  userChoiceState: 'hidden' | 'visible' = 'hidden';
+  opponentChoiceState: 'hidden' | 'visible' = 'hidden';
+
+  isGameOver: boolean = false;
+
+  private intervalId?: any;
+
+  constructor(
+    private rpsService: RPSService,
+    private router: Router
+  ) {
     this.rpsService.component = this;
   }
+
   ngOnDestroy(): void {
     this.rpsService.disconnect();
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 
   changeChoice(choice: RPSChoicesEnum): void {
     if (this.choice === choice) {
       this.choice = undefined;
+      this.userChoiceState = 'hidden';
       return;
     }
-
-    // Nieuwe keuze doorgeven
     this.choice = choice;
-    this.rpsService.changeChoice(choice as RPSChoicesEnum);
+    this.userChoiceState = 'visible';
+
+    this.rpsService.changeChoice(choice);
   }
 
   disconnect(): void {
-    console.log('[DEBUG] Disconnecting...');
     this.rpsService.disconnect();
   }
 
   getImageUrl(choice: string): string {
-    choice = choice.toLowerCase();
-    return `rps/${choice}.png`;
+    return `rps/${choice.toLowerCase()}.png`;
   }
 
-  // Timer-update binnenkrijgen vanuit de service
   updateTimer(time: number): void {
     this.timerTime = time;
+
+    if (time <= 0) {
+      setTimeout(() => {
+        this.resetRound();
+      }, 5000);
+    }
   }
 
-  // Score bijwerken vanuit de service
+  resetRound(): void {
+    this.userChoiceState = 'hidden';
+    this.opponentChoiceState = 'hidden';
+
+    this.choice = undefined;
+    this.opponentChoice = '';
+
+    this.winner = false;
+    this.looser = false;
+    this.draw = false;
+
+    this.timerTime = 6;
+  }
+
   updateScore(playerScore: number, opponentScore: number): void {
     this.score = playerScore;
     this.opponentScore = opponentScore;
   }
 
-  // Data van de service (socket) direct naar de component doorzetten
+  showGameOverPopup(): void {
+    this.isGameOver = true;
+  }
+
+  leaveGame(): void {
+    this.rpsService.disconnect();
+    this.router.navigate(['/dashboard']);
+  }
+
   setData(data: {
     choice?: RPSChoicesEnum;
     opponentChoice?: string;
@@ -76,8 +133,6 @@ export class RpsComponent {
     round?: number;
     draw?: boolean;
   }): void {
-    console.log('[DEBUG] setData aangeroepen met:', data);
-  
     if (data.round !== undefined) {
       this.round = data.round;
     }
@@ -86,6 +141,7 @@ export class RpsComponent {
     }
     if (data.opponentChoice !== undefined) {
       this.opponentChoice = data.opponentChoice;
+      this.opponentChoiceState = 'visible';
     }
     if (data.score !== undefined) {
       this.score = data.score;
@@ -94,28 +150,16 @@ export class RpsComponent {
       this.opponentScore = data.opponentScore;
     }
     if (data.timerTime !== undefined) {
-      this.timerTime = data.timerTime;
+      this.updateTimer(data.timerTime);
     }
     if (data.winner !== undefined) {
       this.winner = data.winner;
-      console.log('[DEBUG] Winner updated:', this.winner);
     }
     if (data.looser !== undefined) {
       this.looser = data.looser;
-      console.log('[DEBUG] Looser updated:', this.looser);
     }
-    if(data.winner === false && data.looser === false) {
-      this.winner = false;
-      this.looser = false;
-      this.draw = true;
+    if (data.draw !== undefined) {
+      this.draw = data.draw;
     }
-  }  
-
-  // Popup sluiten
-  closePopup(): void {
-    this.winner = false;
-    this.looser = false;
-    this.draw = false;
-    this.choice = undefined;
   }
 }

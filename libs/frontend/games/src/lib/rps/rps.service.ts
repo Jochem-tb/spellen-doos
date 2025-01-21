@@ -122,12 +122,18 @@ export class RPSService {
   }
 
   private handleGameOver(): void {
-    setTimeout(() => {
-      alert('Het spel is voorbij!\nBedankt voor het spelen!\nJe wordt nu teruggestuurd naar het dashboard.');
-      this.socket.disconnect();
-      this.gameServerService.gameOver();
-    }, 3000);
+    // Instead of alert(), we now show a modal in the component.
+    this.zone.run(() => {
+      if (this.component) {
+        setTimeout(() => {
+        this.component.showGameOverPopup();
+        }, 2500);
+      } else {
+        console.warn('[DEBUG] No component found to show game over popup.');
+      }
+    });
   }
+  
 
   public changeChoice(choice: RPSChoicesEnum): void {
     console.log(`[DEBUG - RPSService] Player choice: ${choice}`);
