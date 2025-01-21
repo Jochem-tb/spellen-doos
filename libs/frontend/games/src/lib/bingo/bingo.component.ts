@@ -99,6 +99,8 @@ export class BingoComponent {
   bingoMessage: string = '';
   displayBingoMessage: boolean = false;
 
+  bingoButtonActive: boolean = false;
+
   constructor(bingoService: BingoService) {
     // Koppel deze component aan de service (zodat de service kan updaten).
     console.log('[DEBUG] Bingo Component constructor...');
@@ -121,6 +123,11 @@ export class BingoComponent {
   iHaveBingo(): void {
     this.bingoService.callBingo(this.playerCard);
   }
+
+  toggleBingoButton() {
+    this.bingoButtonActive = !this.bingoButtonActive;
+  }
+
   updateBingoCard(card: BingoCard): void {
     this.playerCard = card;
   }

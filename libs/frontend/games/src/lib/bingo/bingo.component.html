@@ -25,7 +25,13 @@
       </div>
     </div>
 
-    <button class="bingo-button" (click)="iHaveBingo()">BINGO!</button>
+    <button
+      class="bingo-button"
+      (click)="iHaveBingo()"
+      [disabled]="bingoButtonActive"
+    >
+      BINGO!
+    </button>
   </div>
 
   <div class="start-message" *ngIf="startMessage">

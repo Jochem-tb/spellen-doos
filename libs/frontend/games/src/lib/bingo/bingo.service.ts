@@ -128,8 +128,12 @@ export class BingoService {
 
   private handleBingoCalled(playerId: string): void {
     this.component.displayBingoPicture(true);
+    this.component.toggleBingoButton();
     setTimeout(() => {
       this.component.displayBingoPicture(false);
+      setTimeout(() => {
+        this.component.toggleBingoButton();
+      }, 1500);
     }, 5000);
   }
 
