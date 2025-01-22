@@ -119,6 +119,7 @@ export class RPSService {
 
   public disconnect(): void {
     this.socket.disconnect();
+    this.router.navigate(['/dashboard']);
   }
 
   private handleGameOver(): void {
