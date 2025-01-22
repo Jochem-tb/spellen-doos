@@ -114,7 +114,8 @@ export class RPSService {
   }
 
   private playerDisconnected(playerId: string): void {
-    alert(`Speler ${playerId} heeft momenteel de game verlaten.`);
+    // alert(`Speler ${playerId} heeft momenteel de game verlaten.`);
+    console.log(`Speler ${playerId} heeft momenteel de game verlaten.`);
   }
 
   public disconnect(): void {
