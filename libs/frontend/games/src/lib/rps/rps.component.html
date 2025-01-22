@@ -26,7 +26,7 @@
     </div>
 
     <div class="timer-between">
-      <div *ngIf="timerTime === -1 && !winner && !looser && !draw">
+      <div *ngIf="timerTime === -1 && !winner && !loser && !draw">
         Maak uw keuze
       </div>
       <div *ngIf="timerTime > 0">
@@ -35,7 +35,7 @@
       <div *ngIf="timerTime <= 0 && winner">
         Gewonnen
       </div>
-      <div *ngIf="timerTime <= 0 && looser">
+      <div *ngIf="timerTime <= 0 && loser">
         Verloren
       </div>
       <div *ngIf="timerTime <= 0 && draw">
@@ -45,7 +45,7 @@
 
     <!-- Opponent choice -->
     <div class="choice-section opponent-choice">
-      <img *ngIf="looser" class="crown" src="rps/kroon.png" alt="Crown" />
+      <img *ngIf="loser" class="crown" src="rps/kroon.png" alt="Crown" />
       <h2>Keuze tegenstander</h2>
       <div class="choice-box" [@slideInOpponent]="opponentChoiceState">
         <img

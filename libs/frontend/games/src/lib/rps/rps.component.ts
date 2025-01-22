@@ -46,7 +46,7 @@ export class RpsComponent implements OnDestroy {
   timerTime: number = -1;
 
   winner: boolean = false;
-  looser: boolean = false;
+  loser: boolean = false;
   draw: boolean = false;
   round: number = 0;
 
@@ -124,7 +124,7 @@ export class RpsComponent implements OnDestroy {
     this.opponentChoice = '';
   
     this.winner = false;
-    this.looser = false;
+    this.loser = false;
     this.draw = false;
   
     this.timerTime = -1; 
@@ -151,7 +151,7 @@ export class RpsComponent implements OnDestroy {
     this.router.navigate(['/dashboard']);
   }
 
-  setData(data: Partial<Pick<this, 'choice' | 'opponentChoice' | 'score' | 'opponentScore' | 'timerTime' | 'winner' | 'looser' | 'round' | 'draw'>>): void {
+  setData(data: Partial<Pick<this, 'choice' | 'opponentChoice' | 'score' | 'opponentScore' | 'timerTime' | 'winner' | 'loser' | 'round' | 'draw'>>): void {
     Object.assign(this, data);
     if (data.opponentChoice !== undefined) {
       this.opponentChoiceState = VisibilityEnum.Visible;
