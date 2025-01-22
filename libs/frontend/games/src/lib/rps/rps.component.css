@@ -20,11 +20,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid #fff;
 }
 
 .back-button {
+  flex: 0 0 auto;
   margin: 1rem 0;
   padding: 8px 50px;
   background-color: #3498db;
@@ -43,6 +45,10 @@ body {
 }
 
 .header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -54,6 +60,7 @@ body {
 }
 
 .score-container {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
