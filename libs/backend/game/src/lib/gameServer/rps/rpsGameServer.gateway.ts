@@ -184,7 +184,6 @@ export class RPSGameServerControllerGateway
     const players = this.rooms.get(roomId);
     if (!players) {
       console.error(`Room ${roomId} not found.`);
-      throw new Error(`Room ${roomId} not found.`);
       return;
     }
 
