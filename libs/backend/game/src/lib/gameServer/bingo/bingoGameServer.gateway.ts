@@ -109,8 +109,8 @@ export class BingoGameServerControllerGateway
   private calculateWaitTime(): number {
     const playersInQueue = this.queue.length;
 
-    // Apply the dynamic calculation: 60 seconds for 1 player, 55 seconds for 2, 40 for 5, etc.
-    let waitTime: number = Math.max(60000 - (playersInQueue - 1) * 15000, 2000);
+    // Apply the dynamic calculation: 45 seconds for 1 player, 55 seconds for 2, 40 for 5, etc.
+    let waitTime: number = Math.max(45000 - (playersInQueue - 1) * 7000, 2000);
 
     return waitTime;
   }
