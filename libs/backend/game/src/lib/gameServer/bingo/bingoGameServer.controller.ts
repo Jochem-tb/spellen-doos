@@ -271,68 +271,6 @@ export class BingoGameServerController implements IBingoGameServer {
     return leftToRight || rightToLeft;
   }
 
-  private checkHorizontalBingo(card: number[][]): boolean {
-    for (let row of card) {
-      if (row.every((num) => this.calledNumbers.includes(num))) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private checkVerticalBingo(card: number[][], gridSize: number): boolean {
-    for (let col = 0; col < gridSize; col++) {
-      let columnNumbers = card.map((row) => row[col]);
-      if (columnNumbers.every((num) => this.calledNumbers.includes(num))) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private checkDiagonalBingo(card: number[][], gridSize: number): boolean {
-    let leftToRight = card.every((row, i) =>
-      this.calledNumbers.includes(row[i])
-    );
-
-    let rightToLeft = card.every((row, i) =>
-      this.calledNumbers.includes(row[gridSize - 1 - i])
-    );
-
-    return leftToRight || rightToLeft;
-  }
-
-  private checkHorizontalBingo(card: number[][]): boolean {
-    for (let row of card) {
-      if (row.every((num) => this.calledNumbers.includes(num))) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private checkVerticalBingo(card: number[][], gridSize: number): boolean {
-    for (let col = 0; col < gridSize; col++) {
-      let columnNumbers = card.map((row) => row[col]);
-      if (columnNumbers.every((num) => this.calledNumbers.includes(num))) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private checkDiagonalBingo(card: number[][], gridSize: number): boolean {
-    let leftToRight = card.every((row, i) =>
-      this.calledNumbers.includes(row[i])
-    );
-
-    let rightToLeft = card.every((row, i) =>
-      this.calledNumbers.includes(row[gridSize - 1 - i])
-    );
-
-    return leftToRight || rightToLeft;
-  }
-
   private generateBingoCards(players: Socket[]): Map<Socket, BingoCard> {
     // Generate bingo cards for all players
     const bingoCards: Map<Socket, BingoCard> = new Map();
