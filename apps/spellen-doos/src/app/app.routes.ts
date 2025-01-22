@@ -10,17 +10,18 @@ import {
   BingoComponent,
   RpsComponent,
   WaitScreenComponent,
+  GameTutorialComponent,
 } from '@spellen-doos/frontend/games';
 
 export const appRoutes: Route[] = [
-  { 
-    path: '', 
-    redirectTo: 'welcome', 
-    pathMatch: 'full' 
+  {
+    path: '',
+    redirectTo: 'welcome',
+    pathMatch: 'full',
   },
-  { 
-    path: 'welcome', 
-    component: WelcomeComponent 
+  {
+    path: 'welcome',
+    component: WelcomeComponent,
   },
   {
     path: 'dashboard',
@@ -31,6 +32,10 @@ export const appRoutes: Route[] = [
     path: 'profile',
     component: ProfileComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'gameTutorial/:id',
+    component: GameTutorialComponent,
   },
   {
     path: 'waitScreen/:id',
@@ -51,14 +56,10 @@ export const appRoutes: Route[] = [
     path: 'register',
     component: RegisterComponent,
   },
-  { 
-    path: 'login', 
-    component: LoginComponent 
+  {
+    path: 'login',
+    component: LoginComponent,
   },
 
-  // Redirect to welcome page if no route found
-  { 
-    path: '**', 
-    redirectTo: 'welcome' 
-  }
+  { path: '**', redirectTo: 'welcome' },
 ];

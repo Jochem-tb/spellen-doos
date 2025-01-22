@@ -40,9 +40,9 @@ export class BingoGameServerControllerGateway
   queue: Socket[] = [];
   minPlayerForGame: number = 1;
   maxPlayerForGame: number = 30;
-  recommendedPlayerForGame: number = 15;
-
-  private readonly TIME_FOR_RECONNECTION_IN_MS = 30000; // 30 seconds
+  recommendedPlayerForGame: number = 12;
+  buffer: number = 3;
+  gameCreationTimeout: NodeJS.Timeout | null = null;
 
   @WebSocketServer()
   server!: Server;
@@ -56,17 +56,21 @@ export class BingoGameServerControllerGateway
     if (this.checkRequirementsForGame()) {
       console.log('Requirements met for bingo game');
       this.createGameRoom();
+    } else {
+      this.scheduleGameCreation();
     }
   }
 
   private checkRequirementsForGame(): boolean {
-    //TODO: Implement logic to check dynamic players for game, not always minimum
-    return this.queue.length >= this.minPlayerForGame;
+    const playersInQueue = this.queue.length;
+    return (
+      playersInQueue >= this.recommendedPlayerForGame - this.buffer &&
+      playersInQueue <= this.recommendedPlayerForGame + this.buffer
+    );
   }
 
   private getPlayersForGame(): Socket[] {
-    //TODO: Implement logic to get dynamic players for game, not always minimum
-    return this.queue.splice(0, this.minPlayerForGame);
+    return this.queue.splice(0, this.maxPlayerForGame); // Always take max number of players, or as close as possible
   }
 
   private createGameRoom(): void {
@@ -84,6 +88,33 @@ export class BingoGameServerControllerGateway
     });
   }
 
+  private scheduleGameCreation(): void {
+    const waitTime = this.calculateWaitTime();
+    console.log(`Scheduling game creation in ${waitTime} ms`);
+
+    if (this.gameCreationTimeout) {
+      clearTimeout(this.gameCreationTimeout);
+    }
+
+    this.gameCreationTimeout = setTimeout(() => {
+      if (this.queue.length >= this.minPlayerForGame) {
+        console.log(
+          `Requirements met for bingo game after wait time ${waitTime}`
+        );
+        this.createGameRoom();
+      }
+    }, waitTime);
+  }
+
+  private calculateWaitTime(): number {
+    const playersInQueue = this.queue.length;
+
+    // Apply the dynamic calculation: 45 seconds for 1 player, 55 seconds for 2, 40 for 5, etc.
+    let waitTime: number = Math.max(45000 - (playersInQueue - 1) * 7000, 2000);
+
+    return waitTime;
+  }
+
   // Handle client disconnections
   handleDisconnect(client: Socket) {
     // Remove player from queue if present
@@ -98,31 +129,39 @@ export class BingoGameServerControllerGateway
 
       // If room is empty, remove room and game controller
       if (this.rooms.get(roomId)?.length === 0) {
+        console.log('Room is empty. Closing room:', roomId);
         this.rooms.delete(roomId);
+        const gameController = this.games.get(roomId);
+        if (gameController) {
+          console.warn('Send stopgame command to roomController:', roomId);
+          gameController.stopGame();
+        }
         this.games.delete(roomId);
       } else {
         // If room is not empty, notify the other player of the disconnect
         console.warn('Player disconnected:', client.id);
-        players.forEach((player) => {
-          if (player.id !== client.id) {
-            player.emit(BaseGatewayEvents.PLAYER_DISCONNECT, {
-              playerId: client.id,
-            });
-          }
+        this.broadcastToRoom(roomId, BaseGatewayEvents.PLAYER_DISCONNECT, {
+          playerId: client.id,
         });
 
-        // Set a timeout for reconnection
-        setTimeout(() => {
-          // Check if the connectedPlayers is more than Minimum players for game, otherwise delete room
-          const roomPlayers = this.rooms.get(roomId);
-          if (roomPlayers && roomPlayers.length < this.minPlayerForGame) {
-            this.rooms.delete(roomId);
-            this.games.delete(roomId);
-            this.server.to(roomId).emit(BaseGatewayEvents.GAME_OVER, {
-              reason: 'Not enough players to continue the game.',
-            });
+        // Check if the connectedPlayers is more than Minimum players for game, otherwise delete room
+        const roomPlayers = this.rooms.get(roomId);
+        if (roomPlayers && roomPlayers.length < this.minPlayerForGame) {
+          console.warn(
+            'Not enough players to continue the game. Closing room:',
+            roomId
+          );
+          const roomController = this.games.get(roomId);
+          if (roomController) {
+            console.warn('Send stopgame command to roomController:', roomId);
+            roomController.stopGame();
           }
-        }, this.TIME_FOR_RECONNECTION_IN_MS); // 30 seconds for reconnection
+          this.rooms.delete(roomId);
+          this.games.delete(roomId);
+          this.server.to(roomId).emit(BaseGatewayEvents.GAME_OVER, {
+            reason: 'Not enough players to continue the game.',
+          });
+        }
       }
     });
 

@@ -22,7 +22,10 @@ export enum WaitScreenGames {
   providedIn: 'root',
 })
 export class GameServerService {
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient) {
+    console.error('[DEBUG] GameServerService constructor');
+    // this.resetSocket();
+  }
 
   //TESTING SOCKETS
 
@@ -47,6 +50,7 @@ export class GameServerService {
 
   public signIntoQueue(title: string): boolean {
     try {
+      console.log('Signing into queue for game:', title);
       this.initializeSocket(title);
     } catch (error) {
       console.log('Error:', error);
@@ -109,6 +113,8 @@ export class GameServerService {
 
       let gameFoundMessage = '';
       let gameUrl = '';
+      let countdownInterval: any;
+      let countdown$: any;
 
       switch (this.waitScreenGame) {
         case WaitScreenGames.RPS:
@@ -124,14 +130,20 @@ export class GameServerService {
       this.waitScreenComponent.stopTimer();
       this.waitScreenComponent.displayGameFound = true;
       this.waitScreenComponent.gameFoundMessage = gameFoundMessage;
-      of(null)
-        // Wait for 1.5 seconds before proceeding --> only display gameFoundMessage
-        //TODO set back to 1500 and 1000
+      const navigationSubscription = this.router.events.subscribe(() => {
+        console.log('Navigation event detected, cancelling game setup');
+        this.waitScreenComponent.displayGameFound = false;
+        navigationSubscription.unsubscribe();
+        countdown$.unsubscribe();
+        countdownInterval.unsubscribe();
+        this.rejoinQueue();
+      });
 
+      countdown$ = of(null)
         .pipe(delay(1500))
         .subscribe(() => {
           let countdown = 3;
-          const countdownInterval = interval(1000).subscribe(() => {
+          countdownInterval = interval(1000).subscribe(() => {
             if (countdown >= 0) {
               console.log('Countdown:', countdown);
               this.waitScreenComponent.gameFoundTimer = countdown;
@@ -139,6 +151,7 @@ export class GameServerService {
             } else {
               countdownInterval.unsubscribe();
               this.waitScreenComponent.displayGameFound = false;
+              navigationSubscription.unsubscribe();
               if (gameUrl !== '') {
                 this.router.navigate([gameUrl]);
               } else {
@@ -147,6 +160,15 @@ export class GameServerService {
               }
             }
           });
+
+          this.socket.on(BaseGatewayEvents.PLAYER_DISCONNECT, () => {
+            console.log('Player disconnected, cancelling game setup');
+            this.waitScreenComponent.displayGameFound = false;
+            countdown$.unsubscribe();
+            countdownInterval.unsubscribe();
+            navigationSubscription.unsubscribe();
+            this.rejoinQueue();
+          });
         });
     });
 
@@ -154,5 +176,15 @@ export class GameServerService {
     this.socket.on(BaseGatewayEvents.DISCONNECT, () => {
       console.log('Disconnected from the control hub');
     });
+  }
+
+  private rejoinQueue(): void {
+    console.log('Rejoining queue');
+    this.socket.disconnect();
+    this.socket = undefined;
+    this.waitScreenComponent.gameFoundTimer = -1;
+    this.waitScreenComponent.displayGameFound = false;
+    this.signIntoQueue(this.waitScreenGame);
+    this.waitScreenComponent.startTimer();
   }
 }

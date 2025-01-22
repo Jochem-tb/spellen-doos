@@ -8,7 +8,7 @@
   "
 >
   @if (currentStep.key) {
-  <div class="register-container rounded">
+  <div class="register-container">
     <h1 class="text-center">Welkom!</h1>
     @if (currentStepIndex > 0) {
     <h2>
@@ -19,11 +19,11 @@
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div>
         @if (currentStep.key === 'desciption') {
-        <div>
-          <p>
-            Dit is een proces waarin je jezelf registreert voor de spellendoos.
-            Hierin vul je je gegevens in en maak je een account aan.
-            <br /><br />
+        <div> 
+          <p class="welcome-text">
+            Wat leuk dat je je wilt aanmelden! Om je aanmelding goed te verlopen, maken wij gebruik van een aantal stappen.
+            Maak je geen zorgen, we leiden je er doorheen! Als je hulp nodig hebt, kan je altijd op de hulpknop klikken rechtsonderin je beeld.
+            <br> <br>
             Kijk goed naar wat je moet invullen en veel plezier!
           </p>
         </div>
@@ -145,7 +145,7 @@
           (click)="previousStep()"
           class="btn btn-danger col-4"
           *ngIf="currentStepIndex === 0"
-          routerLink="/"
+          routerLink="/welcome"
         >
           Terug
         </button>

@@ -1,11 +1,6 @@
 <app-header></app-header>
 <div class="container mt-4">
-  <button
-    class="btn btn-secondary p-3 ps-4 pe-4 mt-1 mb-3"
-    routerLink="/dashboard"
-  >
-    Terug
-  </button>
+  <button class="terug-btn" routerLink="/dashboard"> Terug </button>
   <div class="row">
     <!-- Left Section -->
     <div class="col-md-4 text-center">
@@ -13,16 +8,18 @@
         <img
           [src]="profile?.profilePicture"
           alt="profile picture"
-          class="img-thumbnail"
+          class="img-thumbnail clickable-image"
+          (click)="togglePictureOptions()"
         />
         <button
-          class="btn btn-secondary w-100 mt-3"
-          (click)="togglePictureOptions()"
-        >
-          Verander foto
+        class="btn btn-secondary w-100 mt-3 img-thumbnail clickable-image"
+        (click)="togglePictureOptions()"
+        style="font-size: 1.25rem; padding: 0.75rem;">
+        Verander foto
         </button>
       </div>
     </div>
+    
     <!-- Right Section -->
     <div class="col-md-8">
       <div class="border p-4">
