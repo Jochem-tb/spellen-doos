@@ -25,6 +25,7 @@ import {
 } from '@nestjs/websockets';
 import { DefaultEventsMap, Server, Socket } from 'socket.io';
 import { BingoGameServerControllerGateway } from './bingoGameServer.gateway';
+import { interval } from 'rxjs';
 
 export class BingoGameServerController implements IBingoGameServer {
   bingoCards: Map<Socket, BingoCard>;
@@ -41,6 +42,7 @@ export class BingoGameServerController implements IBingoGameServer {
   private activeInterval: NodeJS.Timeout | null = null; // Track the active interval
 
   gateway!: BingoGameServerControllerGateway;
+  alreadyCheckingBingo: boolean = false;
 
   constructor(
     private readonly gameId: string,
@@ -74,12 +76,16 @@ export class BingoGameServerController implements IBingoGameServer {
     });
   }
 
+  stopGame(): void {
+    this.stopNumberCalling();
+  }
+
   playerReady(playerSocket: Socket): void {
     this.playerReadiness.set(playerSocket, true);
     console.log(`[BINGO] Player ${playerSocket.id} is now ready.`);
 
     if (this.allPlayersReady()) {
-      this.startNumberCalling(8000); // All players are ready, start number calling
+      this.startNumberCalling(10000); // All players are ready, start number calling
     }
   }
 
@@ -91,13 +97,18 @@ export class BingoGameServerController implements IBingoGameServer {
     );
   }
 
-  startNumberCalling(intervalMs: number = 8000): void {
+  startNumberCalling(intervalMs: number = 10000): void {
     if (this.timerActive) {
       console.warn('[BINGO] Number calling is already active.');
       return;
     }
 
     console.log('[BINGO] Starting number calling...');
+    this.gateway.broadcastToRoom(
+      this.gameId,
+      BingoGameEvents.START_NUMBER_CALLING,
+      {}
+    );
 
     this.timerActive = true;
     this.activeInterval = setInterval(() => {
@@ -107,13 +118,19 @@ export class BingoGameServerController implements IBingoGameServer {
         return;
       }
 
+      if (this.connectedPlayers.length === 0) {
+        console.log('[BINGO] No more players connected!');
+        this.stopGame();
+        return;
+      }
+
       const randomIndex = Math.floor(
         Math.random() * this.availableNumbers.length
       );
       const calledNumber = this.availableNumbers.splice(randomIndex, 1)[0]; // Remove from availableNumbers
       this.calledNumbers.push(calledNumber); // Add to calledNumbers
 
-      console.log(`[BINGO] Called Number: ${calledNumber}`);
+      console.log(`[BINGO - ${this.gameId}] Called Number: ${calledNumber}`);
 
       // Broadcast the new number to all players
       this.gateway.broadcastToRoom(this.gameId, BingoGameEvents.NUMBER_CALLED, {
@@ -137,6 +154,15 @@ export class BingoGameServerController implements IBingoGameServer {
   }
 
   someoneCalledBingo(playerSocket: Socket, bingoCard: BingoCard): void {
+    if (this.alreadyCheckingBingo) {
+      console.warn(
+        `[BINGO] Bingo call already in progress for game: ${this.gameId}`
+      );
+      return;
+    }
+
+    this.alreadyCheckingBingo = true;
+
     console.log(
       `someoneCalledBingo called for player: ${playerSocket.id} in game: ${this.gameId} with card: ${bingoCard}`
     );
@@ -146,6 +172,7 @@ export class BingoGameServerController implements IBingoGameServer {
       console.error(
         `[ERROR] Invalid clientId: ${playerSocket.id} for game: ${this.gameId}`
       );
+      this.alreadyCheckingBingo = false;
       return;
     }
 
@@ -159,6 +186,7 @@ export class BingoGameServerController implements IBingoGameServer {
       console.error(
         `[ERROR] Bingo card mismatch for player: ${playerSocket.id}`
       );
+      this.alreadyCheckingBingo = false;
       return;
     }
 
@@ -176,29 +204,102 @@ export class BingoGameServerController implements IBingoGameServer {
       clientId: playerSocket.id,
       result: validBingo,
     });
+
+    if (validBingo === BingoResultEnum.VALID) {
+      this.stopGame();
+      interval(13000).subscribe(() => {
+        this.gateway.broadcastToRoom(this.gameId, BaseGatewayEvents.GAME_OVER, {
+          reason: 'Iemand heeft een goede bingo!',
+        });
+      });
+    } else {
+      this.alreadyCheckingBingo = false;
+    }
   }
 
   private evaluateBingo(bingoCard: BingoCard): BingoResultEnum {
     const card = bingoCard.card; // 2D array representing the bingo card
     const gridSize = card.length; // Assuming a square grid (5x5)
 
+    console.log('[DEBUG] Evaluating bingo card:', card);
+
+    let result: BingoResultEnum = BingoResultEnum.NOT_VALID;
+
     if (this.checkHorizontalBingo(card)) {
       console.log('[BINGO] Horizontal bingo detected!');
-      return BingoResultEnum.VALID;
-    }
-
-    if (this.checkVerticalBingo(card, gridSize)) {
+      result = BingoResultEnum.VALID;
+    } else if (this.checkVerticalBingo(card, gridSize)) {
       console.log('[BINGO] Vertical bingo detected!');
-      return BingoResultEnum.VALID;
-    }
-
-    if (this.checkDiagonalBingo(card, gridSize)) {
+      result = BingoResultEnum.VALID;
+    } else if (this.checkDiagonalBingo(card, gridSize)) {
       console.log('[BINGO] Diagonal bingo detected!');
-      return BingoResultEnum.VALID;
+      result = BingoResultEnum.VALID;
     }
 
-    // No valid bingo found
-    return BingoResultEnum.NOT_VALID;
+    console.log(`[DEBUG] Bingo card evaluation result: ${result}`);
+    return result;
+  }
+
+  private checkHorizontalBingo(card: number[][]): boolean {
+    for (let row of card) {
+      if (row.every((num) => this.calledNumbers.includes(num))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private checkVerticalBingo(card: number[][], gridSize: number): boolean {
+    for (let col = 0; col < gridSize; col++) {
+      let columnNumbers = card.map((row) => row[col]);
+      if (columnNumbers.every((num) => this.calledNumbers.includes(num))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private checkDiagonalBingo(card: number[][], gridSize: number): boolean {
+    let leftToRight = card.every((row, i) =>
+      this.calledNumbers.includes(row[i])
+    );
+
+    let rightToLeft = card.every((row, i) =>
+      this.calledNumbers.includes(row[gridSize - 1 - i])
+    );
+
+    return leftToRight || rightToLeft;
+  }
+
+  private checkHorizontalBingo(card: number[][]): boolean {
+    for (let row of card) {
+      if (row.every((num) => this.calledNumbers.includes(num))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private checkVerticalBingo(card: number[][], gridSize: number): boolean {
+    for (let col = 0; col < gridSize; col++) {
+      let columnNumbers = card.map((row) => row[col]);
+      if (columnNumbers.every((num) => this.calledNumbers.includes(num))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private checkDiagonalBingo(card: number[][], gridSize: number): boolean {
+    let leftToRight = card.every((row, i) =>
+      this.calledNumbers.includes(row[i])
+    );
+
+    let rightToLeft = card.every((row, i) =>
+      this.calledNumbers.includes(row[gridSize - 1 - i])
+    );
+
+    return leftToRight || rightToLeft;
   }
 
   private checkHorizontalBingo(card: number[][]): boolean {

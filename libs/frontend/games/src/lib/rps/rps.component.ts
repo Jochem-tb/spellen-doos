@@ -1,121 +1,163 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { RPSService } from './rps.service';
-import { RPSChoicesEnum } from '@spellen-doos/shared/api';
+import { RPSChoicesEnum, VisibilityEnum } from '@spellen-doos/shared/api';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+} from '@angular/animations';
 
 @Component({
   selector: 'lib-rps',
   standalone: false,
   templateUrl: './rps.component.html',
   styleUrls: ['./rps.component.css'],
+  animations: [
+    trigger('slideIn', [
+      state(VisibilityEnum.Hidden, style({ transform: 'translateX(-100%)', opacity: 0 })),
+      state(VisibilityEnum.Visible, style({ transform: 'translateX(0)', opacity: 1 })),
+  
+      transition(`${VisibilityEnum.Hidden} => ${VisibilityEnum.Visible}`, [animate('0.5s ease-in-out')]),
+      transition(`${VisibilityEnum.Visible} => ${VisibilityEnum.Hidden}`, [animate('0.5s ease-in-out')]),
+    ]),
+    trigger('slideInOpponent', [
+      state(VisibilityEnum.Hidden, style({ transform: 'translateX(100%)', opacity: 0 })),
+      state(VisibilityEnum.Visible, style({ transform: 'translateX(0)', opacity: 1 })),
+  
+      transition(`${VisibilityEnum.Hidden} => ${VisibilityEnum.Visible}`, [animate('0.5s ease-in-out')]),
+      transition(`${VisibilityEnum.Visible} => ${VisibilityEnum.Hidden}`, [animate('0.5s ease-in-out')]),
+    ]),
+  ],
 })
-export class RpsComponent {
-  choice?: RPSChoicesEnum = undefined;
-  result: string = '';
-  score: number = 0;
-  opponentChoice: string = '';
-  opponentScore: number = 0;
-  timerTime: number = 0;
-  winner: boolean = false;
-  looser: boolean = false;
-  round: number = 0;
-  draw: boolean = false;
-
+export class RpsComponent implements OnDestroy {
   RPSChoicesEnum = RPSChoicesEnum;
+  VisibilityEnum = VisibilityEnum;
 
+  roundActive = true
 
-  constructor(private rpsService: RPSService) {
-    // Koppel deze component aan de service (zodat de service kan updaten).
-    console.log('[DEBUG] RPS Component constructor...');
+  choice?: RPSChoicesEnum;
+  opponentChoice: string = '';
+  score: number = 0;
+  opponentScore: number = 0;
+
+  timerTime: number = -1;
+
+  winner: boolean = false;
+  loser: boolean = false;
+  draw: boolean = false;
+  round: number = 0;
+
+  userChoiceState: VisibilityEnum.Hidden | VisibilityEnum.Visible = VisibilityEnum.Hidden;
+  opponentChoiceState: VisibilityEnum.Hidden | VisibilityEnum.Visible = VisibilityEnum.Hidden;
+
+  isGameOver: boolean = false;
+
+  private intervalId?: any;
+
+  constructor(
+    private rpsService: RPSService,
+    private router: Router
+  ) {
     this.rpsService.component = this;
   }
+
   ngOnDestroy(): void {
     this.rpsService.disconnect();
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 
-  changeChoice(choice: RPSChoicesEnum): void {
-    if (this.choice === choice) {
+  changeChoice(newChoice: RPSChoicesEnum): void {
+    if (this.choice === newChoice) {
       this.choice = undefined;
+      this.userChoiceState = VisibilityEnum.Hidden;
       return;
     }
-
-    // Nieuwe keuze doorgeven
-    this.choice = choice;
-    this.rpsService.changeChoice(choice as RPSChoicesEnum);
+  
+    if (this.choice && this.choice !== newChoice) {
+      this.userChoiceState = VisibilityEnum.Hidden;
+  
+      setTimeout(() => {
+        this.choice = newChoice;
+        this.userChoiceState = VisibilityEnum.Visible;
+        this.rpsService.changeChoice(newChoice);
+      }, 500);
+      return;
+    }
+  
+    this.choice = newChoice;
+    this.userChoiceState = VisibilityEnum.Visible;
+    this.rpsService.changeChoice(newChoice);
   }
 
   disconnect(): void {
-    console.log('[DEBUG] Disconnecting...');
+    console.log('[DEBUG] - Disconnecting from RPS game');
     this.rpsService.disconnect();
   }
 
   getImageUrl(choice: string): string {
-    choice = choice.toLowerCase();
-    return `rps/${choice}.png`;
+    return `rps/${choice.toLowerCase()}.png`;
   }
 
-  // Timer-update binnenkrijgen vanuit de service
   updateTimer(time: number): void {
     this.timerTime = time;
+
+    if (time <= 0) {
+
+      this.roundActive = false;
+
+      setTimeout(() => {
+        this.resetRound();
+      }, 5000);
+    }
   }
 
-  // Score bijwerken vanuit de service
+  resetRound(): void {
+    this.userChoiceState = VisibilityEnum.Hidden;
+    this.opponentChoiceState = VisibilityEnum.Hidden;
+  
+    this.choice = undefined;
+    this.opponentChoice = '';
+  
+    this.winner = false;
+    this.loser = false;
+    this.draw = false;
+  
+    this.timerTime = -1; 
+
+    this.roundActive = true;
+  }
+
   updateScore(playerScore: number, opponentScore: number): void {
     this.score = playerScore;
     this.opponentScore = opponentScore;
   }
 
-  // Data van de service (socket) direct naar de component doorzetten
-  setData(data: {
-    choice?: RPSChoicesEnum;
-    opponentChoice?: string;
-    score?: number;
-    opponentScore?: number;
-    timerTime?: number;
-    winner?: boolean;
-    looser?: boolean;
-    round?: number;
-    draw?: boolean;
-  }): void {
-    console.log('[DEBUG] setData aangeroepen met:', data);
-  
-    if (data.round !== undefined) {
-      this.round = data.round;
-    }
-    if (data.choice !== undefined) {
-      this.choice = data.choice;
-    }
+  showGameOverPopup(): void {
+    this.isGameOver = true;
+  }
+
+  onChoiceClick(choice: RPSChoicesEnum): void {
+    if (!this.roundActive) return;
+    this.changeChoice(choice);
+  }
+
+  leaveGame(): void {
+    this.rpsService.disconnect();
+    this.router.navigate(['/dashboard']);
+  }
+
+  setData(data: Partial<Pick<this, 'choice' | 'opponentChoice' | 'score' | 'opponentScore' | 'timerTime' | 'winner' | 'loser' | 'round' | 'draw'>>): void {
+    Object.assign(this, data);
     if (data.opponentChoice !== undefined) {
-      this.opponentChoice = data.opponentChoice;
-    }
-    if (data.score !== undefined) {
-      this.score = data.score;
-    }
-    if (data.opponentScore !== undefined) {
-      this.opponentScore = data.opponentScore;
+      this.opponentChoiceState = VisibilityEnum.Visible;
     }
     if (data.timerTime !== undefined) {
-      this.timerTime = data.timerTime;
+      this.updateTimer(data.timerTime);
     }
-    if (data.winner !== undefined) {
-      this.winner = data.winner;
-      console.log('[DEBUG] Winner updated:', this.winner);
-    }
-    if (data.looser !== undefined) {
-      this.looser = data.looser;
-      console.log('[DEBUG] Looser updated:', this.looser);
-    }
-    if(data.winner === false && data.looser === false) {
-      this.winner = false;
-      this.looser = false;
-      this.draw = true;
-    }
-  }  
-
-  // Popup sluiten
-  closePopup(): void {
-    this.winner = false;
-    this.looser = false;
-    this.draw = false;
-    this.choice = undefined;
   }
 }

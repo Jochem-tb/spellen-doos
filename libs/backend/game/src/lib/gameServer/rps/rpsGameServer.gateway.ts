@@ -104,8 +104,6 @@ export class RPSGameServerControllerGateway
           }
         });
 
-        // Set a timeout for reconnection
-        setTimeout(() => {
           // Check if the connectedPlayers is more than Minimum players for game, otherwise delete room
           const roomPlayers = this.rooms.get(roomId);
           if (roomPlayers && roomPlayers.length < this.minPlayerForGame) {
@@ -114,8 +112,8 @@ export class RPSGameServerControllerGateway
             this.server.to(roomId).emit(BaseGatewayEvents.GAME_OVER, {
               reason: 'Not enough players to continue the game.',
             });
+            this.closeGameRoom(roomId);
           }
-        }, this.TIME_FOR_RECONNECTION_IN_MS); // 30 seconds for reconnection
       }
     });
 
@@ -186,7 +184,6 @@ export class RPSGameServerControllerGateway
     const players = this.rooms.get(roomId);
     if (!players) {
       console.error(`Room ${roomId} not found.`);
-      throw new Error(`Room ${roomId} not found.`);
       return;
     }
 

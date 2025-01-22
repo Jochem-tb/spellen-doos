@@ -7,10 +7,28 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { WaitScreenComponent } from './waitScreen/waitScreen.component';
 import { RpsComponent } from './rps/rps.component';
 import { BingoComponent } from './bingo/bingo.component';
+import { GameTutorialComponent } from './gameTutorial/gameTutorial.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
-  imports: [CommonModule, RouterModule, HttpClientModule, UiModule],
-  declarations: [WaitScreenComponent, RpsComponent, BingoComponent],
-  exports: [WaitScreenComponent, RpsComponent, BingoComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    HttpClientModule,
+    UiModule,
+    BrowserAnimationsModule,
+  ],
+  declarations: [
+    WaitScreenComponent,
+    RpsComponent,
+    BingoComponent,
+    GameTutorialComponent,
+  ],
+  exports: [
+    WaitScreenComponent,
+    RpsComponent,
+    BingoComponent,
+    GameTutorialComponent,
+  ],
 })
 export class GamesModule {}

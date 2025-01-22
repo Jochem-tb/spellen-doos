@@ -19,6 +19,14 @@ export enum RPSChoicesEnum {
   Steen = 'Steen',
   Papier = 'Papier',
   Schaar = 'Schaar',
+  PlayerB = "PlayerB",
+  PlayerA = "PlayerA",
+  Draw = "Draw",
+}
+
+export enum VisibilityEnum {
+  Visible = 'visible',
+  Hidden = 'hidden',
 }
 
 export interface IRPSRoundInfo {

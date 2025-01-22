@@ -8,6 +8,12 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  border-radius: 30px;
+}
+
+button {
+  border-radius: 50px;
+  font-size: 20px!important;
 }
   
   label {
@@ -62,4 +68,10 @@
 
 .invalid-feedback {
   margin-bottom: 20px;
+}
+
+p.welcome-text {
+  font-size: 1.1rem;
+  margin-bottom: 1.05rem;
+  padding: 5px 20px 5px 20px;
 }

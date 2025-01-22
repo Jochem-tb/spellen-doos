@@ -60,7 +60,6 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     //Set the title of the wait screen
-    //TODO: Implement real call with ID in Route
     console.log('URL:', this.router.url);
     const gameId = this.router.url.split('/')[2];
     console.log('GameID:', gameId);
@@ -106,7 +105,7 @@ export class WaitScreenComponent implements OnInit, OnDestroy {
     }
   }
 
-  private startTimer(): void {
+  public startTimer(): void {
     this.timerSubscription = interval(1000).subscribe(() => {
       //Update the time
       this.elapsedSeconds++;

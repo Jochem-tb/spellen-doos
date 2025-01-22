@@ -28,7 +28,6 @@ export class BingoService {
   }
 
   private socket!: Socket;
-  // private gameServer!: Socket;
   private roomId!: string;
 
   public component!: BingoComponent;
@@ -72,18 +71,23 @@ export class BingoService {
     this.socket.on(BingoGameEvents.BINGO_CARD, (card: BingoCard) => {
       console.log('Bingo card received from server');
       console.debug(card);
-      this.component.updateBingoCard(card);
-      console.log('Emitting player ready event...');
-      this.socket.emit(BaseGatewayEvents.PLAYER_READY, { roomId: this.roomId });
+      if (card) {
+        this.component.updateBingoCard(card);
+        console.log('Emitting player ready event...');
+        this.socket.emit(BaseGatewayEvents.PLAYER_READY, {
+          roomId: this.roomId,
+        });
+      } else {
+        console.log('No bingo card received, requesting again...');
+        this.socket.emit(BingoGameEvents.BINGO_CARD, { roomId: this.roomId });
+      }
     });
 
     this.socket.on(
       BingoGameEvents.BINGO_CALLED,
       (data: { clientId: string }) => {
         console.log('Bingo called by: ', data.clientId);
-        if (this.socket.id && data.clientId !== this.socket.id) {
-          this.handleBingoCalled(data.clientId);
-        }
+        this.handleBingoCalled(data.clientId);
       }
     );
 
@@ -91,7 +95,41 @@ export class BingoService {
       BingoGameEvents.BINGO_RESULT,
       (data: { clientId: string; result: BingoResultEnum }) => {
         console.log('Bingo result received from server for: ', data.clientId);
-        this.handleBingoResult(data.clientId, data.result);
+        setTimeout(() => {
+          this.handleBingoResult(data.clientId, data.result);
+        }, 3000);
+      }
+    );
+
+    this.socket.on(
+      BingoGameEvents.NUMBER_CALLED,
+      (data: { number: number; remaining: number }) => {
+        console.log('Bingo number received: ', data.number);
+        this.component.updateCalledNumber(data.number);
+      }
+    );
+
+    this.socket.on(BingoGameEvents.START_NUMBER_CALLING, (data: any) => {
+      console.log('Number calling started event received');
+      this.component.startNumberCalling();
+    });
+  }
+
+  public getBingoCard(): void {
+    console.log('[DEBUG] Requesting bingo card from server...');
+    this.socket.emit(
+      BingoGameEvents.BINGO_CARD,
+      { roomId: this.roomId },
+      () => {
+        console.log('Bingo card requested');
+      }
+    );
+
+    this.socket.on(
+      BingoGameEvents.NUMBER_CALLED,
+      (data: { number: number; remaining: number }) => {
+        console.log('Bingo number received: ', data.number);
+        this.component.updateCalledNumber(data.number);
       }
     );
 
@@ -105,7 +143,14 @@ export class BingoService {
   }
 
   private handleBingoCalled(playerId: string): void {
-    alert(`Speler ${playerId} heeft bingo geroepen`);
+    this.component.displayBingoPicture(true);
+    this.component.toggleBingoButton();
+    setTimeout(() => {
+      this.component.displayBingoPicture(false);
+      setTimeout(() => {
+        this.component.toggleBingoButton();
+      }, 1500);
+    }, 5000);
   }
 
   private handleBingoResult(playerId: string, result: BingoResultEnum): void {
@@ -122,14 +167,31 @@ export class BingoService {
   }
 
   private validBingo(playerId: string): void {
-    alert(`Speler ${playerId} heeft geldige bingo!`);
+    let message;
+
+    if (playerId === this.socket.id) {
+      message = 'Je hebt geldige bingo!';
+    } else {
+      message = `Een andere speler heeft geldige bingo!`;
+    }
+
+    this.component.bingoMessage = message;
+    this.component.displayBingoMessage = true;
+    this.component.successBingo = true;
   }
 
   private invalidBingo(playerId: string): void {
-    alert(`Speler ${playerId} heeft ongeldige bingo!`);
+    if (playerId === this.socket.id) {
+      // alert(`Je hebt ongeldige bingo!`);
+    }
+    this.component.successBingo = false;
   }
 
   private playerDisconnected(playerId: string): void {
+    if (this.socket.id === playerId) {
+      alert('Er is een fout opgetreden. Je bent uit de game gezet.');
+      this.router.navigate(['/']);
+    }
     alert(`Speler ${playerId} heeft momenteel de game verlaten.`);
   }
 
@@ -138,11 +200,8 @@ export class BingoService {
   }
 
   private handleGameOver(): void {
-    setTimeout(() => {
-      alert('Game over');
-      this.socket.disconnect();
-      this.gameServerService.gameOver();
-    }, 3000);
+    this.socket.disconnect();
+    this.gameServerService.gameOver();
   }
 
   public callBingo(card: BingoCard): void {

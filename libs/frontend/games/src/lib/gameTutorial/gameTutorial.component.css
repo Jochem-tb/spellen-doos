@@ -1,0 +1,156 @@
+/* Root container for full-screen layout */
+.fullscreen-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full viewport height */
+    margin: 0;
+    overflow: hidden; /* Prevent scrolling */
+  }
+  
+  /* Ensure the container covers the full viewport */
+  .gametutorial-container {
+    min-height: 100vh; /* Full height of the viewport */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden; /* Prevent scrollbars from appearing */
+    margin: 0; /* Remove any default margins */
+    padding: 0;
+    background-image: url('/backgrounds/dash-background.jpg');
+  }
+  
+  /* Background Wrapper for the Rectangle */
+  .background-wrapper {
+    position: relative;
+    width: 90%; /* Adjust width as needed */
+    height: 80vh;
+    max-width: 110vh; /* Limit the width for portrait shape */
+    background-size: cover;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    background-color: #f8f9fa !important; /* Light background color */
+    /* background-image: url('/backgrounds/tutorialAchtergrond.jpg'); */
+  }
+
+  .tutorial-container {
+    position: absolute;
+
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: 50%;
+  }
+
+  .tutorial-image-holder {
+    grid-row: 1;
+    border-radius: 10px;
+  }
+
+  .tutorial-text-holder {
+    grid-row: 0;
+  }
+
+  .tutorial-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .tutorial-text {
+    font-size: 1.1rem;
+    font-weight: 400;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 0 1rem;
+  }
+  
+  .text-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 10px; /* Match the border radius of the rectangle */
+  }
+  
+  /* Styles for inner elements */
+  .title {
+    font-family: 'Arial', sans-serif;
+    margin-top: 40px;
+    font-size: 2rem;
+    font-weight: bold;
+    font-style: italic;
+  }
+  
+  .gameTitle {
+    font-family: 'Arial', sans-serif;
+    font-size: 2.8rem;
+    font-style: normal;
+  }
+    
+  .start-box {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 15vh;
+  }
+  
+  .start-button {
+    position: relative;
+    border-radius: 12px;
+    border: 1px solid black;
+    color: black;
+    font-size: 1.3rem;
+    text-align: center;
+    padding: 1.2rem 1.5rem;
+    transition: transform 0.2s ease-in-out, background-color 0.3s;
+    background-color:#39F139 !important; /* Green button color */
+  }
+  
+  .start-button:hover {
+    transform: scale(1.05);
+    background-color: #2ED32E !important; /* Slightly darker green on hover */
+  }
+
+  /* .btn-secondary {
+    position: absolute;
+    left: 7rem;
+    top: 8rem;
+    background-color: #6c757d;
+    border: none;
+  } */
+
+  header {
+    padding-bottom: 3.5rem !important;
+    padding-top: 3rem !important;
+  }
+  
+  .terug-btn {
+    position: absolute;
+    top: -1.1rem;
+    left: 1.5rem;
+    padding: 8px 50px;
+    background-color: #6c757d;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    overflow: hidden;
+  }

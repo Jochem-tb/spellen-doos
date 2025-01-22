@@ -74,39 +74,45 @@ export class RPSService {
     });
 
     this.socket.on(RPSGameEvents.ROUND_RESULT, (data: any) => {
-      console.log('[DEBUG] ROUND_RESULT event binnen:', data);
-  
-      // Zorg ervoor dat Angular de UI bijwerkt
       this.zone.run(() => {
-        if (!this.component) {
-          console.warn('[WARNING] Component is niet gekoppeld aan service!');
-          return;
-        }
-  
-        // Update data in de component
+        if (!this.component) return;
+    
+        // If the current user is Player A
         if (this.socket.id === data.playerA) {
+          const isWinner = data.winner === 'PlayerA';
+          const isLoser  = data.winner === 'PlayerB';
+          const isDraw   = data.winner === 'Draw';
+    
           this.component.setData({
             choice: data.playerAChoice,
             opponentChoice: data.playerBChoice,
             score: data.playerAWins,
             opponentScore: data.playerBWins,
-            winner: data.winner === 'PlayerA',
-            looser: data.winner === 'PlayerB',
+            winner: isWinner,
+            loser: isLoser,
+            draw: isDraw,
             round: data.round
           });
-        } else {
+        } 
+        // Else the current user is Player B
+        else {
+          const isWinner = data.winner === 'PlayerB';
+          const isLoser  = data.winner === 'PlayerA';
+          const isDraw   = data.winner === 'Draw';
+    
           this.component.setData({
             choice: data.playerBChoice,
             opponentChoice: data.playerAChoice,
             score: data.playerBWins,
             opponentScore: data.playerAWins,
-            winner: data.winner === 'PlayerB',
-            looser: data.winner === 'PlayerA',
+            winner: isWinner,
+            loser: isLoser,
+            draw: isDraw,
             round: data.round
           });
         }
       });
-    });
+    });    
     
     this.socket.on(RPSGameEvents.CHANGE_CHOICE, (data: any) => {
       console.log('My choice in gameController:', data.choice);
@@ -114,20 +120,27 @@ export class RPSService {
   }
 
   private playerDisconnected(playerId: string): void {
-    alert(`Speler ${playerId} heeft momenteel de game verlaten.`);
+    // alert(`Speler ${playerId} heeft momenteel de game verlaten.`);
+    console.log(`Speler ${playerId} heeft momenteel de game verlaten.`);
   }
 
   public disconnect(): void {
     this.socket.disconnect();
+    this.router.navigate(['/dashboard']);
   }
 
   private handleGameOver(): void {
-    setTimeout(() => {
-      alert('Het spel is voorbij!\nBedankt voor het spelen!\nJe wordt nu teruggestuurd naar het dashboard.');
-      this.socket.disconnect();
-      this.gameServerService.gameOver();
-    }, 3000);
+    this.zone.run(() => {
+      if (this.component) {
+        setTimeout(() => {
+        this.component.showGameOverPopup();
+        }, 2500);
+      } else {
+        console.warn('[DEBUG] No component found to show game over popup.');
+      }
+    });
   }
+  
 
   public changeChoice(choice: RPSChoicesEnum): void {
     console.log(`[DEBUG - RPSService] Player choice: ${choice}`);

@@ -17,6 +17,7 @@
   overflow: hidden; /* Prevent scrollbars from appearing */
   margin: 0; /* Remove any default margins */
   padding: 0;
+  background-image: url('/backgrounds/dash-background.jpg');
 }
 
 /* Background Wrapper for the Rectangle */

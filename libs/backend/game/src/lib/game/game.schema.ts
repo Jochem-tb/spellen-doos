@@ -18,7 +18,7 @@ export class Game implements IGame {
   longDescription?: string | undefined;
 
   @Prop({ required: true, type: Array })
-  tutorialSteps?: ITutorialStep[] | undefined;
+  tutorialContent?: string | undefined;
 
   @Prop({ required: true, type: String })
   cardImage: string = '/assets/game/placeholder.png';

@@ -1,9 +1,9 @@
 import { IEnvironment } from './environment.interface';
 
 export const environment: IEnvironment = {
-    production: false,
+  production: false,
 
-    ROOT_DOMAIN_URL: 'dummy',
+  ROOT_DOMAIN_URL: 'dummy',
 
 
     //* API for CRUD operations
