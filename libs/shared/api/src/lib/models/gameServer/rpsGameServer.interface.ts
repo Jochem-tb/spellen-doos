@@ -21,6 +21,7 @@ export enum RPSChoicesEnum {
   Schaar = 'Schaar',
   PlayerB = "PlayerB",
   PlayerA = "PlayerA",
+  Draw = "Draw",
 }
 
 export enum VisibilityEnum {
