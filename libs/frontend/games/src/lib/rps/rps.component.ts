@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { RPSService } from './rps.service';
-import { RPSChoicesEnum } from '@spellen-doos/shared/api';
+import { RPSChoicesEnum, VisibilityEnum } from '@spellen-doos/shared/api';
 import {
   trigger,
   state,
@@ -17,23 +17,24 @@ import {
   styleUrls: ['./rps.component.css'],
   animations: [
     trigger('slideIn', [
-      state(RPSChoicesEnum.Hidden, style({ transform: 'translateX(-100%)', opacity: 0 })),
-      state(RPSChoicesEnum.Visible, style({ transform: 'translateX(0)', opacity: 1 })),
+      state(VisibilityEnum.Hidden, style({ transform: 'translateX(-100%)', opacity: 0 })),
+      state(VisibilityEnum.Visible, style({ transform: 'translateX(0)', opacity: 1 })),
   
-      transition(`${RPSChoicesEnum.Hidden} => ${RPSChoicesEnum.Visible}`, [animate('0.5s ease-in-out')]),
-      transition(`${RPSChoicesEnum.Visible} => ${RPSChoicesEnum.Hidden}`, [animate('0.5s ease-in-out')]),
+      transition(`${VisibilityEnum.Hidden} => ${VisibilityEnum.Visible}`, [animate('0.5s ease-in-out')]),
+      transition(`${VisibilityEnum.Visible} => ${VisibilityEnum.Hidden}`, [animate('0.5s ease-in-out')]),
     ]),
     trigger('slideInOpponent', [
-      state(RPSChoicesEnum.Hidden, style({ transform: 'translateX(100%)', opacity: 0 })),
-      state(RPSChoicesEnum.Visible, style({ transform: 'translateX(0)', opacity: 1 })),
+      state(VisibilityEnum.Hidden, style({ transform: 'translateX(100%)', opacity: 0 })),
+      state(VisibilityEnum.Visible, style({ transform: 'translateX(0)', opacity: 1 })),
   
-      transition(`${RPSChoicesEnum.Hidden} => ${RPSChoicesEnum.Visible}`, [animate('0.5s ease-in-out')]),
-      transition(`${RPSChoicesEnum.Visible} => ${RPSChoicesEnum.Hidden}`, [animate('0.5s ease-in-out')]),
+      transition(`${VisibilityEnum.Hidden} => ${VisibilityEnum.Visible}`, [animate('0.5s ease-in-out')]),
+      transition(`${VisibilityEnum.Visible} => ${VisibilityEnum.Hidden}`, [animate('0.5s ease-in-out')]),
     ]),
   ],
 })
 export class RpsComponent implements OnDestroy {
   RPSChoicesEnum = RPSChoicesEnum;
+  VisibilityEnum = VisibilityEnum;
 
   roundActive = true
 
@@ -49,8 +50,8 @@ export class RpsComponent implements OnDestroy {
   draw: boolean = false;
   round: number = 0;
 
-  userChoiceState: RPSChoicesEnum.Hidden | RPSChoicesEnum.Visible = RPSChoicesEnum.Hidden;
-  opponentChoiceState: RPSChoicesEnum.Hidden | RPSChoicesEnum.Visible = RPSChoicesEnum.Hidden;
+  userChoiceState: VisibilityEnum.Hidden | VisibilityEnum.Visible = VisibilityEnum.Hidden;
+  opponentChoiceState: VisibilityEnum.Hidden | VisibilityEnum.Visible = VisibilityEnum.Hidden;
 
   isGameOver: boolean = false;
 
@@ -73,23 +74,23 @@ export class RpsComponent implements OnDestroy {
   changeChoice(newChoice: RPSChoicesEnum): void {
     if (this.choice === newChoice) {
       this.choice = undefined;
-      this.userChoiceState = RPSChoicesEnum.Hidden;
+      this.userChoiceState = VisibilityEnum.Hidden;
       return;
     }
   
     if (this.choice && this.choice !== newChoice) {
-      this.userChoiceState = RPSChoicesEnum.Hidden;
+      this.userChoiceState = VisibilityEnum.Hidden;
   
       setTimeout(() => {
         this.choice = newChoice;
-        this.userChoiceState = RPSChoicesEnum.Visible;
+        this.userChoiceState = VisibilityEnum.Visible;
         this.rpsService.changeChoice(newChoice);
       }, 500);
       return;
     }
   
     this.choice = newChoice;
-    this.userChoiceState = RPSChoicesEnum.Visible;
+    this.userChoiceState = VisibilityEnum.Visible;
     this.rpsService.changeChoice(newChoice);
   }
 
@@ -116,8 +117,8 @@ export class RpsComponent implements OnDestroy {
   }
 
   resetRound(): void {
-    this.userChoiceState = RPSChoicesEnum.Hidden;
-    this.opponentChoiceState = RPSChoicesEnum.Hidden;
+    this.userChoiceState = VisibilityEnum.Hidden;
+    this.opponentChoiceState = VisibilityEnum.Hidden;
   
     this.choice = undefined;
     this.opponentChoice = '';
@@ -153,7 +154,7 @@ export class RpsComponent implements OnDestroy {
   setData(data: Partial<Pick<this, 'choice' | 'opponentChoice' | 'score' | 'opponentScore' | 'timerTime' | 'winner' | 'looser' | 'round' | 'draw'>>): void {
     Object.assign(this, data);
     if (data.opponentChoice !== undefined) {
-      this.opponentChoiceState = RPSChoicesEnum.Visible;
+      this.opponentChoiceState = VisibilityEnum.Visible;
     }
     if (data.timerTime !== undefined) {
       this.updateTimer(data.timerTime);

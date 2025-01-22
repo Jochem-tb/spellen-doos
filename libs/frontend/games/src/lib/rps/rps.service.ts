@@ -123,7 +123,6 @@ export class RPSService {
   }
 
   private handleGameOver(): void {
-    // Instead of alert(), we now show a modal in the component.
     this.zone.run(() => {
       if (this.component) {
         setTimeout(() => {
