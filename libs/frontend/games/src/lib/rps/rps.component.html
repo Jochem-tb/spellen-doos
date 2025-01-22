@@ -26,31 +26,21 @@
     </div>
 
     <div class="timer-between">
-      <ng-container *ngIf="timerTime === -1 && !winner && !looser && !draw; else timerOrResult">
-      Maak uw keuze
-      </ng-container>
-
-      <ng-template #timerOrResult>
-      <ng-container *ngIf="timerTime > 0; else result">
-        {{ timerTime }} sec
-      </ng-container>
-
-      <ng-template #result>
-        <ng-container *ngIf="winner; else loserOrDraw">
+      <div *ngIf="timerTime === -1 && !winner && !looser && !draw">
+        Maak uw keuze
+      </div>
+      <div *ngIf="timerTime > 0">
+        {{ timerTime }} sec 
+      </div>
+      <div *ngIf="timerTime <= 0 && winner">
         Gewonnen
-        </ng-container>
-        <ng-template #loserOrDraw>
-        <ng-container *ngIf="looser; else draw">
-          Verloren
-        </ng-container>
-        </ng-template>
-        <ng-template #draw>
-        <ng-container *ngIf="draw">
-          Gelijkspel
-        </ng-container>
-        </ng-template>
-      </ng-template>
-      </ng-template>
+      </div>
+      <div *ngIf="timerTime <= 0 && looser">
+        Verloren
+      </div>
+      <div *ngIf="timerTime <= 0 && draw">
+        Gelijkspel
+      </div>
     </div>
 
     <!-- Opponent choice -->
@@ -68,22 +58,25 @@
   </div>
 
   <div class="score-row">
-    <div 
-      class="score-box" 
+    <div
+      class="score-box"
       [class.disabled]="!roundActive"
-      (click)="onChoiceClick(RPSChoicesEnum.Steen)">
+      (click)="onChoiceClick(RPSChoicesEnum.Steen)"
+    >
       <img src="rps/steen.png" alt="Steen" />
     </div>
-    <div 
-      class="score-box" 
+    <div
+      class="score-box"
       [class.disabled]="!roundActive"
-      (click)="onChoiceClick(RPSChoicesEnum.Papier)">
+      (click)="onChoiceClick(RPSChoicesEnum.Papier)"
+    >
       <img src="rps/papier.png" alt="Papier" />
     </div>
-    <div 
-      class="score-box" 
+    <div
+      class="score-box"
       [class.disabled]="!roundActive"
-      (click)="onChoiceClick(RPSChoicesEnum.Schaar)">
+      (click)="onChoiceClick(RPSChoicesEnum.Schaar)"
+    >
       <img src="rps/schaar.png" alt="Schaar" />
     </div>
   </div>
